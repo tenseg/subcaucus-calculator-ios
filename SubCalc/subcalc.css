@@ -1,0 +1,211 @@
+body {
+    padding:0;
+    margin: 0;
+    font-family:Helvetica,Verdana,Arial,sans-serif;
+    background-color:#8f1731;
+    font-size: 24px;
+    font-weight: 100;
+}
+
+#page_wrapper {
+    overflow: auto;
+    min-width: 300px;
+    max-width: 600px;
+    margin: auto;
+	background-color: #f9edcb;
+}
+
+p {
+	margin: 15px 10px;
+}
+
+p.credit, 
+h1 {
+    font-size:12px;
+    padding:10px;
+    margin: 0;
+    background-color:#0005a8;
+    color: white;
+}
+
+p.credit {
+	text-align: right;
+}
+
+p.credit a {
+	color: white;
+}
+
+a {
+	text-decoration: none;
+}
+
+input {
+	font-size: 24px;
+	padding: 0;
+	border:none;
+	border-bottom: 1px solid #AAA
+}
+
+div#caucusinfo {
+	padding: 0;
+	width: 100%;
+	background-color: #daddff;
+}
+
+div#caucusinfo input {
+	display: block;
+	margin: 0;
+	width: 96%;
+	padding: 2%;
+	font-weight: bold;
+	background-color: transparent;
+}
+
+div#caucusinfo span.note {
+	display: none;
+}
+
+div#subcaucuses {
+	margin-top: 20px;
+	background-color: white;
+}
+
+div.row {
+	display: block;
+	position: relative;
+	border:none;
+	border-bottom: 1px solid #AAA;
+	width: 96%;
+	height: 40px;
+	padding: 10px 2% 0 2%;
+	/* background-color: #F5F5FF; */
+	overflow: hidden;
+}
+
+div.row.header {
+	background-color: black;
+	color: white;
+	font-size: 14px;
+	height: 24px;
+	border: none;
+}
+
+div.cell {
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+	vertical-align: top;
+	overflow: hidden;
+}
+
+div.cell.number {
+	display: none;
+}
+
+div.cell.name {
+	width: 70%;
+}
+
+div.cell.count {
+	width: 15%;
+	text-align: right;
+	cursor: pointer;
+}
+
+div.cell.note {
+	width: 15%;
+	overflow: none;
+	text-align: right;
+	cursor: pointer;
+}
+
+div.cell.popup {
+	display: none;
+	position: absolute;
+	top: 0;
+	right: 0;
+	background-color: rgba(245, 245, 43, 0.93);
+	width: 70%;
+	height: 100%;
+	padding: 10px;
+	text-align: right;
+	cursor: pointer;
+}
+
+div.cell.popup.green {
+	background-color: rgba(100, 251, 100, 0.87);
+	color: black;
+}
+
+div.cell.popup.red {
+	background-color: rgba(251, 100, 100, 0.87);
+	color: black;
+}
+
+div.cell.popup span.fineprint {
+	font-size: 80%;
+}
+
+div.cell input {
+	border: none;
+	margin: 0;
+	width: 100%;
+}
+
+div.row.total {
+	background-color: #CCCCCC;
+}
+
+div.row.total div.cell.note {
+	visibility: hidden;
+}
+
+.red {
+    color:#c11616;
+}
+
+.blue {
+    background-color:#d4e6f4;
+    color:blue
+}
+
+.green {
+    color:green
+}
+
+.fineprint {
+    font-size:50%
+}
+
+.largeprint {
+    font-weight:700
+}
+
+.sctabletotal {
+    text-align:right
+}
+
+.numeric {
+    text-align:right
+}
+
+.note {
+    margin-left:5px
+}
+
+.credit {
+    padding:5px;
+    border-right-width:0;
+    border-left-width:0;
+    border-color:#999;
+    border-style:solid;
+    border-bottom-width:1px;
+    border-top-width:1px
+}
+
+#viabilitynumber,
+#wholeviability {
+    background-color:#ffe600;
+    padding: 0 0.25em;
+}
