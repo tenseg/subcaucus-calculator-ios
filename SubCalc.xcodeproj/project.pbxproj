@@ -21,7 +21,6 @@
 		AC2A2D681C0E66C100196FBF /* moment.min.js in Resources */ = {isa = PBXBuildFile; fileRef = AC2A2D611C0E66C100196FBF /* moment.min.js */; };
 		AC2A2D691C0E66C100196FBF /* subcalc.css in Resources */ = {isa = PBXBuildFile; fileRef = AC2A2D621C0E66C100196FBF /* subcalc.css */; };
 		AC2A2D6A1C0E66C100196FBF /* subcalc.js in Resources */ = {isa = PBXBuildFile; fileRef = AC2A2D631C0E66C100196FBF /* subcalc.js */; };
-		AC2A2D6D1C0E723200196FBF /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = AC2A2D6C1C0E723200196FBF /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -297,7 +296,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AC2A2D6D1C0E723200196FBF /* README.md in Sources */,
 				AC2A2D321C0E668700196FBF /* ViewController.swift in Sources */,
 				AC2A2D301C0E668700196FBF /* AppDelegate.swift in Sources */,
 			);
@@ -442,6 +440,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = SubCalc/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = net.tenseg.SubCalc;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -453,6 +452,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = SubCalc/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = net.tenseg.SubCalc;
 				PRODUCT_NAME = "$(TARGET_NAME)";
