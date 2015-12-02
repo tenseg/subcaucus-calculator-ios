@@ -8,7 +8,7 @@ SubCalc is the Minnesota Subcaucus Calculator. The iOS version (currently v2.0 i
 * "SubCalcTests" includes our unit test source files
 * "SubCalc" includes all the source and supporting files for the actual SubCalc binary app
 * We play around with Swift in "Experimentation.playground"
-* "TODO" contains our working list of issues and features to address; this is the real document in Xcode where we commiserate on things we need to do (though the wiki here on Bitbucket can be used for more complex and heirarchical discussions and planning), we also mark items DONE and record those accomplishments in the TODO file
+* "[TODO](TODO.md)" contains our working list of issues and features to address; this is the real document in Xcode where we commiserate on things we need to do (though the wiki here on Bitbucket can be used for more complex and heirarchical discussions and planning), we also mark items DONE and record those accomplishments in the TODO file
 * "SubCalc.xcodeproj" is the Xcode project for SubCalc
 * Assorted other files, like the editable image versions of icons, are also at the root of the repo
 
