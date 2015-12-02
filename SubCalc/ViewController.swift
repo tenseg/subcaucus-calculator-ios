@@ -13,11 +13,17 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
 
     //MARK: Vars and Lets
     @IBOutlet weak var scWebView: UIWebView!
+    var rootPath = ""
+    let jsonFilename = "/subcalc.json"
     
     //MARK: View Funcs
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        // get documents path
+        // something like ~/Library/Developer/CoreSimulator/Devices/5C595030-7E0F-4FB8-AEBE-9F7BC6D23844/data/Containers/Data/Application/89361389-672E-4F91-BDBC-EE94F6E45F89/Documents on simulator
+        self.rootPath = (NSSearchPathForDirectoriesInDomains(.DocumentDirectory,.UserDomainMask,true)[0] as String)
         
         // To communicate with this webview... http://stackoverflow.com/questions/15983797/can-a-uiwebview-interact-communicate-with-the-app
         if let htmlPath = NSBundle.mainBundle().pathForResource("index", ofType: "html") {
@@ -49,6 +55,9 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
         if request.URL?.scheme == "file" {
             return true
         } else if request.URL?.scheme == "silly-extension" {
+//            let jsonData = try NSJSONSerialization.dataWithJSONObject(request.URL?.__somethong__!, options: NSJSONWritingOptions.PrettyPrinted)
+//            jsonData.writeToFile(rootPath + jsonFilename, atomically: true)
+            
             let alertController = UIAlertController(title: "Silly Here", message: request.URL?.absoluteString, preferredStyle: .ActionSheet)
             
             let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
