@@ -21,6 +21,7 @@
 		AC2A2D681C0E66C100196FBF /* moment.min.js in Resources */ = {isa = PBXBuildFile; fileRef = AC2A2D611C0E66C100196FBF /* moment.min.js */; };
 		AC2A2D691C0E66C100196FBF /* subcalc.css in Resources */ = {isa = PBXBuildFile; fileRef = AC2A2D621C0E66C100196FBF /* subcalc.css */; };
 		AC2A2D6A1C0E66C100196FBF /* subcalc.js in Resources */ = {isa = PBXBuildFile; fileRef = AC2A2D631C0E66C100196FBF /* subcalc.js */; };
+		AC2A2D6D1C0E723200196FBF /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = AC2A2D6C1C0E723200196FBF /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,8 @@
 		AC2A2D611C0E66C100196FBF /* moment.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = moment.min.js; sourceTree = "<group>"; };
 		AC2A2D621C0E66C100196FBF /* subcalc.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = subcalc.css; sourceTree = "<group>"; };
 		AC2A2D631C0E66C100196FBF /* subcalc.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = subcalc.js; sourceTree = "<group>"; };
+		AC2A2D6C1C0E723200196FBF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		AC2A2D6E1C0E72C600196FBF /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +94,8 @@
 		AC2A2D231C0E668700196FBF = {
 			isa = PBXGroup;
 			children = (
+				AC2A2D6E1C0E72C600196FBF /* TODO.md */,
+				AC2A2D6C1C0E723200196FBF /* README.md */,
 				AC2A2D2E1C0E668700196FBF /* SubCalc */,
 				AC2A2D431C0E668700196FBF /* SubCalcTests */,
 				AC2A2D4E1C0E668700196FBF /* SubCalcUITests */,
@@ -292,6 +297,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AC2A2D6D1C0E723200196FBF /* README.md in Sources */,
 				AC2A2D321C0E668700196FBF /* ViewController.swift in Sources */,
 				AC2A2D301C0E668700196FBF /* AppDelegate.swift in Sources */,
 			);
