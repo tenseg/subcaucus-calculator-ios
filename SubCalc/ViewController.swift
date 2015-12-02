@@ -45,8 +45,21 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
 //                }
 //            }
 //            return false
-/*        } else */ if request.URL?.scheme == "file" {
+//        } else if request.URL?.scheme == "file" {
+        if request.URL?.scheme == "file" {
             return true
+        } else if request.URL?.scheme == "silly-extension" {
+            let alertController = UIAlertController(title: "Silly Here", message: request.URL?.absoluteString, preferredStyle: .ActionSheet)
+            
+            let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                // do nothing
+            }
+            alertController.addAction(OKAction)
+            
+            self.presentViewController(alertController, animated: true) {
+                // do nothing
+            }
+            return false
         } else {
             UIApplication.sharedApplication().openURL(request.URL!)
             return false

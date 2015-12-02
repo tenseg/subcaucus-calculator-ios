@@ -347,6 +347,7 @@ function SCSaveCaucus() {
 	};
 	SCSetData();
 	SCShowSavedList();
+    window.location.href = "silly-extension://this_is_silly_too";
 }
 
 function SCLoadSavedCaucus(caucusHash) {
