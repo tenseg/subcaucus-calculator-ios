@@ -60,6 +60,21 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
                 // do nothing
             }
             return false
+        } else if request.URL?.scheme == "subcalc-extension" {
+            var incommingString = request.URL?.resourceSpecifier
+            incommingString?.removeRange((incommingString?.startIndex)!..<(incommingString?.startIndex.advancedBy(2))!)
+            let jsonString = incommingString!.stringByRemovingPercentEncoding
+            let alertController = UIAlertController(title: "Subcalc Here", message: jsonString, preferredStyle: .ActionSheet)
+            
+            let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                // do nothing
+            }
+            alertController.addAction(OKAction)
+            
+            self.presentViewController(alertController, animated: true) {
+                // do nothing
+            }
+            return false
         } else {
             UIApplication.sharedApplication().openURL(request.URL!)
             return false

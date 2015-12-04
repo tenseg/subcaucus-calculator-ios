@@ -332,6 +332,7 @@ function SCGetData() {
 // SCSetData() writes our data back to local storage
 function SCSetData() {
 	localStorage.subcalc = JSON.stringify(scData);
+    window.location.href = "subcalc-extension://" + encodeURIComponent(JSON.stringify(scData));
 }
 
 //! Saving and Loading
@@ -347,7 +348,6 @@ function SCSaveCaucus() {
 	};
 	SCSetData();
 	SCShowSavedList();
-    window.location.href = "silly-extension://this_is_silly_too";
 }
 
 function SCLoadSavedCaucus(caucusHash) {
