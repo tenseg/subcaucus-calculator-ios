@@ -325,6 +325,7 @@ function SCGetData() {
 			return;
 		}
 	}
+    // insert check of swift data here, post it into DOM at lauch, then just check here
 	SCNotify("Nothing to remember, assigning defaults.");
 	scData = { "current" : SCNewPrecinct() };
 }
