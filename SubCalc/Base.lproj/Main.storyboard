@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <webView contentMode="scaleToFill" scalesPageToFit="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MGG-Wu-h7h">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <rect key="frame" x="0.0" y="20" width="600" height="580"/>
                                 <animations/>
                                 <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="deviceRGB"/>
                                 <connections>
@@ -29,7 +29,9 @@
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="MGG-Wu-h7h" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="7O2-Rq-zEf"/>
+                            <constraint firstItem="MGG-Wu-h7h" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="20" id="7O2-Rq-zEf">
+                                <variation key="heightClass=compact" constant="0.0"/>
+                            </constraint>
                             <constraint firstAttribute="trailing" secondItem="MGG-Wu-h7h" secondAttribute="trailing" id="ZhN-yZ-Lgq"/>
                             <constraint firstItem="MGG-Wu-h7h" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="mwh-m0-qSd"/>
                             <constraint firstItem="MGG-Wu-h7h" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="o4A-N0-RFQ"/>

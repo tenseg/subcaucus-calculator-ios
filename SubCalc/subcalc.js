@@ -17,7 +17,7 @@
 // scroll the iPhone browser past the toolbar
 addEventListener("load", function() { setTimeout(SCHideURLbar, 0); }, false);
 function SCHideURLbar(){
-	window.scrollTo(0,1);
+	// window.scrollTo(0,1);
 }
 
 SCNotify("Hello world.\n");
