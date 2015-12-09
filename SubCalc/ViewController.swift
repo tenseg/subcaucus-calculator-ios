@@ -59,15 +59,18 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
 //            let jsonData = try NSJSONSerialization.dataWithJSONObject(request.URL?.__somethong__!, options: NSJSONWritingOptions.PrettyPrinted)
 //            jsonData.writeToFile(rootPath + jsonFilename, atomically: true)
             
-            let alertController = UIAlertController(title: "Silly Here", message: request.URL?.absoluteString, preferredStyle: .ActionSheet)
-            
-            let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
-                // do nothing
-            }
-            alertController.addAction(OKAction)
-            
-            self.presentViewController(alertController, animated: true) {
-                // do nothing
+            if #available(iOS 8.0, *) {
+                let alertController = UIAlertController(title: "Silly Here", message: request.URL?.absoluteString, preferredStyle: .ActionSheet)
+                let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                    // do nothing
+                }
+                alertController.addAction(OKAction)
+                
+                self.presentViewController(alertController, animated: true) {
+                    // do nothing
+                }
+            } else {
+                // Fallback on earlier versions
             }
             return false
         } else if request.URL?.scheme == "subcalc-extension" {
@@ -89,15 +92,18 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
             do {
                 try jsonString?.writeToFile(rootPath + jsonFilename, atomically: true, encoding: NSUTF8StringEncoding)
             } catch _ {
-                let alertController = UIAlertController(title: "Subcalc Here", message: jsonString, preferredStyle: .ActionSheet)
-                
-                let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
-                    // do nothing
-                }
-                alertController.addAction(OKAction)
-                
-                self.presentViewController(alertController, animated: true) {
-                    // do nothing
+                if #available(iOS 8.0, *) {
+                    let alertController = UIAlertController(title: "Subcalc Here", message: jsonString, preferredStyle: .ActionSheet)
+                    let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                        // do nothing
+                    }
+                    alertController.addAction(OKAction)
+                    
+                    self.presentViewController(alertController, animated: true) {
+                        // do nothing
+                    }
+                } else {
+                    // Fallback on earlier versions
                 }
             }
             return false
