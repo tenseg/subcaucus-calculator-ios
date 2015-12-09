@@ -75,7 +75,12 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
             if ( incommingString == "//saved-caucuses") {
                 // NSString* returnValue = [self.webView stringByEvaluatingJavaScriptFromString: "someJSFunction()"];
                 let fileContent = try? String(contentsOfFile: rootPath + jsonFilename)
-                let result = webView.stringByEvaluatingJavaScriptFromString("SCGetData("+fileContent!+")");
+                var result = ""
+                if (fileContent != nil) {
+                    result = webView.stringByEvaluatingJavaScriptFromString("SCGetData("+fileContent!+")")!
+                } else {
+                    result = webView.stringByEvaluatingJavaScriptFromString("SCGetData(\"nothing\")")!
+                }
                 print(result)
                 return false
             }

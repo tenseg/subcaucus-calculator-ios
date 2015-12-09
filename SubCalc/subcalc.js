@@ -305,6 +305,7 @@ function SCGetData( data ) {
 	var trySwift = true;
 	scData = false;
 	
+	//SCNotify("Checking data.");
 	// if we got data, we assume it was from swift
 	if ( data ) {
 		trySwift = false; // because we just did
@@ -315,6 +316,7 @@ function SCGetData( data ) {
 		}
 	}
 	
+	//SCNotify("Checking local.");
 	// then we try to find a local data store
 	if ( ! scData && typeof localStorage.subcalc === 'string' ) {
 		SCNotify("Local storage found.");
@@ -326,13 +328,16 @@ function SCGetData( data ) {
 		}
 	}
 	
+	//SCNotify("Checking swift.");
 	// next look for the data to be present in swift
 	if ( ! scData && trySwift ) {
 		// this calls back to SCGetData with data set
 		window.location.href = "subcalc-extension://saved-caucuses";
+		SCNotify("Swift will call back.");
 		return;
 	} 
 	
+	//SCNotify("Checking default.");
 	if ( ! scData ) {
 		// otherwise use default data
 		SCNotify("Nothing to remember, assigning defaults.");
