@@ -1,9 +1,12 @@
 # TODO #
 
 * Add a way to communicate with the webview, maybe as outlined [on StackOverflow](http://stackoverflow.com/questions/15983797/can-a-uiwebview-interact-communicate-with-the-app)
-* Auto-updating web code
 * Icon and splash screen
 * Better about screen?
+
+# NOT YET #
+
+* Auto-updating web code (concern about the security of this and App Store rules)
 
 # DONE #
 

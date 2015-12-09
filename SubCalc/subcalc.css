@@ -209,3 +209,10 @@ div.row.total div.cell.note {
     background-color:#ffe600;
     padding: 0 0.25em;
 }
+
+@media screen and (max-width: 340px) /* targeting iPhone 4 width */ {
+    body, input {
+        font-size: 20px;
+    }
+}
+
