@@ -22,6 +22,8 @@ function SCHideURLbar(){
 
 SCNotify("Hello world.\n");
 
+scSwiftData = ""; // this global is used to pass data from Swift to JavaScript
+
 $(document).ready(SCReady); // tells us to call SCReady() once the doc is ready
 
 //! Utility functions
@@ -129,7 +131,7 @@ function SCNotify(note) { return; // comment out this return to enable debugging
 		scMessage = ""; // scMessage is global
 	}
 	scMessage = scMessage + "\n" + note; 
-	// no messages for now // $("#message").html("<pre>" + scMessage + "</pre>"); 
+	$("#message").html("<pre>" + scMessage + "</pre>"); // no messages for now // 
 }
 
 // SCValidCaucus() checks to see if what we have is really a
@@ -147,21 +149,6 @@ function SCReady() {
 	SCNotify("DOM ready.\n");
 	SCGetData();
 	//console.log(scData);
-	// look for a ?caucus= component of the URI
-	// and treats it as the current caucus
-	var querystring = getQuerystring('caucus');
-	if (querystring) {
-		// more about quirks mode at http://stackoverflow.com/a/17307387/383737
-		try {
-			var caucus = JSON.parse(decodeURIComponent(querystring));
-			if (SCValidCaucus(caucus)) {
-				scData['current'] = caucus;
-			}
-		} catch(err) {
-			// we just won't load it if it did not parse
-		}
-	}
-	SCPopulateTable();	
 }
 
 // SCNewPrecinct() simply returns an empty precinct
@@ -314,20 +301,62 @@ function SCFocusSCRow() {
 */
 
 // SCGetData() checks local storage for past data, if none is found, then default data is created
-function SCGetData() {
-	if (typeof localStorage.subcalc === 'string' ) {
-		SCNotify("Local storage found.");
-		var remembered = JSON.parse(localStorage.subcalc)	
-		if (typeof remembered.current === 'object') {
-			SCNotify("We remember!");
-			scData = remembered; // scData is global
-			SCShowSavedList();
-			return;
+function SCGetData( data ) {
+	var trySwift = true;
+	scData = false;
+	
+	// if we got data, we assume it was from swift
+	if ( data ) {
+		trySwift = false; // because we just did
+		SCNotify("Got Data\n"+JSON.stringify(data, undefined, 2));
+		if (typeof data.current === 'object') {
+			SCNotify("We remembered from incomming data!");
+			scData = data; // scData is global
 		}
 	}
-    // insert check of swift data here, post it into DOM at lauch, then just check here
-	SCNotify("Nothing to remember, assigning defaults.");
-	scData = { "current" : SCNewPrecinct() };
+	
+	// then we try to find a local data store
+	if ( ! scData && typeof localStorage.subcalc === 'string' ) {
+		SCNotify("Local storage found.");
+		var remembered = JSON.parse(localStorage.subcalc)	
+		SCNotify(JSON.stringify(remembered, undefined, 2));
+		if (typeof remembered.current === 'object') {
+			SCNotify("We remember from local storage!");
+			scData = remembered; // scData is global
+		}
+	}
+	
+	// next look for the data to be present in swift
+	if ( ! scData && trySwift ) {
+		// this calls back to SCGetData with data set
+		window.location.href = "subcalc-extension://saved-caucuses";
+		return;
+	} 
+	
+	if ( ! scData ) {
+		// otherwise use default data
+		SCNotify("Nothing to remember, assigning defaults.");
+		scData = { "current" : SCNewPrecinct() };
+	}
+	
+	// look for a ?caucus= component of the URI
+	// and treats it as the current caucus no matter what
+	var querystring = getQuerystring('caucus');
+	if (querystring) {
+		// more about quirks mode at http://stackoverflow.com/a/17307387/383737
+		try {
+			var caucus = JSON.parse(decodeURIComponent(querystring));
+			if (SCValidCaucus(caucus)) {
+				scData['current'] = caucus;
+			}
+		} catch(err) {
+			// we just won't load it if it did not parse
+		}
+	}
+	
+	SCShowSavedList();
+	SCPopulateTable();
+	return;
 }
 
 // SCSetData() writes our data back to local storage
