@@ -21,6 +21,8 @@
 		AC2A2D681C0E66C100196FBF /* moment.min.js in Resources */ = {isa = PBXBuildFile; fileRef = AC2A2D611C0E66C100196FBF /* moment.min.js */; };
 		AC2A2D691C0E66C100196FBF /* subcalc.css in Resources */ = {isa = PBXBuildFile; fileRef = AC2A2D621C0E66C100196FBF /* subcalc.css */; };
 		AC2A2D6A1C0E66C100196FBF /* subcalc.js in Resources */ = {isa = PBXBuildFile; fileRef = AC2A2D631C0E66C100196FBF /* subcalc.js */; };
+		ACF337A21C1A3A3B009896DD /* red-320x568.png in Resources */ = {isa = PBXBuildFile; fileRef = ACF337A11C1A3A3B009896DD /* red-320x568.png */; };
+		ACF337A41C1A3AE3009896DD /* red-568x320.png in Resources */ = {isa = PBXBuildFile; fileRef = ACF337A31C1A3AE3009896DD /* red-568x320.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +65,8 @@
 		AC2A2D631C0E66C100196FBF /* subcalc.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = subcalc.js; sourceTree = "<group>"; };
 		AC2A2D6C1C0E723200196FBF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		AC2A2D6E1C0E72C600196FBF /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
+		ACF337A11C1A3A3B009896DD /* red-320x568.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-320x568.png"; sourceTree = "<group>"; };
+		ACF337A31C1A3AE3009896DD /* red-568x320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-568x320.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +119,8 @@
 		AC2A2D2E1C0E668700196FBF /* SubCalc */ = {
 			isa = PBXGroup;
 			children = (
+				ACF337A11C1A3A3B009896DD /* red-320x568.png */,
+				ACF337A31C1A3AE3009896DD /* red-568x320.png */,
 				AC2A2D2F1C0E668700196FBF /* AppDelegate.swift */,
 				AC2A2D311C0E668700196FBF /* ViewController.swift */,
 				AC2A2D331C0E668700196FBF /* Main.storyboard */,
@@ -275,10 +281,12 @@
 				AC2A2D651C0E66C100196FBF /* index.html in Resources */,
 				AC2A2D681C0E66C100196FBF /* moment.min.js in Resources */,
 				AC2A2D3A1C0E668700196FBF /* LaunchScreen.storyboard in Resources */,
+				ACF337A21C1A3A3B009896DD /* red-320x568.png in Resources */,
 				AC2A2D671C0E66C100196FBF /* moment.js in Resources */,
 				AC2A2D371C0E668700196FBF /* Assets.xcassets in Resources */,
 				AC2A2D351C0E668700196FBF /* Main.storyboard in Resources */,
 				AC2A2D6A1C0E66C100196FBF /* subcalc.js in Resources */,
+				ACF337A41C1A3AE3009896DD /* red-568x320.png in Resources */,
 				AC2A2D641C0E66C100196FBF /* cache.manifest in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
