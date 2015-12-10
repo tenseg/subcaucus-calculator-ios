@@ -3,7 +3,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -17,23 +16,7 @@
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="subcalc-launch-nowords.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="vBL-Lq-GXM">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="vBL-Lq-GXM" secondAttribute="height" multiplier="1:1" id="cSb-aT-ZBr"/>
-                                </constraints>
-                            </imageView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="vBL-Lq-GXM" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" priority="900" id="2WF-ES-iCX"/>
-                            <constraint firstItem="vBL-Lq-GXM" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" priority="900" id="7i6-cg-80f"/>
-                            <constraint firstItem="vBL-Lq-GXM" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Cqp-2Q-GGJ"/>
-                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="vBL-Lq-GXM" secondAttribute="bottom" priority="900" id="JUQ-kA-a3g"/>
-                            <constraint firstItem="vBL-Lq-GXM" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="Utq-5K-0cA"/>
-                            <constraint firstAttribute="trailing" secondItem="vBL-Lq-GXM" secondAttribute="trailing" priority="900" id="uG9-DD-HrW"/>
-                        </constraints>
+                        <color key="backgroundColor" red="0.5607843137254902" green="0.090196078431372548" blue="0.19215686274509805" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="600" height="600"/>
@@ -43,7 +26,4 @@
             <point key="canvasLocation" x="53" y="375"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="subcalc-launch-nowords.jpg" width="2048" height="2048"/>
-    </resources>
 </document>

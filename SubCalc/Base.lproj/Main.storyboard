@@ -25,7 +25,7 @@
                                 </connections>
                             </webView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.5607843137254902" green="0.090196078431372548" blue="0.19215686274509805" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="MGG-Wu-h7h" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="20" id="7O2-Rq-zEf">
                                 <variation key="heightClass=compact" constant="0.0"/>

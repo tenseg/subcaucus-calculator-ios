@@ -21,7 +21,6 @@
 		AC2A2D681C0E66C100196FBF /* moment.min.js in Resources */ = {isa = PBXBuildFile; fileRef = AC2A2D611C0E66C100196FBF /* moment.min.js */; };
 		AC2A2D691C0E66C100196FBF /* subcalc.css in Resources */ = {isa = PBXBuildFile; fileRef = AC2A2D621C0E66C100196FBF /* subcalc.css */; };
 		AC2A2D6A1C0E66C100196FBF /* subcalc.js in Resources */ = {isa = PBXBuildFile; fileRef = AC2A2D631C0E66C100196FBF /* subcalc.js */; };
-		AC74F2991C18DBC000773935 /* subcalc-launch-nowords.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AC74F2981C18DBC000773935 /* subcalc-launch-nowords.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,7 +63,6 @@
 		AC2A2D631C0E66C100196FBF /* subcalc.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = subcalc.js; sourceTree = "<group>"; };
 		AC2A2D6C1C0E723200196FBF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		AC2A2D6E1C0E72C600196FBF /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
-		AC74F2981C18DBC000773935 /* subcalc-launch-nowords.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "subcalc-launch-nowords.jpg"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,7 +115,6 @@
 		AC2A2D2E1C0E668700196FBF /* SubCalc */ = {
 			isa = PBXGroup;
 			children = (
-				AC74F2981C18DBC000773935 /* subcalc-launch-nowords.jpg */,
 				AC2A2D2F1C0E668700196FBF /* AppDelegate.swift */,
 				AC2A2D311C0E668700196FBF /* ViewController.swift */,
 				AC2A2D331C0E668700196FBF /* Main.storyboard */,
@@ -281,7 +278,6 @@
 				AC2A2D671C0E66C100196FBF /* moment.js in Resources */,
 				AC2A2D371C0E668700196FBF /* Assets.xcassets in Resources */,
 				AC2A2D351C0E668700196FBF /* Main.storyboard in Resources */,
-				AC74F2991C18DBC000773935 /* subcalc-launch-nowords.jpg in Resources */,
 				AC2A2D6A1C0E66C100196FBF /* subcalc.js in Resources */,
 				AC2A2D641C0E66C100196FBF /* cache.manifest in Resources */,
 			);
@@ -417,7 +413,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -457,7 +453,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
