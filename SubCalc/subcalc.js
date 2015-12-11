@@ -10,19 +10,28 @@
 // created for SD64 DFL by Eric Celeste in January 2010
 // 20150131 (efc) revised to add storage, email, and cleaner design
 // 20150202 (efc) implemented a consistent cross-platform sort, allow for reseeding
+// 20151210 (efc) fixing blurring bug (and many others)
+// 20151211 (efc) unify the web and app versions of the script
 
-// variables with "SC" at the front are SubCalc variables
+"use strict"
+
+// variables with "SC" at the front are SubCalc global variables
+
+var scDebug = true; // should be false when shipping
+var scApp = false; // should be true in the version inside our iPhone app
+var scMessage;
+var scData;
+var scNumberOfSubcaucuses;
+var SCRandomNumberGenerator;
 
 //! Handle mobile responsiveness
 // scroll the iPhone browser past the toolbar
-addEventListener("load", function() { setTimeout(SCHideURLbar, 0); }, false);
+if ( ! scApp ) addEventListener("load", function() { setTimeout(SCHideURLbar, 0); }, false);
 function SCHideURLbar(){
-	// window.scrollTo(0,1);
+	window.scrollTo(0,1);
 }
 
 SCNotify("Hello world.\n");
-
-scSwiftData = ""; // this global is used to pass data from Swift to JavaScript
 
 $(document).ready(SCReady); // tells us to call SCReady() once the doc is ready
 
@@ -125,13 +134,14 @@ function trim(s) {
 }
 
 // SCNotify( string ) appends the string to a message for later display
-function SCNotify(note) { return; // comment out this return to enable debugging.
+function SCNotify(note) {
+	if ( ! scDebug ) return; // set scDebug to true above to debug
 	console.log(note);
 	if (typeof scMessage === 'undefined') {
 		scMessage = ""; // scMessage is global
 	}
-	scMessage = scMessage + "\n" + note; 
-	$("#message").html("<pre>" + scMessage + "</pre>"); // no messages for now // 
+	scMessage = scMessage + "\n" + note;
+	$("#message").html("<pre>" + scMessage + "</pre>"); 
 }
 
 // SCValidCaucus() checks to see if what we have is really a
@@ -168,30 +178,43 @@ function SCReseed() {
 	SCPopulateTable();
 }
 
+// SCEmptyNote() is just the HTML for an empty note in a row
+function SCEmptyNote( row ) {
+	return "<span id='scrow-" + row + "-delegates' class='note'></span>";
+}
+
+function SCInitializeViabilityStatement() {
+	$("div#viability").html("<p>To generate an initial viability number, just enter the number of delegates you are allowed for the whole caucus, and put a count of all the people in the room in the first subcaucus.</p>");
+}
+
 // SCPopulateTable() builds the subcaucus table and makes sure the right scripts are attached to its elements
 function SCPopulateTable() {
 	SCNotify("Populating table");
+	// find out who has focus and remember so it can be reset
+	var hasFocus = document.activeElement;
+	
 	var precinct = scData['current']['precinct'];
 	var allowed = scData['current']['allowed'];
 	var scNames = scData['current']['names'];
 	var scCounts = scData['current']['members'];
 	
-	$("#precinct").val(precinct);
-	$("#delegatesallowed").val(allowed);
+	scNumberOfSubcaucuses = Object.keys(scNames).length;
 	
-	numberOfSubcaucuses = 0;
-	for (var i in scNames) {
-		numberOfSubcaucuses++;
+	$("#precinct").val(precinct);
+	if ( allowed > 0 ) {
+		$("#delegatesallowed").val(allowed);
+	} else {
+		$("#delegatesallowed").val("");
 	}
-
+	
 	var codeForTable = "<div class='row header'><div class='cell number'></div><div class='cell name'>Subcaucus name</div><div class='cell count'>Count</div><div class='cell note'><span id='scheader-note'></span></div></div>";
-	for (i=1; i <= numberOfSubcaucuses; i++) {
+	for (var i=1; i <= scNumberOfSubcaucuses; i++) {
 		var count = scCounts[i] ? scCounts[i] : ""; // replace 0 with empty string
 		codeForTable += "<div id='scrow-"+i+"' class='row'>";
 		codeForTable += "<div class='cell number'>"+i+"</div>";
-		codeForTable += "<div class='cell name'><input id='scrow-"+i+"-name' class='scrow scrowname' type='text' tabindex='"+(numberOfSubcaucuses+i+2)+"' value='"+scNames[i]+"' placeholder='Subcaucus "+i+"' autocapitalize='on' /></div>";
+		codeForTable += "<div class='cell name'><input id='scrow-"+i+"-name' class='scrow scrowname' type='text' tabindex='"+(scNumberOfSubcaucuses+i+2)+"' value='"+scNames[i]+"' placeholder='Subcaucus "+i+"' autocapitalize='on' /></div>";
 		codeForTable += "<div class='cell count'><input id='scrow-"+i+"-count' class='scrow scrowcount numeric' type='tel' tabindex='"+(i+2)+"' value='"+count+"' placeholder='&mdash;' /></div>";
-		codeForTable += "<div class='cell note' id='scrow-"+i+"-delcell'><span id='scrow-"+i+"-delegates' class='note'></span></div>";
+		codeForTable += "<div class='cell note' id='scrow-"+i+"-delcell'>" + SCEmptyNote(i) + "</div>";
 		codeForTable += "<div class='cell popup' id='scrow-"+i+"-popcell'><span id='scrow-"+i+"-popup' class='popup'></span></div>";
 		codeForTable += "</div>";
 	}
@@ -200,13 +223,14 @@ function SCPopulateTable() {
 	
 	$("div#subcaucuses").html(codeForTable); // insert the code
 	
-	$("div#viability").html("<p>To generate an initial viability number, just enter the number of delegates you are allowed for the caucus, and put a count of all the people in the room in the first subcaucus.</p>");
+	SCInitializeViabilityStatement();
 	
 	// modify the behavior of some of the newly inserted elements
 	$('a#save').click( function() { SCSaveCaucus(); return false; } );
 	$('a#new').click( function() { SCNewCaucus(); return false; } );
 	$('a#reseed').click( function() { SCReseed(); return false; } );
 	$("input").blur(SCBlur); // every input element will call SCBlur() when completed
+	$("input.scrowcount").blur(SCBlurCount); // every count element will call a special blur
 	$("input.scrow").focus(SCFocusSCRow); // every scrow input element will call SCFocus() when you enter it
 	$("input.numeric").live('click', function() {
     	$(this).select();
@@ -244,51 +268,83 @@ function SCPopulateTable() {
 		$('#when').html("");
 	}
 	
+	if ( $(hasFocus).is("input") ) {
+		$(hasFocus).focus(); // return focus to this id
+	}
+	
 	// calculate delegations
 	SCDistributeDelegates();
-}
-
-// SCClearNotes() removes all the descriptive notes and colors
-function SCClearNotes() {
-	// $(".note").html(""); // clear all the notes before we check
-	$(".red").removeClass("red"); // clear all the red highlights
-	$(".green").removeClass("green"); // clear all the green highlights
 }
 
 //! Interactions
 
 // SCBlur() is invoked whenever any input field loses focus
 // check the value entered and then run calculations
-function SCBlur() {
-	SCNotify("\nBlur " + this.id + " " + this.value + ".");
-	SCClearNotes();
-	$(this).val(trim(this.value));
-	if ($(this).hasClass("numeric")) { // validate the eligible item
+function SCBlurInCommon( element ) {
+	SCNotify("\nBlurInCommon " + element.id + " " + element.value + ".");
+	var value = trim(element.value);
+	$(element).val(value);
+	if ($(element).hasClass("numeric")) { // validate the eligible item
 		SCNotify("Numeric. ");
-		if (! /^\d*$/.test(this.value)) { // is it not numeric or blank?
+		if (! /^\d*$/.test(value)) { // is it not numeric or blank?
 			SCNotify("Bad. ");
-			$(this).focus();
-			$(this).addClass("red");
-			$("#"+this.id+"-note").html(" just a number, please");
-			$("#"+this.id+"-note").addClass("red");
+			$(element).val("");
+			$(element).addClass("red");
+			$("#"+element.id+"-note").html(" just a number, please");
+			$("#"+element.id+"-note").addClass("red");
 			return;
 		} else {
 			SCNotify("Good. ");
 		}
 	}
+
+	// remember everything
+	// this could be a bunch of if statements,
+	// but I'm not sure that would speed anything up
+	scData["current"]["precinct"] = $("#precinct").val();
+	scData["current"]["allowed"] = parseInt($("#delegatesallowed").val());
+	var members = new Object; // number of members in each subcaucus
+	var names = new Object; // the name of each subcaucus
+	for (var i=1; i <= scNumberOfSubcaucuses; i++) {
+		names[i] = $("#scrow-"+i+"-name").val();
+		members[i] = parseInt($("#scrow-"+i+"-count").val());
+		if (isNaN(members[i])) members[i] = 0;
+	}
+	scData["current"]["names"] = names;
+	scData["current"]["members"] = members;
+	SCSetData();
+	
 	SCDistributeDelegates();
+}
+
+
+function SCBlur() {
+	SCNotify("\nBlur " + this.id + " " + this.value + ".");
+	SCBlurInCommon( this );
+}
+
+function SCBlurCount() {
+	SCNotify("\nBluring a count " + this.id + " " + this.value + ".");
+	if ( this.value == 0 || isNaN( this.value ) ) {
+		// <div class='cell note' id='scrow-"+i+"-delcell'><span id='scrow-"+i+"-delegates' class='note'></span></div>
+		// id is of the form scrow-2-count, we need the number from the middle
+		var idArray = this.id.split("-");
+		var row = idArray[1];
+		$(this).val("");
+	}
+	SCBlurInCommon( this );
 }
 
 // SCFocusSCRow() should only get called when the user is entering
 // one of the subcaucus row fields (the name or the count)
 // here we make sure there is always another row to tab to
 function SCFocusSCRow() {
+	SCNotify("\nFocus " + this.id + " " + this.value + ".");
 	var idArray = this.id.split("-");
 	var row = idArray[1];
-	if (row == numberOfSubcaucuses) { // if this is the last row
-		newNumber = numberOfSubcaucuses + 1;
-		scData['current']['names'][newNumber] = '';
-		scData['current']['members'][newNumber] = '';
+	if (row == scNumberOfSubcaucuses) { // if this is the last row
+		scData['current']['names'][scNumberOfSubcaucuses+1] = '';
+		scData['current']['members'][scNumberOfSubcaucuses+1] = '';
 		SCPopulateTable();
 		$("#"+this.id).focus(); // return focus to this id, which will no longer be last row
 	}
@@ -302,7 +358,7 @@ function SCFocusSCRow() {
 
 // SCGetData() checks local storage for past data, if none is found, then default data is created
 function SCGetData( data ) {
-	var trySwift = true;
+	var trySwift = scApp; // only try swift if we are in the iPhone app
 	scData = false;
 	
 	//SCNotify("Checking data.");
@@ -366,8 +422,11 @@ function SCGetData( data ) {
 
 // SCSetData() writes our data back to local storage
 function SCSetData() {
+	SCNotify("Setting: " + JSON.stringify(scData, undefined, 2));
 	localStorage.subcalc = JSON.stringify(scData);
-    window.location.href = "subcalc-extension://" + encodeURIComponent(JSON.stringify(scData));
+	if ( scApp ) {
+    	window.location.href = "subcalc-extension://" + encodeURIComponent(JSON.stringify(scData));
+    }
 }
 
 //! Saving and Loading
@@ -378,7 +437,7 @@ function SCSaveCaucus() {
 		scData['saved'] = new Object;
 	}
 	scData['saved'][scData['current']['precinct'].hashCode()] = {
-		'caucus': scData['current'],
+		'caucus': $.extend( {}, scData['current'] ), // using jQuery to copy the object
 		'saved': Date.now()
 	};
 	SCSetData();
@@ -388,8 +447,8 @@ function SCSaveCaucus() {
 function SCLoadSavedCaucus(caucusHash) {
 	if ( scData['saved'][caucusHash]) {
 		SCNotify("Loading caucus "+caucusHash);
-		window.scrollTo(0,0);
-		scData['current'] = scData['saved'][caucusHash]['caucus'];
+		if ( ! scApp ) window.scrollTo(0,0);
+		scData['current'] = $.extend( {}, scData['saved'][caucusHash]['caucus'] ); // using jQuery to copy the object
 		SCPopulateTable();
 	} else {
 		SCNotify("Could not find caucus "+caucusHash);
@@ -400,9 +459,9 @@ function SCShowSavedList() {
 	if (scData['saved']) {
 		var list = '<ul>';
 		for (var h in scData['saved']) { // step through the hashes for each saved caucus
-			saved = scData['saved'][h];
-			caucus = scData['saved'][h]['caucus'];
-			then = moment(scData['saved'][h]['saved']).calendar();
+			var saved = scData['saved'][h];
+			var caucus = scData['saved'][h]['caucus'];
+			var then = moment(scData['saved'][h]['saved']).calendar();
 			list += '<a href="#" onclick="SCLoadSavedCaucus('+h+')"><li>'+caucus['precinct']+' (saved '+then+')</li></a>';
 		}
 		list += '</ul>';
@@ -447,7 +506,7 @@ function SCRemainderRankDescendingHandler(thisObject,thatObject) {
 	}
 	/*	A special note about coin flips...
 		
-		In manual subcaucus distribution we use a coin flip to determin which of a set of caucuses
+		In manual subcaucus distribution we use a coin flip to determine which of a set of caucuses
 		should be priority in the case of a tie. But this would be a bit awkward in a script like
 		this, so we essentially pre-flip the coin by assigning a "remainder rank" to each caucus.
 		This way we can later just step through the rank until we run out of delegates.
@@ -494,11 +553,38 @@ function SCSortRemainderRanks(a)
 */
 function SCDistributeDelegates() {
 	SCNotify("Distributing delegates");
+	
+	// first clear out all the delegate information
+	for (var i=1; i <= scNumberOfSubcaucuses; i++) {
+		$("#scrow-" + i + "-delcell").html(
+			SCEmptyNote( i )
+		);
+	}
+	$(".red").removeClass("red"); // clear all the red highlights
+	$(".green").removeClass("green"); // clear all the green highlights
+	$("#scviabletotal").html("");
+	SCInitializeViabilityStatement();
+	
+	// prepare local copies of global info (just to make variable names shorter)
+	var allowed = scData["current"]["allowed"];
+	var members = scData["current"]["members"]; // number of members in each subcaucus
+	var names = scData["current"]["names"]; // number of members in each subcaucus
+	
+	// "Step No. 1: Add up the total number of members of all the subcaucuses." (room)
+	var room = 0;
+	for (var i=1; i <= scNumberOfSubcaucuses; i++) {
+		room += members[i];
+	}
+	if (room > 0) {
+		$("#sctotal").html(room);
+		SCNotify(room + " counted in the room.");
+	}
+
 	// Step No. 0
 	// make sure we know the "number of delegates to be elected" (allowed)
-	var allowed = parseInt($("#delegatesallowed").val());
-	if (isNaN(allowed)) {
-		$("#delegatesallowed").focus();
+	if ( allowed <= 0 || isNaN( allowed ) ) {
+		if ( ! scApp ) window.scrollTo(0,0);
+		// $("#delegatesallowed").focus();
 		$("#delegatesallowed").addClass("red");
 		$("#delegatesallowed-note").html(" enter the number allowed");
 		$("#delegatesallowed-note").addClass("red");
@@ -506,20 +592,7 @@ function SCDistributeDelegates() {
 		return;
 	}
 	
-	// "Step No. 1: Add up the total number of members of all the subcaucuses." (room)
-	var room = 0;
-	var members = new Object; // number of members in each subcaucus
-	var names = new Object; // the name of each subcaucus
-	for (var i=1; i <= numberOfSubcaucuses; i++) {
-		names[i] = $("#scrow-"+i+"-name").val();
-		members[i] = parseInt($("#scrow-"+i+"-count").val());
-		if (isNaN(members[i])) members[i] = 0;
-		room += members[i];
-	}
-	if (room > 0) {
-		$("#sctotal").html(room);
-		SCNotify(room + " counted in the room.");
-	} else {
+	if (room == 0) {
 		SCNotify("Nobody counted in the room yet.");
 		return; // nothing else to do until some people are in the room
 	}
@@ -545,7 +618,7 @@ function SCDistributeDelegates() {
 	// and calculate the total number viable people in the room (viableRoom)
 	var viabilityScore = new Object; // the raw score for the delegation
 	var viableRoom = 0; // the total number of people in viable subcaucuses
-	for (var i=1; i <= numberOfSubcaucuses; i++) {
+	for (var i=1; i <= scNumberOfSubcaucuses; i++) {
 		viabilityScore[i] = members[i] / viability;
 		if (viabilityScore[i] >= 1) {
 			viableRoom += members[i];
@@ -572,7 +645,7 @@ function SCDistributeDelegates() {
 	var remainder = new Object; // the remainder for use in allocating leftover delegates
 	var remainderRank = new Array(); // will become a rank-order list of the remainders
 	var delegateScore = new Object; // the raw score for the delegation
-	for (var i=1; i <= numberOfSubcaucuses; i++) {
+	for (var i=1; i <= scNumberOfSubcaucuses; i++) {
 		if (viabilityScore[i] >= 1) { // this is a viable subcaucus
 			delegateScore[i] = members[i] / delegateViability;
 			delegation[i] = Math.floor(delegateScore[i]);
@@ -608,7 +681,7 @@ function SCDistributeDelegates() {
 	
 	// post statements about the delegations
 	totalDelegation = 0; // start a fresh count, now including remainders
-	for (var i=1; i <= numberOfSubcaucuses; i++) {
+	for (var i=1; i <= scNumberOfSubcaucuses; i++) {
 		if (viabilityScore[i] >= 1) {
 			if (viability > 1) {
 				// var s = delegation[i] > 1 ? "s" : ""; // deal with plural
@@ -647,16 +720,7 @@ function SCDistributeDelegates() {
 	} else {
 		$("#scheader-note").html("Dels");
 	}
-	
-	// update the caucus dictionary for saving state
-	
-	scData["current"]["precinct"] = $("#precinct").val();
-	scData["current"]["allowed"] = allowed;
-	scData["current"]["names"] = names;
-	scData["current"]["members"] = members;
-	
-	SCSetData();
-	
+		
 	var email = "Caucus";
 	email += scData['current']['precinct'] ? ' "'+scData['current']['precinct']+'" ' : " ";
 	email += "is allowed";
@@ -674,7 +738,7 @@ function SCDistributeDelegates() {
 			email += "Because some people are counted in subcaucuses which are not viable, each delegate requires only "+delegateViability.toFixed(3)+" people in a viable subcaucus.\n\n";
 		}
 		email += "These are the individual subcaucuses:\n\n";
-		for (var i=1; i <= numberOfSubcaucuses; i++) {
+		for (var i=1; i <= scNumberOfSubcaucuses; i++) {
 			if ( names[i] || members[i] ) {
 				email += names[i] ? names[i]+': ' : 'Subcaucus '+i+': ';
 				email += members[i] + ( members[i] == 1 ? " person, " : " people, ");
@@ -705,4 +769,5 @@ function SCDistributeDelegates() {
 	var mailto = "mailto:?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(email);
 	
 	$('#email').attr('href', mailto);
+	
 }
