@@ -27,7 +27,6 @@
     {
       "orientation" : "portrait",
       "idiom" : "iphone",
-      "filename" : "red-320x568.png",
       "extent" : "full-screen",
       "minimum-system-version" : "7.0",
       "scale" : "2x"
