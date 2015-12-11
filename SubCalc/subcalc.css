@@ -12,14 +12,14 @@ body {
     min-width: 300px;
     max-width: 600px;
     margin: auto;
-	background-color: #f9edcb;
+    background-color: #f9edcb;
 }
 
 p {
-	margin: 15px 10px;
+    margin: 15px 10px;
 }
 
-p.credit, 
+p.credit,
 h1 {
     font-size:12px;
     padding:10px;
@@ -29,136 +29,138 @@ h1 {
 }
 
 p.credit {
-	text-align: right;
+    text-align: right;
 }
 
 p.credit a {
-	color: white;
+    color: white;
 }
 
 a {
-	text-decoration: none;
+    text-decoration: none;
 }
 
 input {
-	font-size: 24px;
-	padding: 0;
-	border:none;
-	border-bottom: 1px solid #AAA
+    font-size: 24px;
+    padding: 0;
+    -webkit-appearance: none;
+    -webkit-border-radius: 0;
+    border:none;
+    border-bottom: 1px solid #AAA
 }
 
 div#caucusinfo {
-	padding: 0;
-	width: 100%;
-	background-color: #daddff;
+    padding: 0;
+    width: 100%;
+    background-color: #daddff;
 }
 
 div#caucusinfo input {
-	display: block;
-	margin: 0;
-	width: 96%;
-	padding: 2%;
-	font-weight: bold;
-	background-color: transparent;
+    display: block;
+    margin: 0;
+    width: 96%;
+    padding: 2%;
+    font-weight: bold;
+    background-color: transparent;
 }
 
 div#caucusinfo span.note {
-	display: none;
+    display: none;
 }
 
 div#subcaucuses {
-	margin-top: 20px;
-	background-color: white;
+    margin-top: 20px;
+    background-color: white;
 }
 
 div.row {
-	display: block;
-	position: relative;
-	border:none;
-	border-bottom: 1px solid #AAA;
-	width: 96%;
-	height: 40px;
-	padding: 10px 2% 0 2%;
-	/* background-color: #F5F5FF; */
-	overflow: hidden;
+    display: block;
+    position: relative;
+    border:none;
+    border-bottom: 1px solid #AAA;
+    width: 96%;
+    height: 40px;
+    padding: 10px 2% 0 2%;
+    /* background-color: #F5F5FF; */
+    overflow: hidden;
 }
 
 div.row.header {
-	background-color: black;
-	color: white;
-	font-size: 14px;
-	height: 24px;
-	border: none;
+    background-color: black;
+    color: white;
+    font-size: 14px;
+    height: 24px;
+    border: none;
 }
 
 div.cell {
-	display: inline-block;
-	margin: 0;
-	padding: 0;
-	vertical-align: top;
-	overflow: hidden;
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    vertical-align: top;
+    overflow: hidden;
 }
 
 div.cell.number {
-	display: none;
+    display: none;
 }
 
 div.cell.name {
-	width: 70%;
+    width: 70%;
 }
 
 div.cell.count {
-	width: 15%;
-	text-align: right;
-	cursor: pointer;
+    width: 15%;
+    text-align: right;
+    cursor: pointer;
 }
 
 div.cell.note {
-	width: 15%;
-	overflow: none;
-	text-align: right;
-	cursor: pointer;
+    width: 15%;
+    overflow: none;
+    text-align: right;
+    cursor: pointer;
 }
 
 div.cell.popup {
-	display: none;
-	position: absolute;
-	top: 0;
-	right: 0;
-	background-color: rgba(245, 245, 43, 0.93);
-	width: 70%;
-	height: 100%;
-	padding: 10px;
-	text-align: right;
-	cursor: pointer;
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: rgba(245, 245, 43, 0.93);
+    width: 70%;
+    height: 100%;
+    padding: 10px;
+    text-align: right;
+    cursor: pointer;
 }
 
 div.cell.popup.green {
-	background-color: rgba(100, 251, 100, 0.87);
-	color: black;
+    background-color: rgba(100, 251, 100, 0.87);
+    color: black;
 }
 
 div.cell.popup.red {
-	background-color: rgba(251, 100, 100, 0.87);
-	color: black;
+    background-color: rgba(251, 100, 100, 0.87);
+    color: black;
 }
 
 div.cell.popup span.fineprint {
-	font-size: 80%;
+    font-size: 80%;
 }
 
 div.cell input {
-	border: none;
-	margin: 0;
-	width: 100%;
+    border: none;
+    margin: 0;
+    width: 100%;
 }
 
 div.row.total {
-	background-color: #CCCCCC;
+    background-color: #CCCCCC;
 }
 
 div.row.total div.cell.note {
-	visibility: hidden;
+    visibility: hidden;
 }
 
 .red {
@@ -174,8 +176,10 @@ div.row.total div.cell.note {
     color:green
 }
 
-.fineprint {
-    font-size:50%
+.fineprint,
+div#savedlist {
+    font-size:60%;
+    line-height: 1.5em;
 }
 
 .largeprint {
@@ -208,10 +212,6 @@ div.row.total div.cell.note {
 #wholeviability {
     background-color:#ffe600;
     padding: 0 0.25em;
-}
-
-pre {
-    font-size: 12px;
 }
 
 @media screen and (max-width: 340px) /* targeting iPhone 4 width */ {
