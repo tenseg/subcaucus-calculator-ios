@@ -17,8 +17,8 @@
 
 // variables with "SC" at the front are SubCalc global variables
 
-var scDebug = true; // should be false when shipping
-var scApp = false; // should be true in the version inside our iPhone app
+var scDebug = false; // should be false when shipping
+var scApp = true; // should be true in the version inside our iPhone app
 var scMessage;
 var scData;
 var scNumberOfSubcaucuses;
