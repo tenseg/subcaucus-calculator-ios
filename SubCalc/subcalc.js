@@ -5,7 +5,7 @@
 // this script handles the caucus calculations, storage, and emailing
 //
 // great hints for iOS web apps at http://matt.might.net/articles/how-to-native-iphone-ipad-apps-in-javascript/
-// generate icons and splashscreens at http://ticons.fokkezb.nl
+// generate icons and splashscreens at http://ticons.fokkezb.nl 
 //
 // created for SD64 DFL by Eric Celeste in January 2010
 // 20150131 (efc) revised to add storage, email, and cleaner design
