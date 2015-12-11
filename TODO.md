@@ -1,6 +1,7 @@
 # TODO #
 
 * Better about screen?
+* Add app version, build number, iOS version, and device type to the support email
 
 # NOT YET #
 
