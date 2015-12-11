@@ -121,14 +121,10 @@
 		AC2A2D2E1C0E668700196FBF /* SubCalc */ = {
 			isa = PBXGroup;
 			children = (
-				ACF337A11C1A3A3B009896DD /* red-320x568.png */,
-				ACF337A31C1A3AE3009896DD /* red-568x320.png */,
-				AC2A2D2F1C0E668700196FBF /* AppDelegate.swift */,
-				AC2A2D311C0E668700196FBF /* ViewController.swift */,
-				AC2A2D331C0E668700196FBF /* Main.storyboard */,
-				AC2A2D361C0E668700196FBF /* Assets.xcassets */,
-				AC2A2D381C0E668700196FBF /* LaunchScreen.storyboard */,
-				AC2A2D3B1C0E668700196FBF /* Info.plist */,
+				FAE7BBC31C1A439600BAA676 /* Assets */,
+				FAE7BBC21C1A438B00BAA676 /* Code */,
+				FAE7BBC41C1A43B400BAA676 /* Interfaces */,
+				FAE7BBC51C1A43D000BAA676 /* Plists */,
 				AC2A2D6B1C0E66CD00196FBF /* WebBits */,
 			);
 			path = SubCalc;
@@ -164,6 +160,42 @@
 				AC2A2D631C0E66C100196FBF /* subcalc.js */,
 			);
 			name = WebBits;
+			sourceTree = "<group>";
+		};
+		FAE7BBC21C1A438B00BAA676 /* Code */ = {
+			isa = PBXGroup;
+			children = (
+				AC2A2D2F1C0E668700196FBF /* AppDelegate.swift */,
+				AC2A2D311C0E668700196FBF /* ViewController.swift */,
+			);
+			name = Code;
+			sourceTree = "<group>";
+		};
+		FAE7BBC31C1A439600BAA676 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				AC2A2D361C0E668700196FBF /* Assets.xcassets */,
+				ACF337A31C1A3AE3009896DD /* red-568x320.png */,
+				ACF337A11C1A3A3B009896DD /* red-320x568.png */,
+			);
+			name = Assets;
+			sourceTree = "<group>";
+		};
+		FAE7BBC41C1A43B400BAA676 /* Interfaces */ = {
+			isa = PBXGroup;
+			children = (
+				AC2A2D381C0E668700196FBF /* LaunchScreen.storyboard */,
+				AC2A2D331C0E668700196FBF /* Main.storyboard */,
+			);
+			name = Interfaces;
+			sourceTree = "<group>";
+		};
+		FAE7BBC51C1A43D000BAA676 /* Plists */ = {
+			isa = PBXGroup;
+			children = (
+				AC2A2D3B1C0E668700196FBF /* Info.plist */,
+			);
+			name = Plists;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -321,7 +353,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/bash\n#  Run this script after the 'Copy Bundle Resources' build phase\n#  It will compute the git commit number and write that to the CFBundleVersion of the target's built Info.plist\n#  From http://tgoode.com/2014/06/05/sensible-way-increment-bundle-version-cfbundleversion-xcode/#code\n\nbranch=${1:-'master'}\nbuildNumber=$(expr $(git rev-list $branch --count) - $(git rev-list HEAD..$branch --count))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}.dSYM/Contents/Info.plist\"";
+			shellScript = "#!/bin/bash\n#  Run this script after the 'Copy Bundle Resources' build phase\n#  It will compute the git commit number and write that to the CFBundleVersion of the target's built Info.plist\n#  From http://tgoode.com/2014/06/05/sensible-way-increment-bundle-version-cfbundleversion-xcode/#code\n\nbranch=${1:-'master'}\nbuildNumber=$(expr $(git rev-list $branch --count) - $(git rev-list HEAD..$branch --count))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 

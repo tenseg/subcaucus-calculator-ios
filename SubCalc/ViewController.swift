@@ -20,7 +20,7 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
+        UIApplication.sharedApplication().statusBarStyle = .LightContent
         // get documents path
         // something like ~/Library/Developer/CoreSimulator/Devices/5C595030-7E0F-4FB8-AEBE-9F7BC6D23844/data/Containers/Data/Application/89361389-672E-4F91-BDBC-EE94F6E45F89/Documents on simulator
         self.rootPath = (NSSearchPathForDirectoriesInDomains(.DocumentDirectory,.UserDomainMask,true)[0] as String)
