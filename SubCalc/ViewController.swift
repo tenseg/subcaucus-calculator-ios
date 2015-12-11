@@ -13,8 +13,8 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
 
     //MARK: Vars and Lets
     @IBOutlet weak var scWebView: UIWebView!
-    var rootPath = ""
-    let jsonFilename = "/subcalc.json"
+    var scRootPath = ""
+    let scJsonFilename = "/subcalc.json"
     
     //MARK: View Funcs
     override func viewDidLoad() {
@@ -23,8 +23,8 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
         UIApplication.sharedApplication().statusBarStyle = .LightContent
         // get documents path
         // something like ~/Library/Developer/CoreSimulator/Devices/5C595030-7E0F-4FB8-AEBE-9F7BC6D23844/data/Containers/Data/Application/89361389-672E-4F91-BDBC-EE94F6E45F89/Documents on simulator
-        self.rootPath = (NSSearchPathForDirectoriesInDomains(.DocumentDirectory,.UserDomainMask,true)[0] as String)
-        print (self.rootPath)
+        self.scRootPath = (NSSearchPathForDirectoriesInDomains(.DocumentDirectory,.UserDomainMask,true)[0] as String)
+        print (self.scRootPath)
         
         // To communicate with this webview... http://stackoverflow.com/questions/15983797/can-a-uiwebview-interact-communicate-with-the-app
         if let htmlPath = NSBundle.mainBundle().pathForResource("index", ofType: "html") {
@@ -61,7 +61,7 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
             return true
         } else if request.URL?.scheme == "silly-extension" {
 //            let jsonData = try NSJSONSerialization.dataWithJSONObject(request.URL?.__somethong__!, options: NSJSONWritingOptions.PrettyPrinted)
-//            jsonData.writeToFile(rootPath + jsonFilename, atomically: true)
+//            jsonData.writeToFile(scRootPath + scJsonFilename, atomically: true)
             
             if #available(iOS 8.0, *) {
                 let alertController = UIAlertController(title: "Silly Here", message: request.URL?.absoluteString, preferredStyle: .ActionSheet)
@@ -81,7 +81,7 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
             var incommingString = request.URL?.resourceSpecifier
             if ( incommingString == "//saved-caucuses") {
                 // NSString* returnValue = [self.webView stringByEvaluatingJavaScriptFromString: "someJSFunction()"];
-                let fileContent = try? String(contentsOfFile: rootPath + jsonFilename)
+                let fileContent = try? String(contentsOfFile: scRootPath + scJsonFilename)
                 var result = ""
                 if (fileContent != nil) {
                     result = webView.stringByEvaluatingJavaScriptFromString("SCGetData("+fileContent!+")")!
@@ -94,7 +94,7 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
             incommingString?.removeRange((incommingString?.startIndex)!..<(incommingString?.startIndex.advancedBy(2))!)
             let jsonString = incommingString!.stringByRemovingPercentEncoding
             do {
-                try jsonString?.writeToFile(rootPath + jsonFilename, atomically: true, encoding: NSUTF8StringEncoding)
+                try jsonString?.writeToFile(scRootPath + scJsonFilename, atomically: true, encoding: NSUTF8StringEncoding)
             } catch _ {
                 if #available(iOS 8.0, *) {
                     let alertController = UIAlertController(title: "Subcalc Here", message: jsonString, preferredStyle: .ActionSheet)
