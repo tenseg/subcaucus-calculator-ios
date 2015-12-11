@@ -5,24 +5,31 @@
 // this script handles the caucus calculations, storage, and emailing
 //
 // great hints for iOS web apps at http://matt.might.net/articles/how-to-native-iphone-ipad-apps-in-javascript/
-// generate icons and splashscreens at http://ticons.fokkezb.nl 
+// generate icons and splashscreens at http://ticons.fokkezb.nl
 //
 // created for SD64 DFL by Eric Celeste in January 2010
 // 20150131 (efc) revised to add storage, email, and cleaner design
 // 20150202 (efc) implemented a consistent cross-platform sort, allow for reseeding
 // 20151210 (efc) fixing blurring bug (and many others)
 // 20151211 (efc) unify the web and app versions of the script
+// 20151211 (efc) autodetect the app, call last row "Add new subcaucus"
 
 "use strict"
 
 // variables with "SC" at the front are SubCalc global variables
 
-var scDebug = false; // should be false when shipping
-var scApp = true; // should be true in the version inside our iPhone app
+var scDebug = true; // should be false when shipping
+var scApp = false; // should be true in the version inside our iPhone app
 var scMessage;
 var scData;
 var scNumberOfSubcaucuses;
 var SCRandomNumberGenerator;
+
+// autosense whether we are in the iPhone app
+if ( getQuerystring('app') ) {
+	scApp = true;
+	scDebug = false;	
+}
 
 //! Handle mobile responsiveness
 // scroll the iPhone browser past the toolbar
@@ -212,7 +219,9 @@ function SCPopulateTable() {
 		var count = scCounts[i] ? scCounts[i] : ""; // replace 0 with empty string
 		codeForTable += "<div id='scrow-"+i+"' class='row'>";
 		codeForTable += "<div class='cell number'>"+i+"</div>";
-		codeForTable += "<div class='cell name'><input id='scrow-"+i+"-name' class='scrow scrowname' type='text' tabindex='"+(scNumberOfSubcaucuses+i+2)+"' value='"+scNames[i]+"' placeholder='Subcaucus "+i+"' autocapitalize='on' /></div>";
+		var placeholder = "Subcaucus " + i;
+		if ( i == scNumberOfSubcaucuses ) placeholder = "Add new subcaucus";
+		codeForTable += "<div class='cell name'><input id='scrow-"+i+"-name' class='scrow scrowname' type='text' tabindex='"+(scNumberOfSubcaucuses+i+2)+"' value='"+scNames[i]+"' placeholder='"+placeholder+"' autocapitalize='on' /></div>";
 		codeForTable += "<div class='cell count'><input id='scrow-"+i+"-count' class='scrow scrowcount numeric' type='tel' tabindex='"+(i+2)+"' value='"+count+"' placeholder='&mdash;' /></div>";
 		codeForTable += "<div class='cell note' id='scrow-"+i+"-delcell'>" + SCEmptyNote(i) + "</div>";
 		codeForTable += "<div class='cell popup' id='scrow-"+i+"-popcell'><span id='scrow-"+i+"-popup' class='popup'></span></div>";

@@ -29,7 +29,11 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
         // To communicate with this webview... http://stackoverflow.com/questions/15983797/can-a-uiwebview-interact-communicate-with-the-app
         if let htmlPath = NSBundle.mainBundle().pathForResource("index", ofType: "html") {
             let htmlURL = NSURL.fileURLWithPath(htmlPath)
-            let htmlRequest = NSURLRequest(URL: htmlURL)
+            let urlString = htmlURL.absoluteString
+            let queryString = "?app=1" // to signal to the script that we are in-app
+            let urlWithQuery = urlString + queryString;
+            let finalURL = NSURL(string: urlWithQuery)
+            let htmlRequest = NSURLRequest(URL: finalURL!)
             scWebView.loadRequest(htmlRequest)
         }
    }
