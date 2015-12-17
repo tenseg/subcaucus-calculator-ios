@@ -3,13 +3,18 @@
 * Better about screen
 * Add app version, build number, iOS version, and device type to the support email
 * Transition all email functionality to iOS mail compose view controller
-* Sharing of caucuses should use the iOS share sheet, by us sharing a block of text; this would support not just email, but messages, copy, and many others as well
+* Sharing of caucuses should use the iOS share sheet, by us sharing a block of text that is description and json; this would support not just email, but messages, copy, and many others as well
+* Implement universal links with associated domains, which requires HTTPS be standard for sd64dfl.org
+* Caucus deletion option
 
 # NOT YET #
 
 * Auto-updating web code (concern about the security of this and App Store rules)
 
 # DONE #
+
+2.0.1 in development:
+* 20151217 (atc) began work on utilizing the iOS share sheet instead of emailing a caucus directly; now disallowing text selection anywhere except in text fields on the uiwebview, this is done in css
 
 2.0 released 17 December 2015:
 * 20151209 (efc) Add a way to communicate with the webview, maybe as outlined [on StackOverflow](http://stackoverflow.com/questions/15983797/can-a-uiwebview-interact-communicate-with-the-app)

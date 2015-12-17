@@ -13,6 +13,16 @@ body {
     max-width: 600px;
     margin: auto;
     background-color: #f9edcb;
+    /* Disable selection/Copy of UIWebView, from https://gist.github.com/netpoetica/a1234ae1d4d2988f03ef*/
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+input,textarea {
+    /* Exception for input areas, from https://gist.github.com/netpoetica/a1234ae1d4d2988f03ef */
+    -webkit-touch-callout: default !important;
+    -webkit-user-select: text !important;
 }
 
 p {

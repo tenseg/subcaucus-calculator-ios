@@ -397,7 +397,7 @@ function SCGetData( data ) {
 	// next look for the data to be present in swift
 	if ( ! scData && trySwift ) {
 		// this calls back to SCGetData with data set
-		window.location.href = "subcalc-extension://saved-caucuses";
+		window.location.href = "subcalc-data-extension://saved-caucuses";
 		SCNotify("Swift will call back.");
 		return;
 	} 
@@ -434,7 +434,7 @@ function SCSetData() {
 	SCNotify("Setting: " + JSON.stringify(scData, undefined, 2));
 	localStorage.subcalc = JSON.stringify(scData);
 	if ( scApp ) {
-    	window.location.href = "subcalc-extension://" + encodeURIComponent(JSON.stringify(scData));
+    	window.location.href = "subcalc-data-extension://" + encodeURIComponent(JSON.stringify(scData));
     }
 }
 

@@ -46,6 +46,7 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
 
     //MARK: Delegates
     func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+          // perhaps send mailto URLs to the mail compose view controller
 //        if request.URL!.scheme == "mailto" {
 //            if let rawParts = request.URL?.resourceSpecifier.componentsSeparatedByString("?") {
 //                if MFMailComposeViewController.canSendMail() {
@@ -57,27 +58,19 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
 //            }
 //            return false
 //        } else if request.URL?.scheme == "file" {
+        // automatically load file URLs in this web view
         if request.URL?.scheme == "file" {
             return true
-        } else if request.URL?.scheme == "silly-extension" {
-//            let jsonData = try NSJSONSerialization.dataWithJSONObject(request.URL?.__somethong__!, options: NSJSONWritingOptions.PrettyPrinted)
-//            jsonData.writeToFile(scRootPath + scJsonFilename, atomically: true)
-            
-            if #available(iOS 8.0, *) {
-                let alertController = UIAlertController(title: "Silly Here", message: request.URL?.absoluteString, preferredStyle: .ActionSheet)
-                let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
-                    // do nothing
-                }
-                alertController.addAction(OKAction)
-                
-                self.presentViewController(alertController, animated: true) {
-                    // do nothing
-                }
-            } else {
-                // Fallback on earlier versions
-            }
+        // this will be used to pass a caucus over to the standard sharing sheet as a replacement to the simplistic email this caucus function
+        } else if request.URL?.scheme == "subcalc-sharing-extension" {
+            let incomingString = request.URL?.resourceSpecifier
+            print(incomingString)
+            //***we need to make sure that incomingString is the content that we had sent as the email contents before moving forward here, which will mean undoing url encoding of everything but the json link***
+            let activityViewController = UIActivityViewController(activityItems: [incomingString!], applicationActivities: nil) // should we carry backwards our CSV export activity for this menu? that would require additional code to go from json to csv, but may be worth it
+            presentViewController(activityViewController, animated: true, completion: nil)
             return false
-        } else if request.URL?.scheme == "subcalc-extension" {
+        // this is used for passing data between js and swift
+        } else if request.URL?.scheme == "subcalc-data-extension" {
             var incommingString = request.URL?.resourceSpecifier
             if ( incommingString == "//saved-caucuses") {
                 // NSString* returnValue = [self.webView stringByEvaluatingJavaScriptFromString: "someJSFunction()"];
@@ -111,6 +104,7 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
                 }
             }
             return false
+        // any other URLs are passed on to iOS for handling
         } else {
             UIApplication.sharedApplication().openURL(request.URL!)
             return false

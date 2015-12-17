@@ -1,6 +1,6 @@
 # README #
 
-SubCalc is the Minnesota Subcaucus Calculator. The iOS version (currently v2.0 is in development) of the [Javascript app](http://www.sd64dfl.org/sub). It is written in [Swift](https://developer.apple.com/swift/), though this version is really just a webview and the core code is the same as the web version. So really, this is mostly an HTML/JavaScript project at the moment.
+SubCalc is the Minnesota Subcaucus Calculator. The iOS version (currently v2.0.1 is in development) of the [Javascript app](http://www.sd64dfl.org/sub). It is written in [Swift](https://developer.apple.com/swift/), though this version is really just a webview and the core code is the same as the web version. So really, this is mostly an HTML/JavaScript project at the moment.
 
 ### Repository TOC ###
 
