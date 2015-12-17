@@ -1,7 +1,9 @@
 # TODO #
 
-* Better about screen?
+* Better about screen
 * Add app version, build number, iOS version, and device type to the support email
+* Transition all email functionality to iOS mail compose view controller
+* Sharing of caucuses should use the iOS share sheet, by us sharing a block of text; this would support not just email, but messages, copy, and many others as well
 
 # NOT YET #
 
@@ -9,6 +11,7 @@
 
 # DONE #
 
+2.0 released 17 December 2015:
 * 20151209 (efc) Add a way to communicate with the webview, maybe as outlined [on StackOverflow](http://stackoverflow.com/questions/15983797/can-a-uiwebview-interact-communicate-with-the-app)
 * 20151208 (efc) Icon and splash screen (no splash screen, actually)
 * 20151204 (efc+alex) Accomodate the status bar at the top of the screen. What do we do when the status bar grows (like during a phone call)?
