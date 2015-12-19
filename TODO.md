@@ -6,6 +6,7 @@
 * Sharing of caucuses should use the iOS share sheet, by us sharing a block of text that is description and json; this would support not just email, but messages, copy, and many others as well
 * Implement universal links with associated domains, which requires HTTPS be standard for sd64dfl.org
 * Caucus deletion option
+* Automatically import Caucus.plist into a saved caucus
 
 # NOT YET #
 
