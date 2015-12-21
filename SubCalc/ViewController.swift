@@ -42,7 +42,7 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
     func scDeviceSystemProfile() -> String {
         let device = UIDevice.currentDevice()
         let infoPlist = NSBundle.mainBundle().infoDictionary
-        return "SubCalc Version: \(infoPlist!["CFBundleShortVersionString"]) (\(infoPlist!["CFBundleVersion"]))\nDevice: \(device.name) (\(device.model))\niOS Version: \(device.systemVersion)\nTenseg Device Identifier: \(device.identifierForVendor)";
+        return "\(infoPlist!["CFBundleName"]) Version: \(infoPlist!["CFBundleShortVersionString"]) (\(infoPlist!["CFBundleVersion"]))\nDevice: \(device.model)\niOS Version: \(device.systemVersion)\nTenseg Device Identifier: \(device.identifierForVendor)";
     }
     
     //MARK: Delegates
