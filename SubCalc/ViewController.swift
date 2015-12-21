@@ -37,13 +37,14 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
             scWebView.loadRequest(htmlRequest)
         }
    }
-
-    //MARK: Memory
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    //MARK: Helpers
+    func scDeviceSystemProfile() -> String {
+        let device = UIDevice.currentDevice()
+        let infoPlist = NSBundle.mainBundle().infoDictionary
+        return "SubCalc Version: \(infoPlist!["CFBundleShortVersionString"]) (\(infoPlist!["CFBundleVersion"]))\nDevice: \(device.name) (\(device.model))\niOS Version: \(device.systemVersion)\nTenseg Device Identifier: \(device.identifierForVendor)";
     }
-
+    
     //MARK: Delegates
     func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
           // perhaps send mailto URLs to the mail compose view controller
@@ -113,6 +114,12 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
     
     func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
         controller.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    //MARK: Memory
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
     }
 }
 
