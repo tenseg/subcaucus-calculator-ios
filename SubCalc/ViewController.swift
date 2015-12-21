@@ -31,7 +31,7 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
             let htmlURL = NSURL.fileURLWithPath(htmlPath)
             let urlString = htmlURL.absoluteString
             let queryString = "?app=1" // to signal to the script that we are in-app
-            let urlWithQuery = urlString + queryString;
+            let urlWithQuery = urlString + queryString
             let finalURL = NSURL(string: urlWithQuery)
             let htmlRequest = NSURLRequest(URL: finalURL!)
             scWebView.loadRequest(htmlRequest)
@@ -42,7 +42,7 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
     func scDeviceSystemProfile() -> String {
         let device = UIDevice.currentDevice()
         let infoPlist = NSBundle.mainBundle().infoDictionary
-        return "\(infoPlist!["CFBundleName"]) Version: \(infoPlist!["CFBundleShortVersionString"]) (\(infoPlist!["CFBundleVersion"]))\nDevice: \(device.model)\niOS Version: \(device.systemVersion)\nTenseg Device Identifier: \(device.identifierForVendor)";
+        return "<---Please don't delete the following system information--->\n\(infoPlist!["CFBundleName"]) Version: \(infoPlist!["CFBundleShortVersionString"]) (\(infoPlist!["CFBundleVersion"]))\nDevice: \(device.model)\niOS Version: \(device.systemVersion)\nTenseg Device Identifier: \(device.identifierForVendor)\n<------------------------------------------------>"
     }
     
     //MARK: Delegates
@@ -103,6 +103,18 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
                 } else {
                     // Fallback on earlier versions
                 }
+            }
+            return false
+        // for feedback email
+        } else if request.URL?.scheme == "subcalc-feedback-email-extension" {
+            if MFMailComposeViewController.canSendMail() {
+                let mailView = MFMailComposeViewController()
+                mailView.mailComposeDelegate = self
+                mailView.setToRecipients(["efc@sd64dfl.org"])
+                mailView.setMessageBody("\n\n\n \(self.scDeviceSystemProfile())", isHTML: false)
+                self.presentViewController(mailView, animated: true, completion: nil)
+            } else {
+                /***let user know that they must first set up Mail***/
             }
             return false
         // any other URLs are passed on to iOS for handling
