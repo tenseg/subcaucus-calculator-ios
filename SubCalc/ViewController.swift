@@ -39,7 +39,7 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
    }
     
     //MARK: Helpers
-    func scDeviceSystemProfile() -> String {
+    func tensegDeviceSystemProfile() -> String { // designed to eventually go into TensegHelpers and be usable across any iOS app we develop
         let device = UIDevice.currentDevice()
         let infoPlist = NSBundle.mainBundle().infoDictionary
         return "<---Please don't delete the following system information--->\n\(infoPlist!["CFBundleName"]) Version: \(infoPlist!["CFBundleShortVersionString"]) (\(infoPlist!["CFBundleVersion"]))\nDevice: \(device.model)\niOS Version: \(device.systemVersion)\nTenseg Device Identifier: \(device.identifierForVendor)\n<------------------------------------------------>"
@@ -110,8 +110,9 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
             if MFMailComposeViewController.canSendMail() {
                 let mailView = MFMailComposeViewController()
                 mailView.mailComposeDelegate = self
-                mailView.setToRecipients(["efc@sd64dfl.org"])
-                mailView.setMessageBody("\n\n\n \(self.scDeviceSystemProfile())", isHTML: false)
+                mailView.setToRecipients(["efc@sd64dfl.org"]) // should we really send the iOS email to subcalc@tenseg.net instead?
+                mailView.setSubject("SubCalc Feedback")
+                mailView.setMessageBody("\n\n\n \(self.tensegDeviceSystemProfile())", isHTML: false)
                 self.presentViewController(mailView, animated: true, completion: nil)
             } else {
                 /***let user know that they must first set up Mail***/
