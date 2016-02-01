@@ -15,7 +15,7 @@
 # DONE #
 
 2.0.1 in development:
-* 20151217 (atc) began work on utilizing the iOS share sheet instead of emailing a caucus directly; now disallowing text selection anywhere except in text fields on the uiwebview, this is done in css
+* 20151217 (atc) began work on utilizing the iOS share sheet instead of emailing a caucus directly
 
 2.0 released 17 December 2015:
 * 20151209 (efc) Add a way to communicate with the webview, maybe as outlined [on StackOverflow](http://stackoverflow.com/questions/15983797/can-a-uiwebview-interact-communicate-with-the-app)
