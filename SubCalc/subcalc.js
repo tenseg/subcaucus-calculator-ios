@@ -763,7 +763,7 @@ function SCDistributeDelegates() {
 	}
 	email += ".\n\n";
                         
-    email += viabilityStatement + "\n\n";
+    email += $("<p>"+viabilityStatement+"</p>").text() + "\n\n"; // the <p> tags make the text() funtion work
     email += "These are the individual subcaucuses:\n\n";
     for (var i=1; i <= scNumberOfSubcaucuses; i++) {
         if ( names[i] || members[i] ) {
