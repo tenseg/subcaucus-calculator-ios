@@ -61,19 +61,16 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
 //        } else if request.URL?.scheme == "file" {
         // automatically load file URLs in this web view
         if request.URL?.scheme == "file" {
-            return true
-        // this will be used to pass a caucus over to the standard sharing sheet as a replacement to the simplistic email this caucus function
-        } else if request.URL?.scheme == "subcalc-sharing-extension" {
-            let incomingString = request.URL?.resourceSpecifier
-            print(incomingString)
-            //***we need to make sure that incomingString is the content that we had sent as the email contents before moving forward here, which will mean undoing url encoding of everything but the json link***
-            let activityViewController = UIActivityViewController(activityItems: [incomingString!], applicationActivities: nil) // should we carry backwards our CSV export activity for this menu? that would require additional code to go from json to csv, but may be worth it
-            presentViewController(activityViewController, animated: true, completion: nil)
-            return false
-        // this is used for passing data between js and swift
-        } else if request.URL?.scheme == "subcalc-data-extension" {
-            var incommingString = request.URL?.resourceSpecifier
-            if ( incommingString == "//saved-caucuses") {
+            // returns the actual files (like HTML, CSS, JS, etc.)
+            return true // tells UIWebView to actually pick up this local file
+        } else if request.URL?.scheme == "subcalc-extension" {
+            // this is used for passing data between js and swift
+            var incomingString = request.URL?.resourceSpecifier
+            if incomingString == nil {
+                return false; // just give up if there is no real incomming string
+            }
+            if ( incomingString == "//get-caucuses") {
+                // to get caucus data from swift for js side
                 // NSString* returnValue = [self.webView stringByEvaluatingJavaScriptFromString: "someJSFunction()"];
                 let fileContent = try? String(contentsOfFile: scRootPath + scJsonFilename)
                 var result = ""
@@ -83,46 +80,54 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
                     result = webView.stringByEvaluatingJavaScriptFromString("SCGetData(\"nothing\")")!
                 }
                 print(result)
-                return false
-            }
-            incommingString?.removeRange((incommingString?.startIndex)!..<(incommingString?.startIndex.advancedBy(2))!)
-            let jsonString = incommingString!.stringByRemovingPercentEncoding
-            do {
-                try jsonString?.writeToFile(scRootPath + scJsonFilename, atomically: true, encoding: NSUTF8StringEncoding)
-            } catch _ {
-                if #available(iOS 8.0, *) {
-                    let alertController = UIAlertController(title: "Subcalc Here", message: jsonString, preferredStyle: .ActionSheet)
-                    let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
-                        // do nothing
+            } else if ( incomingString!.hasPrefix("//set-caucuses/") ) {
+                // to set the swift caucuses storage as instructed by the js side
+                incomingString?.removeRange((incomingString?.startIndex)!..<(incomingString?.startIndex.advancedBy(15))!)
+                let jsonString = incomingString!.stringByRemovingPercentEncoding
+                do {
+                    try jsonString?.writeToFile(scRootPath + scJsonFilename, atomically: true, encoding: NSUTF8StringEncoding)
+                } catch _ {
+                    if #available(iOS 8.0, *) {
+                        let alertController = UIAlertController(title: "Subcalc Here", message: jsonString, preferredStyle: .ActionSheet)
+                        let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                            // do nothing
+                        }
+                        alertController.addAction(OKAction)
+                        
+                        self.presentViewController(alertController, animated: true) {
+                            // do nothing
+                        }
+                    } else {
+                        // Fallback on earlier versions
                     }
-                    alertController.addAction(OKAction)
-                    
-                    self.presentViewController(alertController, animated: true) {
-                        // do nothing
-                    }
+                }
+            } else if ( incomingString!.hasPrefix("//share/" ) ) { // NOT YET LIVE
+                // this will be used to pass a caucus over to the standard sharing sheet as a replacement to the simplistic email this caucus function
+                print(incomingString)
+                //***we need to make sure that incomingString is the content that we had sent as the email contents before moving forward here, which will mean undoing url encoding of everything but the json link***
+                let activityViewController = UIActivityViewController(activityItems: [incomingString!], applicationActivities: nil) // should we carry backwards our CSV export activity for this menu? that would require additional code to go from json to csv, but may be worth it
+                presentViewController(activityViewController, animated: true, completion: nil)
+            } else if ( incomingString == "//feedback-email" ) { // NOT YET LIVE
+                // we want to send email feedback from native-land
+                if MFMailComposeViewController.canSendMail() {
+                    let mailView = MFMailComposeViewController()
+                    mailView.mailComposeDelegate = self
+                    mailView.setToRecipients(["efc@sd64dfl.org"]) // should we really send the iOS email to subcalc@tenseg.net instead?
+                    mailView.setSubject("SubCalc Feedback")
+                    mailView.setMessageBody("\n\n\n \(self.tensegDeviceSystemProfile())", isHTML: false)
+                    self.presentViewController(mailView, animated: true, completion: nil)
                 } else {
-                    // Fallback on earlier versions
+                    /***let user know that they must first set up Mail***/
                 }
             }
-            return false
-        // for feedback email
-        } else if request.URL?.scheme == "subcalc-feedback-email-extension" {
-            if MFMailComposeViewController.canSendMail() {
-                let mailView = MFMailComposeViewController()
-                mailView.mailComposeDelegate = self
-                mailView.setToRecipients(["efc@sd64dfl.org"]) // should we really send the iOS email to subcalc@tenseg.net instead?
-                mailView.setSubject("SubCalc Feedback")
-                mailView.setMessageBody("\n\n\n \(self.tensegDeviceSystemProfile())", isHTML: false)
-                self.presentViewController(mailView, animated: true, completion: nil)
-            } else {
-                /***let user know that they must first set up Mail***/
-            }
-            return false
-        // any other URLs are passed on to iOS for handling
         } else {
+            // if we are passed any URL other than file:// or subcalc-extention://
+            // then we just let iOS handle it in the usual way
+            // though, note, this will NOT be handled in our own UIWebView
+            // so it effectively hands off to Safari or other apps
             UIApplication.sharedApplication().openURL(request.URL!)
-            return false
         }
+        return false // tells UIWebView to not actually get anything
     }
     
     func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {

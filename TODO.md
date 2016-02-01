@@ -14,8 +14,9 @@
 
 # DONE #
 
-2.0.1 in development:
+2.0.1 to be released to app store 20160201:
 * 20151217 (atc) began work on utilizing the iOS share sheet instead of emailing a caucus directly
+* 20160201 (efc) clarified use of coin flips for tied remainders
 
 2.0 released 17 December 2015:
 * 20151209 (efc) Add a way to communicate with the webview, maybe as outlined [on StackOverflow](http://stackoverflow.com/questions/15983797/can-a-uiwebview-interact-communicate-with-the-app)

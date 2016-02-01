@@ -13,6 +13,7 @@
 // 20151210 (efc) fixing blurring bug (and many others)
 // 20151211 (efc) unify the web and app versions of the script
 // 20151211 (efc) autodetect the app, call last row "Add new subcaucus"
+// 20160201 (efc) being more explicit about coin flip discrepancies
 
 "use strict"
 
@@ -24,6 +25,7 @@ var scMessage;
 var scData;
 var scNumberOfSubcaucuses;
 var SCRandomNumberGenerator;
+var scIncludeRemainderStatement;
 
 // autosense whether we are in the iPhone app
 if ( getQuerystring('app') ) {
@@ -397,7 +399,7 @@ function SCGetData( data ) {
 	// next look for the data to be present in swift
 	if ( ! scData && trySwift ) {
 		// this calls back to SCGetData with data set
-		window.location.href = "subcalc-data-extension://saved-caucuses";
+		window.location.href = "subcalc-extension://get-caucuses";
 		SCNotify("Swift will call back.");
 		return;
 	} 
@@ -434,7 +436,7 @@ function SCSetData() {
 	SCNotify("Setting: " + JSON.stringify(scData, undefined, 2));
 	localStorage.subcalc = JSON.stringify(scData);
 	if ( scApp ) {
-    	window.location.href = "subcalc-data-extension://" + encodeURIComponent(JSON.stringify(scData));
+    	window.location.href = "subcalc-extension://set-caucuses/" + encodeURIComponent(JSON.stringify(scData));
     }
 }
 
@@ -513,18 +515,29 @@ function SCRemainderRankDescendingHandler(thisObject,thatObject) {
 	{
 		return 1;
 	}
-	/*	A special note about coin flips...
-		
-		In manual subcaucus distribution we use a coin flip to determine which of a set of caucuses
-		should be priority in the case of a tie. But this would be a bit awkward in a script like
-		this, so we essentially pre-flip the coin by assigning a "remainder rank" to each caucus.
-		This way we can later just step through the rank until we run out of delegates.
-		
-		This really does amount to the same thing as the manual process. 
-		
-		However, since it is possible for this order to shift each time the calculation
-		is run, it could be that the exact same set of counts for subcaucuses could result
-		in slightly different delegate assignments from time to time.
+                        
+    scIncludeRemainderStatement = true;
+                        
+	/*	A note about "coin-flips" or "drawing lots"...
+
+        Traditionally, when there are delegates remaining to be assigned and
+        two subcaucuses are "tied" with the same size delegations, the chair
+        of the caucus will use some method of assigning those remaining delegates
+        at random. These methods include coin-flips or drawing lots.
+
+        In this program we accomplish the same randomness, but we do so by first
+        building this "rank order" for remainders to be assigned. It is as though
+        we flipped the coins before we had a tie and just said that in the event of
+        a tie we will assign delegates in this (predetermined but random) order.
+
+        However, since it is possible for this order to shift each time the calculation
+        is run, it could be that the exact same set of counts for subcaucuses could result
+        in slightly different delegate assignments from time to time.
+     
+        At this point in the code, we've determined that two delegation have
+        the exact same amount of "remainder". The next line of code flips the
+        coin to predetermine the order in which these two delegations will be
+        assigned delegates.
 	*/
 	return (SCRandomNumberGenerator(2) ? -1 : 1); // generate a random 1 or -1
 }
@@ -532,9 +545,9 @@ function SCRemainderRankDescendingHandler(thisObject,thatObject) {
 // SCSortRemainderRanks() is an inefficient, but simple, bubble sort algorithm
 // that we can implement across platforms to keep sorting consistent
 /*
-	The sorting algorithm determines the number of calls to the
-	random function, which we need to keep consistent so that
-	the ranking results will match across platforms.
+    The sorting algorithm determines the number of calls to the
+    random function, which we need to keep consistent so that
+    the ranking results will match across platforms.
 */
 function SCSortRemainderRanks(a)
 {
@@ -562,7 +575,10 @@ function SCSortRemainderRanks(a)
 */
 function SCDistributeDelegates() {
 	SCNotify("Distributing delegates");
-	
+    scIncludeRemainderStatement = false; // will be set true if there is a coin flip
+    
+    $('#email').attr('href', "mailto:?body=Caucus calculations are not ready to email yet.");
+    
 	// first clear out all the delegate information
 	for (var i=1; i <= scNumberOfSubcaucuses; i++) {
 		$("#scrow-" + i + "-delcell").html(
@@ -646,13 +662,14 @@ function SCDistributeDelegates() {
 		viabilityStatement += "Because some people are counted in subcaucuses which are not viable, each delegate requires only "+delegateViability.toFixed(3)+" people in a viable subcaucus. You may want to consider another round of walking to allow everyone to join a viable subcaucus. ";
 	}
 	
-	$("#viability").html("<p>"+viabilityStatement+"</p>");
-	
 	// calculate how many delegates each viable subcaucus gets
 	var delegation = new Object; // the number of delegates they get
 	var totalDelegation = 0;
 	var remainder = new Object; // the remainder for use in allocating leftover delegates
-	var remainderRank = new Array(); // will become a rank-order list of the remainders
+    /*
+     See the note about "coin-flips" or "drawing lots" above in the SCRemainderRankObject.
+    */
+	var remainderRank = new Array(); // a rank-order list used to assign the remainders
 	var delegateScore = new Object; // the raw score for the delegation
 	for (var i=1; i <= scNumberOfSubcaucuses; i++) {
 		if (viabilityScore[i] >= 1) { // this is a viable subcaucus
@@ -667,10 +684,11 @@ function SCDistributeDelegates() {
 	// now sort and assign the remainders
 	var ranked = new Object;
 	var addon = new Object;
+    var randomStatement = "";
 	SCSeedRandom(members);
 	// remainderRank.sort(SCRemainderRankDescendingHandler);
 	SCSortRemainderRanks(remainderRank);
-	if (totalDelegation > 0) { // to deal with an empty form
+	if (totalDelegation > 0) { // avoid doing this on an empty form
 		//while (totalDelegation < allowed) { // still some to distribute
 			for(i=0; i < remainderRank.length; i++) {
 				var sub = remainderRank[i].subcaucus;
@@ -688,6 +706,10 @@ function SCDistributeDelegates() {
 		//}
 	}
 	
+    var remainderStatement = "Some delegates may have been assigned to subcaucuses with tied remainders based on a random coin flip. Note that this means that results may vary for other users of this calculator whose coin flips may have turned out differently.";
+
+    $("#viability").html("<p>"+viabilityStatement+"</p>"+ ( scIncludeRemainderStatement ? "<p>"+remainderStatement+"</p>" : "" ));
+                        
 	// post statements about the delegations
 	totalDelegation = 0; // start a fresh count, now including remainders
 	for (var i=1; i <= scNumberOfSubcaucuses; i++) {
@@ -740,32 +762,30 @@ function SCDistributeDelegates() {
 		email += " (only "+ viableRoom + " are in viable subcaucuses)";
 	}
 	email += ".\n\n";
-	if ( viability > 1 ) {
-		email += "The viability number is "+viability.toFixed(3)+", ";
-		email += "so any subcaucus with fewer than "+wholeViability+" people is not viable. ";
-		if (room != viableRoom) {
-			email += "Because some people are counted in subcaucuses which are not viable, each delegate requires only "+delegateViability.toFixed(3)+" people in a viable subcaucus.\n\n";
-		}
-		email += "These are the individual subcaucuses:\n\n";
-		for (var i=1; i <= scNumberOfSubcaucuses; i++) {
-			if ( names[i] || members[i] ) {
-				email += names[i] ? names[i]+': ' : 'Subcaucus '+i+': ';
-				email += members[i] + ( members[i] == 1 ? " person, " : " people, ");
-				if ( viabilityScore[i] >= 1 ) {
-					email += delegation[i] + ( delegation[i] == 1 ? " delegate " : " delegates ");
-					email += "(" + delegateScore[i].toFixed(2);
-					email += addon[i] ? "+" + addon[i] : "";
-					email += " r" + ranked[i] + ").\n\n";
-				} else {
-					email += "no delegates ";
-					email += "(" + viabilityScore[i].toFixed(2);
-					email += " not viable).\n\n";
-				}
-			}
-		}
-	} else {
-		email += "Since you have more delegate slots than people who want to be delegates, everyone gets to be a delegate. Just sign them all up!\n\n";
-	}
+                        
+    email += viabilityStatement + "\n\n";
+    email += "These are the individual subcaucuses:\n\n";
+    for (var i=1; i <= scNumberOfSubcaucuses; i++) {
+        if ( names[i] || members[i] ) {
+            email += names[i] ? names[i]+': ' : 'Subcaucus '+i+': ';
+            email += members[i] + ( members[i] == 1 ? " person, " : " people, ");
+            if ( viabilityScore[i] >= 1 ) {
+                email += delegation[i] + ( delegation[i] == 1 ? " delegate " : " delegates ");
+                email += "(" + delegateScore[i].toFixed(2);
+                email += addon[i] ? "+" + addon[i] : "";
+                email += " r" + ranked[i] + ").\n\n";
+            } else {
+                email += "no delegates ";
+                email += "(" + viabilityScore[i].toFixed(2);
+                email += " not viable).\n\n";
+            }
+        }
+    }
+    
+    if ( scIncludeRemainderStatement ) {
+        email += remainderStatement + "\n\n";
+    }
+        
 	email += "This caucus report was first created "+moment(scData['current']['seed']).calendar()+".\n\n";
 	
 	var url = "http://sd64dfl.org/sub?caucus="+encodeURIComponent(JSON.stringify(scData['current']));
