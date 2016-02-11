@@ -1,20 +1,10 @@
 # TODO #
 
-* Better about screen
-* Add app version, build number, iOS version, and device type to the support email
-* Transition all email functionality to iOS mail compose view controller
-* Sharing of caucuses should use the iOS share sheet, by us sharing a block of text that is description and json; this would support not just email, but messages, copy, and many others as well
-* Implement universal links with associated domains, which requires HTTPS be standard for sd64dfl.org
-* Caucus deletion option
-* Automatically import Caucus.plist into a saved caucus
-
-# NOT YET #
-
-* Auto-updating web code (concern about the security of this and App Store rules)
+Note that all TODO items are henceforth being tracked in the Issue Tracker on Bitbucket.
 
 # DONE #
 
-2.0.1 to be released to app store 20160201:
+2.0.1 released 4 February 2016:
 * 20151217 (atc) began work on utilizing the iOS share sheet instead of emailing a caucus directly
 * 20160201 (efc) clarified use of coin flips for tied remainders
 
