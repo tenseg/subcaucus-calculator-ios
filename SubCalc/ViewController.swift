@@ -20,33 +20,33 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        UIApplication.sharedApplication().statusBarStyle = .LightContent
+        UIApplication.shared.statusBarStyle = .lightContent
         // get documents path
         // something like ~/Library/Developer/CoreSimulator/Devices/5C595030-7E0F-4FB8-AEBE-9F7BC6D23844/data/Containers/Data/Application/89361389-672E-4F91-BDBC-EE94F6E45F89/Documents on simulator
-        self.scRootPath = (NSSearchPathForDirectoriesInDomains(.DocumentDirectory,.UserDomainMask,true)[0] as String)
+        self.scRootPath = (NSSearchPathForDirectoriesInDomains(.documentDirectory,.userDomainMask,true)[0] as String)
         print (self.scRootPath)
         
         // To communicate with this webview... http://stackoverflow.com/questions/15983797/can-a-uiwebview-interact-communicate-with-the-app
-        if let htmlPath = NSBundle.mainBundle().pathForResource("index", ofType: "html") {
-            let htmlURL = NSURL.fileURLWithPath(htmlPath)
+        if let htmlPath = Bundle.main.path(forResource: "index", ofType: "html") {
+            let htmlURL = URL(fileURLWithPath: htmlPath)
             let urlString = htmlURL.absoluteString
             let queryString = "?app=1" // to signal to the script that we are in-app
             let urlWithQuery = urlString + queryString
-            let finalURL = NSURL(string: urlWithQuery)
-            let htmlRequest = NSURLRequest(URL: finalURL!)
+            let finalURL = URL(string: urlWithQuery)
+            let htmlRequest = URLRequest(url: finalURL!)
             scWebView.loadRequest(htmlRequest)
         }
    }
     
     //MARK: Helpers
     func tensegDeviceSystemProfile() -> String { // designed to eventually go into TensegHelpers and be usable across any iOS app we develop
-        let device = UIDevice.currentDevice()
-        let infoPlist = NSBundle.mainBundle().infoDictionary
+        let device = UIDevice.current
+        let infoPlist = Bundle.main.infoDictionary
         return "<---Please don't delete the following system information--->\n\(infoPlist!["CFBundleName"]) Version: \(infoPlist!["CFBundleShortVersionString"]) (\(infoPlist!["CFBundleVersion"]))\nDevice: \(device.model)\niOS Version: \(device.systemVersion)\nTenseg Device Identifier: \(device.identifierForVendor)\n<------------------------------------------------>"
     }
     
     //MARK: Delegates
-    func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+    func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
           // perhaps send mailto URLs to the mail compose view controller
 //        if request.URL!.scheme == "mailto" {
 //            if let rawParts = request.URL?.resourceSpecifier.componentsSeparatedByString("?") {
@@ -60,12 +60,12 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
 //            return false
 //        } else if request.URL?.scheme == "file" {
         // automatically load file URLs in this web view
-        if request.URL?.scheme == "file" {
+        if request.url?.scheme == "file" {
             // returns the actual files (like HTML, CSS, JS, etc.)
             return true // tells UIWebView to actually pick up this local file
-        } else if request.URL?.scheme == "subcalc-extension" {
+        } else if request.url?.scheme == "subcalc-extension" {
             // this is used for passing data between js and swift
-            var incomingString = request.URL?.resourceSpecifier
+            var incomingString = request.url?.path //TODO: Broken after Swift 3 migration, needs fixing before next release, was .resourceSpecifier, but none of compiler-suggested replacements seems to do what we want
             if incomingString == nil {
                 return false; // just give up if there is no real incomming string
             }
@@ -75,26 +75,26 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
                 let fileContent = try? String(contentsOfFile: scRootPath + scJsonFilename)
                 var result = ""
                 if (fileContent != nil) {
-                    result = webView.stringByEvaluatingJavaScriptFromString("SCGetData("+fileContent!+")")!
+                    result = webView.stringByEvaluatingJavaScript(from: "SCGetData("+fileContent!+")")!
                 } else {
-                    result = webView.stringByEvaluatingJavaScriptFromString("SCGetData(\"nothing\")")!
+                    result = webView.stringByEvaluatingJavaScript(from: "SCGetData(\"nothing\")")!
                 }
                 print(result)
             } else if ( incomingString!.hasPrefix("//set-caucuses/") ) {
                 // to set the swift caucuses storage as instructed by the js side
-                incomingString?.removeRange((incomingString?.startIndex)!..<(incomingString?.startIndex.advancedBy(15))!)
-                let jsonString = incomingString!.stringByRemovingPercentEncoding
+                incomingString?.removeSubrange((incomingString?.startIndex)!..<(incomingString?.characters.index((incomingString?.startIndex)!, offsetBy: 15))!)
+                let jsonString = incomingString!.removingPercentEncoding
                 do {
-                    try jsonString?.writeToFile(scRootPath + scJsonFilename, atomically: true, encoding: NSUTF8StringEncoding)
+                    try jsonString?.write(toFile: scRootPath + scJsonFilename, atomically: true, encoding: String.Encoding.utf8)
                 } catch _ {
                     if #available(iOS 8.0, *) {
-                        let alertController = UIAlertController(title: "Subcalc Here", message: jsonString, preferredStyle: .ActionSheet)
-                        let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                        let alertController = UIAlertController(title: "Subcalc Here", message: jsonString, preferredStyle: .actionSheet)
+                        let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
                             // do nothing
                         }
                         alertController.addAction(OKAction)
                         
-                        self.presentViewController(alertController, animated: true) {
+                        self.present(alertController, animated: true) {
                             // do nothing
                         }
                     } else {
@@ -106,7 +106,7 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
                 print(incomingString)
                 //***we need to make sure that incomingString is the content that we had sent as the email contents before moving forward here, which will mean undoing url encoding of everything but the json link***
                 let activityViewController = UIActivityViewController(activityItems: [incomingString!], applicationActivities: nil) // should we carry backwards our CSV export activity for this menu? that would require additional code to go from json to csv, but may be worth it
-                presentViewController(activityViewController, animated: true, completion: nil)
+                present(activityViewController, animated: true, completion: nil)
             } else if ( incomingString == "//feedback-email" ) { // NOT YET LIVE
                 // we want to send email feedback from native-land
                 if MFMailComposeViewController.canSendMail() {
@@ -115,7 +115,7 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
                     mailView.setToRecipients(["efc@sd64dfl.org"]) // should we really send the iOS email to subcalc@tenseg.net instead?
                     mailView.setSubject("SubCalc Feedback")
                     mailView.setMessageBody("\n\n\n \(self.tensegDeviceSystemProfile())", isHTML: false)
-                    self.presentViewController(mailView, animated: true, completion: nil)
+                    self.present(mailView, animated: true, completion: nil)
                 } else {
                     /***let user know that they must first set up Mail***/
                 }
@@ -125,13 +125,13 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
             // then we just let iOS handle it in the usual way
             // though, note, this will NOT be handled in our own UIWebView
             // so it effectively hands off to Safari or other apps
-            UIApplication.sharedApplication().openURL(request.URL!)
+            UIApplication.shared.openURL(request.url!)
         }
         return false // tells UIWebView to not actually get anything
     }
     
-    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
-        controller.dismissViewControllerAnimated(true, completion: nil)
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        controller.dismiss(animated: true, completion: nil)
     }
     
     //MARK: Memory
