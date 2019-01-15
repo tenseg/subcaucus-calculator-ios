@@ -42,11 +42,11 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
     func tensegDeviceSystemProfile() -> String { // designed to eventually go into TensegHelpers and be usable across any iOS app we develop
         let device = UIDevice.current
         let infoPlist = Bundle.main.infoDictionary
-        return "<---Please don't delete the following system information--->\n\(infoPlist!["CFBundleName"]) Version: \(infoPlist!["CFBundleShortVersionString"]) (\(infoPlist!["CFBundleVersion"]))\nDevice: \(device.model)\niOS Version: \(device.systemVersion)\nTenseg Device Identifier: \(device.identifierForVendor)\n<------------------------------------------------>"
+		return "<---Please don't delete the following system information--->\n\(String(describing: infoPlist!["CFBundleName"])) Version: \(String(describing: infoPlist!["CFBundleShortVersionString"])) (\(String(describing: infoPlist!["CFBundleVersion"])))\nDevice: \(device.model)\niOS Version: \(device.systemVersion)\nTenseg Device Identifier: \(String(describing: device.identifierForVendor))\n<------------------------------------------------>"
     }
     
     //MARK: Delegates
-    func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+    func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebView.NavigationType) -> Bool {
           // perhaps send mailto URLs to the mail compose view controller
 //        if request.URL!.scheme == "mailto" {
 //            if let rawParts = request.URL?.resourceSpecifier.componentsSeparatedByString("?") {
@@ -82,7 +82,8 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
                 print(result)
             } else if ( incomingString!.hasPrefix("//set-caucuses/") ) {
                 // to set the swift caucuses storage as instructed by the js side
-                incomingString?.removeSubrange((incomingString?.startIndex)!..<(incomingString?.characters.index((incomingString?.startIndex)!, offsetBy: 15))!)
+				let localIncoming = incomingString
+                incomingString?.removeSubrange((localIncoming?.startIndex)!..<(localIncoming?.index((localIncoming?.startIndex)!, offsetBy: 15))!)
                 let jsonString = incomingString!.removingPercentEncoding
                 do {
                     try jsonString?.write(toFile: scRootPath + scJsonFilename, atomically: true, encoding: String.Encoding.utf8)
@@ -103,7 +104,7 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
                 }
             } else if ( incomingString!.hasPrefix("//share/" ) ) { // NOT YET LIVE
                 // this will be used to pass a caucus over to the standard sharing sheet as a replacement to the simplistic email this caucus function
-                print(incomingString)
+				print(incomingString ?? "")
                 //***we need to make sure that incomingString is the content that we had sent as the email contents before moving forward here, which will mean undoing url encoding of everything but the json link***
                 let activityViewController = UIActivityViewController(activityItems: [incomingString!], applicationActivities: nil) // should we carry backwards our CSV export activity for this menu? that would require additional code to go from json to csv, but may be worth it
                 present(activityViewController, animated: true, completion: nil)
