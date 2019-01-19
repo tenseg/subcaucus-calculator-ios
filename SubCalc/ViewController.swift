@@ -13,18 +13,22 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
 
     //MARK: Vars and Lets
     @IBOutlet weak var scWebView: UIWebView!
-    var scRootPath = ""
-    let scJsonFilename = "/subcalc.json"
     
     //MARK: View Funcs
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        UIApplication.shared.statusBarStyle = .lightContent
-        // get documents path
-        // something like ~/Library/Developer/CoreSimulator/Devices/5C595030-7E0F-4FB8-AEBE-9F7BC6D23844/data/Containers/Data/Application/89361389-672E-4F91-BDBC-EE94F6E45F89/Documents on simulator
-        self.scRootPath = (NSSearchPathForDirectoriesInDomains(.documentDirectory,.userDomainMask,true)[0] as String)
-        print (self.scRootPath)
+        // set status bar style
+		UIApplication.shared.statusBarStyle = .lightContent
+		
+		// attempt to load local data from user defaults
+		loadWebViewData()
+		
+		// save local data when we are no longer active
+		NotificationCenter.default.addObserver(
+			self,
+			selector: #selector(saveWebViewData),
+			name: UIApplication.willResignActiveNotification,
+			object: nil)
         
         // To communicate with this webview... http://stackoverflow.com/questions/15983797/can-a-uiwebview-interact-communicate-with-the-app
         if let htmlPath = Bundle.main.path(forResource: "react/index", ofType: "html") {
@@ -44,65 +48,40 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
         let infoPlist = Bundle.main.infoDictionary
 		return "<---Please don't delete the following system information--->\n\(String(describing: infoPlist!["CFBundleName"])) Version: \(String(describing: infoPlist!["CFBundleShortVersionString"])) (\(String(describing: infoPlist!["CFBundleVersion"])))\nDevice: \(device.model)\niOS Version: \(device.systemVersion)\nTenseg Device Identifier: \(String(describing: device.identifierForVendor))\n<------------------------------------------------>"
     }
+	
+	//MARK: Persistence
+	
+	// Save data from the webview to user defaults
+	@objc func saveWebViewData() {
+		// @link https://stackoverflow.com/a/20965724
+		let jsString = "localStorage.getItem('caucuses')"; // TODO: make this the correct storage type and key
+		if let localData = scWebView.stringByEvaluatingJavaScript(from: jsString) {
+			UserDefaults.standard.set(localData, forKey: "localData")
+		}
+	}
+	
+	// load data from user defaults to the web view
+	func loadWebViewData() {
+		if let localData = UserDefaults.standard.string(forKey: "localData") {
+			// @link https://stackoverflow.com/a/20965724
+			let jsString = "localStorage.setItem('caucuses', \(localData)" // TODO: make this the correct storage type and key
+			scWebView.stringByEvaluatingJavaScript(from: jsString)
+		}
+	}
     
     //MARK: Delegates
     func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebView.NavigationType) -> Bool {
-          // perhaps send mailto URLs to the mail compose view controller
-//        if request.URL!.scheme == "mailto" {
-//            if let rawParts = request.URL?.resourceSpecifier.componentsSeparatedByString("?") {
-//                if MFMailComposeViewController.canSendMail() {
-//                    let mailView = MFMailComposeViewController()
-//                    mailView.mailComposeDelegate = self
-//                    mailView.setToRecipients([rawParts[0]])
-//                    self.presentViewController(mailView, animated: true, completion: nil)
-//                }
-//            }
-//            return false
-//        } else if request.URL?.scheme == "file" {
         // automatically load file URLs in this web view
         if request.url?.scheme == "file" {
             // returns the actual files (like HTML, CSS, JS, etc.)
             return true // tells UIWebView to actually pick up this local file
         } else if request.url?.scheme == "subcalc-extension" {
             // this is used for passing data between js and swift
-            var incomingString = request.url?.path //TODO: Broken after Swift 3 migration, needs fixing before next release, was .resourceSpecifier, but none of compiler-suggested replacements seems to do what we want
+            let incomingString = request.url?.path
             if incomingString == nil {
                 return false; // just give up if there is no real incomming string
             }
-            if ( incomingString == "//get-caucuses") {
-                // to get caucus data from swift for js side
-                // NSString* returnValue = [self.webView stringByEvaluatingJavaScriptFromString: "someJSFunction()"];
-                let fileContent = try? String(contentsOfFile: scRootPath + scJsonFilename)
-                var result = ""
-                if (fileContent != nil) {
-                    result = webView.stringByEvaluatingJavaScript(from: "SCGetData("+fileContent!+")")!
-                } else {
-                    result = webView.stringByEvaluatingJavaScript(from: "SCGetData(\"nothing\")")!
-                }
-                print(result)
-            } else if ( incomingString!.hasPrefix("//set-caucuses/") ) {
-                // to set the swift caucuses storage as instructed by the js side
-				let localIncoming = incomingString
-                incomingString?.removeSubrange((localIncoming?.startIndex)!..<(localIncoming?.index((localIncoming?.startIndex)!, offsetBy: 15))!)
-                let jsonString = incomingString!.removingPercentEncoding
-                do {
-                    try jsonString?.write(toFile: scRootPath + scJsonFilename, atomically: true, encoding: String.Encoding.utf8)
-                } catch _ {
-                    if #available(iOS 8.0, *) {
-                        let alertController = UIAlertController(title: "Subcalc Here", message: jsonString, preferredStyle: .actionSheet)
-                        let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
-                            // do nothing
-                        }
-                        alertController.addAction(OKAction)
-                        
-                        self.present(alertController, animated: true) {
-                            // do nothing
-                        }
-                    } else {
-                        // Fallback on earlier versions
-                    }
-                }
-            } else if ( incomingString!.hasPrefix("//share/" ) ) { // NOT YET LIVE
+           if ( incomingString!.hasPrefix("//share/" ) ) { // NOT YET LIVE
                 // this will be used to pass a caucus over to the standard sharing sheet as a replacement to the simplistic email this caucus function
 				print(incomingString ?? "")
                 //***we need to make sure that incomingString is the content that we had sent as the email contents before moving forward here, which will mean undoing url encoding of everything but the json link***
@@ -140,5 +119,10 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+	
+	//MARY: Take down
+	deinit {
+		NotificationCenter.default.removeObserver(self)
+	}
 }
 
