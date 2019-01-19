@@ -27,7 +27,7 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
         print (self.scRootPath)
         
         // To communicate with this webview... http://stackoverflow.com/questions/15983797/can-a-uiwebview-interact-communicate-with-the-app
-        if let htmlPath = Bundle.main.path(forResource: "index", ofType: "html") {
+        if let htmlPath = Bundle.main.path(forResource: "react/index", ofType: "html") {
             let htmlURL = URL(fileURLWithPath: htmlPath)
             let urlString = htmlURL.absoluteString
             let queryString = "?app=1" // to signal to the script that we are in-app
