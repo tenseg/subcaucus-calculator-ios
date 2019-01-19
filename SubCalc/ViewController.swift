@@ -51,21 +51,31 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
 	
 	//MARK: Persistence
 	
+	// keys used in local storage by the web app
+	// TODO: add the correct key(s)
+	private let storageKeys = [
+		"caucuses"
+	]
+	
 	// Save data from the webview to user defaults
 	@objc func saveWebViewData() {
-		// @link https://stackoverflow.com/a/20965724
-		let jsString = "localStorage.getItem('caucuses')"; // TODO: make this the correct storage type and key
-		if let localData = scWebView.stringByEvaluatingJavaScript(from: jsString) {
-			UserDefaults.standard.set(localData, forKey: "localData")
+		for key in storageKeys {
+			// @link https://stackoverflow.com/a/20965724
+			let jsString = "localStorage.getItem('\(key)')"; // TODO: make this the correct storage type
+			if let localData = scWebView.stringByEvaluatingJavaScript(from: jsString) {
+				UserDefaults.standard.set(localData, forKey: key)
+			}
 		}
 	}
 	
 	// load data from user defaults to the web view
 	func loadWebViewData() {
-		if let localData = UserDefaults.standard.string(forKey: "localData") {
-			// @link https://stackoverflow.com/a/20965724
-			let jsString = "localStorage.setItem('caucuses', \(localData)" // TODO: make this the correct storage type and key
-			scWebView.stringByEvaluatingJavaScript(from: jsString)
+		for key in storageKeys {
+			if let localData = UserDefaults.standard.string(forKey: key) {
+				// @link https://stackoverflow.com/a/20965724
+				let jsString = "localStorage.setItem('\(key)', \(localData)" // TODO: make this the correct storage type
+				scWebView.stringByEvaluatingJavaScript(from: jsString)
+			}
 		}
 	}
     
