@@ -63,7 +63,9 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
 			// @link https://stackoverflow.com/a/20965724
 			let jsString = "localStorage.getItem('\(key)')"; // TODO: make this the correct storage type
 			if let localData = scWebView.stringByEvaluatingJavaScript(from: jsString) {
-				UserDefaults.standard.set(localData, forKey: key)
+				if localData != "" {
+					UserDefaults.standard.set(localData, forKey: key)
+				}
 			}
 		}
 	}
@@ -72,9 +74,11 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
 	func loadWebViewData() {
 		for key in storageKeys {
 			if let localData = UserDefaults.standard.string(forKey: key) {
-				// @link https://stackoverflow.com/a/20965724
-				let jsString = "localStorage.setItem('\(key)', \(localData)" // TODO: make this the correct storage type
-				scWebView.stringByEvaluatingJavaScript(from: jsString)
+				if localData != "" {
+					// @link https://stackoverflow.com/a/20965724
+					let jsString = "localStorage.setItem('\(key)', \(localData)" // TODO: make this the correct storage type
+					scWebView.stringByEvaluatingJavaScript(from: jsString)
+				}
 			}
 		}
 	}
