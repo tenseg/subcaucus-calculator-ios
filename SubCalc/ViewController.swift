@@ -30,13 +30,8 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		
 		// load the react app
         if let htmlPath = Bundle.main.path(forResource: "react/index", ofType: "html") {
-            let htmlURL = URL(fileURLWithPath: htmlPath)
-            let urlString = htmlURL.absoluteString
-            let queryString = "?app=1" // to signal to react that we are in-app
-            let urlWithQuery = urlString + queryString
-            let finalURL = URL(string: urlWithQuery)
-            let htmlRequest = URLRequest(url: finalURL!)
-			scWebView.load(htmlRequest)
+            let urlString = URL(fileURLWithPath: htmlPath).absoluteString + "?app=1"
+			scWebView.load(URLRequest(url: URL(string: urlString)!))
 			scWebView.navigationDelegate = self
 			scWebView.uiDelegate = self
         }
@@ -111,25 +106,23 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
     
     //MARK: Delegates
 	func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: ((WKNavigationActionPolicy) -> Void)) {
-		let request = navigationAction.request
 		// automatically load file URLs in this web view
-		if request.url?.scheme == "file" {
-			// returns the actual files (like HTML, CSS, JS, etc.)
+		if navigationAction.request.url?.scheme == "file" {
 			decisionHandler(.allow) // tells WKWebView to actually pick up this local file
-			return
-		} else if request.url?.scheme == "subcalc-extension" {
+		} else if navigationAction.request.url?.scheme == "subcalc-extension" {
 			// this is used for passing data between react and swift
-			if let incomingString = request.url?.path {
+			if let incomingString = navigationAction.request.url?.path {
 				if ( incomingString.hasPrefix("//share/" ) ) {
 					shareString(content: incomingString.deletePrefix("//share/"))
 				} else if ( incomingString == "//feedback-email" ) {
 					emailTenseg()
 				}
 			}
+			decisionHandler(.cancel) // tells WKWebView to not actually get anything
 		} else {
-			UIApplication.shared.open(request.url!, options: [:], completionHandler: nil) // anything else goes to Safari
+			UIApplication.shared.open(navigationAction.request.url!, options: [:], completionHandler: nil) // anything else goes to Safari
+			decisionHandler(.cancel) // tells WKWebView to not actually get anything
 		}
-		decisionHandler(.cancel) // tells WKWebView to not actually get anything
 	}
     
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
