@@ -7,19 +7,17 @@
 //
 
 import UIKit
+import WebKit
 import MessageUI
 
-class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewControllerDelegate {
+class ViewController: UIViewController, WKUIDelegate, MFMailComposeViewControllerDelegate {
 
     //MARK: Vars and Lets
-    @IBOutlet weak var scWebView: UIWebView!
+    @IBOutlet weak var scWebView: WKWebView!
     
     //MARK: View Funcs
     override func viewDidLoad() {
         super.viewDidLoad()
-        // set status bar style
-		UIApplication.shared.statusBarStyle = .lightContent
-		
 		// attempt to load local data from user defaults
 		loadWebViewData()
 		
@@ -29,18 +27,22 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
 			selector: #selector(saveWebViewData),
 			name: UIApplication.willResignActiveNotification,
 			object: nil)
-        
-        // To communicate with this webview... http://stackoverflow.com/questions/15983797/can-a-uiwebview-interact-communicate-with-the-app
+		
+		// load the react app
         if let htmlPath = Bundle.main.path(forResource: "react/index", ofType: "html") {
             let htmlURL = URL(fileURLWithPath: htmlPath)
             let urlString = htmlURL.absoluteString
-            let queryString = "?app=1" // to signal to the script that we are in-app
+            let queryString = "?app=1" // to signal to react that we are in-app
             let urlWithQuery = urlString + queryString
             let finalURL = URL(string: urlWithQuery)
             let htmlRequest = URLRequest(url: finalURL!)
-            scWebView.loadRequest(htmlRequest)
+			scWebView.load(htmlRequest)
         }
-   }
+	}
+	
+	override var preferredStatusBarStyle: UIStatusBarStyle {
+		return .lightContent
+	}
     
     //MARK: Helpers
     func tensegDeviceSystemProfile() -> String { // designed to eventually go into TensegHelpers and be usable across any iOS app we develop
@@ -61,12 +63,12 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
 	@objc func saveWebViewData() {
 		for key in storageKeys {
 			// @link https://stackoverflow.com/a/20965724
-			let jsString = "localStorage.getItem('\(key)')"; // TODO: make this the correct storage type
-			if let localData = scWebView.stringByEvaluatingJavaScript(from: jsString) {
-				if localData != "" {
-					UserDefaults.standard.set(localData, forKey: key)
+			let jsString = "localStorage.getItem('\(key)')";
+			scWebView.evaluateJavaScript(jsString, completionHandler: { (result, error) in
+				if result as! String != "" {
+					UserDefaults.standard.set(result, forKey: key)
 				}
-			}
+			})
 		}
 	}
 	
@@ -76,8 +78,8 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
 			if let localData = UserDefaults.standard.string(forKey: key) {
 				if localData != "" {
 					// @link https://stackoverflow.com/a/20965724
-					let jsString = "localStorage.setItem('\(key)', \(localData)" // TODO: make this the correct storage type
-					scWebView.stringByEvaluatingJavaScript(from: jsString)
+					let jsString = "localStorage.setItem('\(key)', \(localData)"
+					scWebView.evaluateJavaScript(jsString, completionHandler: nil )
 				}
 			}
 		}
@@ -106,32 +108,26 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
 	}
     
     //MARK: Delegates
-    func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebView.NavigationType) -> Bool {
-        // automatically load file URLs in this web view
-        if request.url?.scheme == "file" {
-            // returns the actual files (like HTML, CSS, JS, etc.)
-            return true // tells UIWebView to actually pick up this local file
-        } else if request.url?.scheme == "subcalc-extension" {
-            // this is used for passing data between js and swift
-            let incomingString = request.url?.path
-            if incomingString == nil {
-                return false; // just give up if there is no real incomming string
-            }
-           if ( incomingString!.hasPrefix("//share/" ) ) { // NOT YET LIVE
-                // this will be used to pass a caucus over to the standard sharing sheet as a replacement to the simplistic email this caucus function
-				shareString(content: incomingString!.deletePrefix("//share/"))
-            } else if ( incomingString == "//feedback-email" ) { // NOT YET LIVE
-                emailTenseg()
-            }
-        } else {
-            // if we are passed any URL other than file:// or subcalc-extention://
-            // then we just let iOS handle it in the usual way
-            // though, note, this will NOT be handled in our own UIWebView
-            // so it effectively hands off to Safari or other apps
-            UIApplication.shared.openURL(request.url!)
-        }
-        return false // tells UIWebView to not actually get anything
-    }
+	func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: ((WKNavigationActionPolicy) -> Void)) {
+		let request = navigationAction.request
+		// automatically load file URLs in this web view
+		if request.url?.scheme == "file" {
+			// returns the actual files (like HTML, CSS, JS, etc.)
+			decisionHandler(.allow) // tells WKWebView to actually pick up this local file
+		} else if request.url?.scheme == "subcalc-extension" {
+			// this is used for passing data between react and swift
+			if let incomingString = request.url?.path {
+				if ( incomingString.hasPrefix("//share/" ) ) {
+					shareString(content: incomingString.deletePrefix("//share/"))
+				} else if ( incomingString == "//feedback-email" ) {
+					emailTenseg()
+				}
+			}
+		} else {
+			UIApplication.shared.open(request.url!, options: [:], completionHandler: nil) // anything else goes to Safari
+		}
+		decisionHandler(.cancel) // tells WKWebView to not actually get anything
+	}
     
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
         controller.dismiss(animated: true, completion: nil)
