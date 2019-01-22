@@ -46,7 +46,7 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
     func tensegDeviceSystemProfile() -> String { // designed to eventually go into TensegHelpers and be usable across any iOS app we develop
         let device = UIDevice.current
         let infoPlist = Bundle.main.infoDictionary
-		return "<---Please don't delete the following system information--->\n\(String(describing: infoPlist!["CFBundleName"])) Version: \(String(describing: infoPlist!["CFBundleShortVersionString"])) (\(String(describing: infoPlist!["CFBundleVersion"])))\nDevice: \(device.model)\niOS Version: \(device.systemVersion)\nTenseg Device Identifier: \(String(describing: device.identifierForVendor))\n<------------------------------------------------>"
+		return "<---Please don't delete the following system information--->\n\(String(describing: infoPlist!["CFBundleName"])) Version: \(String(describing: infoPlist!["CFBundleShortVersionString"])) (\(String(describing: infoPlist!["CFBundleVersion"])))\nDevice: \(device.model)\niOS Version: \(device.systemVersion))\n<------------------------------------------------>"
     }
 	
 	//MARK: Persistence
@@ -82,6 +82,28 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
 			}
 		}
 	}
+	
+	//MARK: Actions from React App
+	func shareString(content: String) {
+		let activityViewController = UIActivityViewController(activityItems: [content], applicationActivities: nil)
+		present(activityViewController, animated: true, completion: nil)
+	}
+	
+	func emailTenseg() {
+		// we want to send email feedback from native-land
+		if MFMailComposeViewController.canSendMail() {
+			let mailView = MFMailComposeViewController()
+			mailView.mailComposeDelegate = self
+			mailView.setToRecipients(["efc@tenseg.net"]) // should we really send the iOS email to subcalc@tenseg.net instead?
+			mailView.setSubject("SubCalc Feedback")
+			mailView.setMessageBody("\n\n\n \(tensegDeviceSystemProfile())", isHTML: false)
+			self.present(mailView, animated: true, completion: nil)
+		} else {
+			let cantSendMailAlert = UIAlertController(title: "Cannot Send Mail", message: "You must first set up Mail before you can send feedback to Tenseg.", preferredStyle: UIAlertController.Style.alert)
+			cantSendMailAlert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+			self.present(cantSendMailAlert, animated: true, completion: nil)
+		}
+	}
     
     //MARK: Delegates
     func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebView.NavigationType) -> Bool {
@@ -97,22 +119,9 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
             }
            if ( incomingString!.hasPrefix("//share/" ) ) { // NOT YET LIVE
                 // this will be used to pass a caucus over to the standard sharing sheet as a replacement to the simplistic email this caucus function
-				print(incomingString ?? "")
-                //***we need to make sure that incomingString is the content that we had sent as the email contents before moving forward here, which will mean undoing url encoding of everything but the json link***
-                let activityViewController = UIActivityViewController(activityItems: [incomingString!], applicationActivities: nil) // should we carry backwards our CSV export activity for this menu? that would require additional code to go from json to csv, but may be worth it
-                present(activityViewController, animated: true, completion: nil)
+				shareString(content: incomingString!.deletePrefix("//share/"))
             } else if ( incomingString == "//feedback-email" ) { // NOT YET LIVE
-                // we want to send email feedback from native-land
-                if MFMailComposeViewController.canSendMail() {
-                    let mailView = MFMailComposeViewController()
-                    mailView.mailComposeDelegate = self
-                    mailView.setToRecipients(["efc@sd64dfl.org"]) // should we really send the iOS email to subcalc@tenseg.net instead?
-                    mailView.setSubject("SubCalc Feedback")
-                    mailView.setMessageBody("\n\n\n \(self.tensegDeviceSystemProfile())", isHTML: false)
-                    self.present(mailView, animated: true, completion: nil)
-                } else {
-                    /***let user know that they must first set up Mail***/
-                }
+                emailTenseg()
             }
         } else {
             // if we are passed any URL other than file:// or subcalc-extention://
@@ -140,3 +149,10 @@ class ViewController: UIViewController, UIWebViewDelegate, MFMailComposeViewCont
 	}
 }
 
+// see https://www.hackingwithswift.com/example-code/strings/how-to-remove-a-prefix-from-a-string
+extension String {
+	func deletePrefix(_ prefix: String) -> String {
+		guard self.hasPrefix(prefix) else { return self }
+		return String(self.dropFirst(prefix.count))
+	}
+}
