@@ -10,7 +10,7 @@ import UIKit
 import WebKit
 import MessageUI
 
-class ViewController: UIViewController, WKUIDelegate, MFMailComposeViewControllerDelegate {
+class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMailComposeViewControllerDelegate {
 
     //MARK: Vars and Lets
     @IBOutlet weak var scWebView: WKWebView!
@@ -37,6 +37,8 @@ class ViewController: UIViewController, WKUIDelegate, MFMailComposeViewControlle
             let finalURL = URL(string: urlWithQuery)
             let htmlRequest = URLRequest(url: finalURL!)
 			scWebView.load(htmlRequest)
+			scWebView.navigationDelegate = self
+			scWebView.uiDelegate = self
         }
 	}
 	
@@ -65,9 +67,10 @@ class ViewController: UIViewController, WKUIDelegate, MFMailComposeViewControlle
 			// @link https://stackoverflow.com/a/20965724
 			let jsString = "localStorage.getItem('\(key)')";
 			scWebView.evaluateJavaScript(jsString, completionHandler: { (result, error) in
-				if result as! String != "" {
-					UserDefaults.standard.set(result, forKey: key)
-				}
+				// TODO: debug and finish once react app is actually saving data
+//				if result != nil {
+//					UserDefaults.standard.set(result, forKey: key)
+//				}
 			})
 		}
 	}
@@ -76,11 +79,10 @@ class ViewController: UIViewController, WKUIDelegate, MFMailComposeViewControlle
 	func loadWebViewData() {
 		for key in storageKeys {
 			if let localData = UserDefaults.standard.string(forKey: key) {
-				if localData != "" {
-					// @link https://stackoverflow.com/a/20965724
-					let jsString = "localStorage.setItem('\(key)', \(localData)"
-					scWebView.evaluateJavaScript(jsString, completionHandler: nil )
-				}
+				// @link https://stackoverflow.com/a/20965724
+				// TODO: debug and finish once react app is actually saving data
+//				let jsString = "localStorage.setItem('\(key)', \(localData)"
+//				scWebView.evaluateJavaScript(jsString, completionHandler: nil )
 			}
 		}
 	}
@@ -108,12 +110,13 @@ class ViewController: UIViewController, WKUIDelegate, MFMailComposeViewControlle
 	}
     
     //MARK: Delegates
-	func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: ((WKNavigationActionPolicy) -> Void)) {
+	func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: ((WKNavigationActionPolicy) -> Void)) {
 		let request = navigationAction.request
 		// automatically load file URLs in this web view
 		if request.url?.scheme == "file" {
 			// returns the actual files (like HTML, CSS, JS, etc.)
 			decisionHandler(.allow) // tells WKWebView to actually pick up this local file
+			return
 		} else if request.url?.scheme == "subcalc-extension" {
 			// this is used for passing data between react and swift
 			if let incomingString = request.url?.path {
