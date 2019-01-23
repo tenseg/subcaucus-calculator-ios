@@ -84,7 +84,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			}
 			self.present(mailView, animated: true, completion: nil)
 		} else {
-			let cantSendMailAlert = UIAlertController(title: "Cannot Send Mail", message: "You must first set up Mail before you can send feedback to Tenseg.", preferredStyle: .alert)
+			let cantSendMailAlert = UIAlertController(title: "Cannot Send Mail", message: "You must first set up Mail before you can send email from SubCalc.", preferredStyle: .alert)
 			cantSendMailAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
 			self.present(cantSendMailAlert, animated: true, completion: nil)
 		}
