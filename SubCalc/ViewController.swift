@@ -90,7 +90,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		}
 	}
     
-    //MARK: Delegates
+    //MARK: WebKit Delegates
 	
 	// decide how to handle urls that are being loaded
 	func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: ((WKNavigationActionPolicy) -> Void)) {
@@ -143,6 +143,8 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		}))
 		self.present(alertController, animated: true, completion: nil)
 	}
+	
+	//MARK: Mail Delegates
 	
 	// when finished with emails
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
