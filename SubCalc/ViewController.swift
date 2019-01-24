@@ -11,27 +11,27 @@ import WebKit
 import MessageUI
 
 class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMailComposeViewControllerDelegate {
-
-    //MARK: Vars and Lets
-    var scWebView: WKWebView!
     
     //MARK: View Funcs
     override func viewDidLoad() {
         super.viewDidLoad()
 		
 		// load the react app
+		// this should always get the path, but needs if let to unwrap it
         if let htmlPath = Bundle.main.path(forResource: "react/index", ofType: "html") {
 			// set up the web view and replace our view with it
 			// there is nothing of substance in IB for this app's main GUI
 			let webConfiguration = WKWebViewConfiguration()
 			webConfiguration.websiteDataStore = WKWebsiteDataStore.default() // persistent
-			scWebView = WKWebView(frame: self.view.frame, configuration: webConfiguration)
-			scWebView.backgroundColor = UIColor(red:0.558, green:0.092, blue:0.191, alpha:1) // red
-			self.view = scWebView
+			let webView = WKWebView(frame: self.view.frame, configuration: webConfiguration)
+			webView.backgroundColor = UIColor(red:0.558, green:0.092, blue:0.191, alpha:1) // red
+			webView.navigationDelegate = self
+			webView.uiDelegate = self
+			self.view = webView
 			
 			// build the url with query items passing details about the ios app
 			var queryItems = [
-				URLQueryItem(name: "app", value: nil),
+				URLQueryItem(name: "app", value: "yes"),
 			]
 			if let version = Bundle.main.infoDictionary!["CFBundleShortVersionString"] {
 				queryItems.append(URLQueryItem(name: "version", value: String(describing: version)))
@@ -40,15 +40,12 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 				queryItems.append(URLQueryItem(name: "build", value: String(describing: build)))
 			}
 			#if DEBUG
-				queryItems.append(URLQueryItem(name: "debug", value: nil))
+				queryItems.append(URLQueryItem(name: "debug", value: "yes"))
 			#endif
 			let urlComps = NSURLComponents(string: URL(fileURLWithPath: htmlPath).absoluteString)!
 			urlComps.queryItems = queryItems
 			// load the react app
-			scWebView.load(URLRequest(url: urlComps.url!))
-			// set ourselves as the webview delegate
-			scWebView.navigationDelegate = self
-			scWebView.uiDelegate = self
+			webView.load(URLRequest(url: urlComps.url!))
 		}
 	}
 	
@@ -57,6 +54,8 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	}
     
     //MARK: Helpers
+	
+	// returns a system profile used in emails to Tenseg
     func tensegDeviceSystemProfile() -> String { // designed to eventually go into TensegHelpers and be usable across any iOS app we develop
         let device = UIDevice.current
         let infoPlist = Bundle.main.infoDictionary
@@ -141,6 +140,24 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
 			completionHandler(true)
 		}))
+		self.present(alertController, animated: true, completion: nil)
+	}
+	
+	// use ios text input for js text input
+	func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (String?) -> Void) {
+		let alertController = UIAlertController(title: webView.url?.host, message: prompt, preferredStyle: .alert)
+		alertController.addTextField { (textField: UITextField!) in
+			textField.text = defaultText
+		}
+		alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
+			completionHandler(nil)
+		}))
+		alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+			if let text = alertController.textFields?.first?.text {
+				completionHandler(text)
+			} else {
+				completionHandler(defaultText)
+			}		}))
 		self.present(alertController, animated: true, completion: nil)
 	}
 	
