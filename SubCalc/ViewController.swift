@@ -10,7 +10,7 @@ import UIKit
 import WebKit
 import MessageUI
 
-class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMailComposeViewControllerDelegate {
+class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
     
     //MARK: View Funcs
     override func viewDidLoad() {
@@ -29,7 +29,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			webView.uiDelegate = self
 			self.view = webView
 			
-			// build the url with query items passing details about the ios app
+			// build the query items passing details about the ios app
 			var queryItems = [
 				URLQueryItem(name: "app", value: "yes"),
 			]
@@ -39,11 +39,14 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			if let build = Bundle.main.infoDictionary!["CFBundleVersion"] {
 				queryItems.append(URLQueryItem(name: "build", value: String(describing: build)))
 			}
-			#if DEBUG
+			#if DEBUG // see https://kitefaster.com/2016/01/23/how-to-specify-debug-and-release-flags-in-xcode-with-swift/
 				queryItems.append(URLQueryItem(name: "debug", value: "yes"))
 			#endif
-			let urlComps = NSURLComponents(string: URL(fileURLWithPath: htmlPath).absoluteString)!
+			
+			// build the url to the react app
+			var urlComps = URLComponents(url: URL(fileURLWithPath: htmlPath), resolvingAgainstBaseURL: false)!
 			urlComps.queryItems = queryItems
+			
 			// load the react app
 			webView.load(URLRequest(url: urlComps.url!))
 		}
@@ -52,15 +55,6 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	override var preferredStatusBarStyle: UIStatusBarStyle {
 		return .lightContent
 	}
-    
-    //MARK: Helpers
-	
-	// returns a system profile used in emails to Tenseg
-    func tensegDeviceSystemProfile() -> String { // designed to eventually go into TensegHelpers and be usable across any iOS app we develop
-        let device = UIDevice.current
-        let infoPlist = Bundle.main.infoDictionary
-		return "<---Please don't delete the following system information--->\n\(String(describing: infoPlist!["CFBundleName"])) Version: \(String(describing: infoPlist!["CFBundleShortVersionString"])) (\(String(describing: infoPlist!["CFBundleVersion"])))\nDevice: \(device.model)\niOS Version: \(device.systemVersion))\n<------------------------------------------------>"
-    }
 	
 	//MARK: Actions from React App
 	
@@ -68,25 +62,6 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	func shareString(content: String) {
 		let activityViewController = UIActivityViewController(activityItems: [content], applicationActivities: nil)
 		present(activityViewController, animated: true, completion: nil)
-	}
-	
-	// use native Mail view to send emails
-	func email(address: String, subject: String = "SubCalc Feedback") {
-		// we want to send email feedback from native-land
-		if MFMailComposeViewController.canSendMail() {
-			let mailView = MFMailComposeViewController()
-			mailView.mailComposeDelegate = self
-			mailView.setToRecipients([address])
-			mailView.setSubject(subject)
-			if address == "subcalc@tenseg.net" {
-				mailView.setMessageBody("\n\n\n \(tensegDeviceSystemProfile())", isHTML: false)
-			}
-			self.present(mailView, animated: true, completion: nil)
-		} else {
-			let cantSendMailAlert = UIAlertController(title: "Cannot Send Mail", message: "You must first set up Mail before you can send email from SubCalc.", preferredStyle: .alert)
-			cantSendMailAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-			self.present(cantSendMailAlert, animated: true, completion: nil)
-		}
 	}
     
     //MARK: WebKit Delegates
@@ -100,19 +75,11 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		} else if navigationAction.request.url?.scheme == "subcalc-extension" {
 			if let incomingString = navigationAction.request.url?.path {
 				// used to share plaintext strings
-				if ( incomingString.hasPrefix("//share-string/" ) ) {
-					shareString(content: incomingString.deletePrefix("//share-string/"))
-				// used to send feedback emails to Tenseg
-				} else if ( incomingString == "//feedback-email" ) {
-					email(address: "subcalc@tenseg.net")
+				if let shareableString = incomingString.deletePrefix("//share-string/" ) {
+					shareString(content: shareableString)
 				}
 			}
 			decisionHandler(.cancel) // tells WKWebView to not actually get anything
-		// emails use the in-app email view
-		} else if (navigationAction.request.url?.scheme == "mailto") {
-			email(address: navigationAction.request.url!.pathComponents[1], subject: "")
-			decisionHandler(.cancel) // tells WKWebView to not actually get anything
-		// anything else goes to Safari
 		} else {
 			UIApplication.shared.open(navigationAction.request.url!, options: [:], completionHandler: nil)
 			decisionHandler(.cancel) // tells WKWebView to not actually get anything
@@ -157,33 +124,23 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 				completionHandler(text)
 			} else {
 				completionHandler(defaultText)
-			}		}))
+			}
+		}))
 		self.present(alertController, animated: true, completion: nil)
 	}
-	
-	//MARK: Mail Delegates
-	
-	// when finished with emails
-    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
-        controller.dismiss(animated: true, completion: nil)
-    }
     
     //MARK: Memory
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-	
-	//MARY: Take down
-	deinit {
-		NotificationCenter.default.removeObserver(self)
-	}
 }
 
-// see https://www.hackingwithswift.com/example-code/strings/how-to-remove-a-prefix-from-a-string
 extension String {
-	func deletePrefix(_ prefix: String) -> String {
-		guard self.hasPrefix(prefix) else { return self }
+	// deletes the prefix if it has that prefix
+	// based on https://www.hackingwithswift.com/example-code/strings/how-to-remove-a-prefix-from-a-string
+	func deletePrefix(_ prefix: String) -> String? {
+		guard self.hasPrefix(prefix) else { return nil }
 		return String(self.dropFirst(prefix.count))
 	}
 }
