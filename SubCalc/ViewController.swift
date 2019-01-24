@@ -58,10 +58,43 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
 	
 	//MARK: Actions from React App
 	
-	// share a string using ios activity view controller
-	func shareString(content: String) {
-		let activityViewController = UIActivityViewController(activityItems: [content], applicationActivities: nil)
-		present(activityViewController, animated: true, completion: nil)
+	// share a text string using ios activity view controller
+	func shareText(_ textContent: String) {
+		let activityViewController = UIActivityViewController(activityItems: [textContent], applicationActivities: nil)
+		activityViewController.completionWithItemsHandler = {
+			(activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) in
+			self.dismiss(animated: true, completion: nil)
+		}
+		self.present(activityViewController, animated: true, completion: nil)
+	}
+	
+	// create a csv file and share it
+	//based on http://www.justindoan.com/tutorials/2016/9/9/creating-and-exporting-a-csv-file-in-swift
+	func shareCSV(_ csvContent: String, toFile filename: String) {
+		// set up the temporary path
+		let temporaryPath = NSURL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("csv_export")?.appendingPathComponent(filename)
+		// try to write the csv to the file
+		do {
+			try csvContent.write(to: temporaryPath!, atomically: true, encoding: String.Encoding.utf8)
+			
+			// offer options to share the csv file
+			let activityViewController = UIActivityViewController(activityItems: [temporaryPath!], applicationActivities: [])
+			activityViewController.completionWithItemsHandler = {
+				(activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) in
+				self.dismiss(animated: true, completion: nil)
+				// delete the temporary file
+				do {
+					try FileManager.default.removeItem(at: temporaryPath!)
+				} catch {
+					print("file deletion failed")
+				}
+			}
+			self.present(activityViewController, animated: true, completion: nil)
+		} catch {
+			let alertController = UIAlertController(title: "CSV Download Failed", message: "The CSV download has failed. Please try again.", preferredStyle: .alert)
+			alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+			self.present(alertController, animated: true, completion: nil)
+		}
 	}
     
     //MARK: WebKit Delegates
@@ -71,15 +104,26 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
 		// automatically load file URLs in this web view
 		if navigationAction.request.url?.scheme == "file" {
 			decisionHandler(.allow) // tells WKWebView to actually pick up this local file
-		// this is used for passing data between react and swift
+		// this scheme is used internally to passing data between react and swift
+		// use "subcalc-extension://_action_/_data_" where _action_ is from the below options and _data_ is the text you want to pass on to the swift from React
 		} else if navigationAction.request.url?.scheme == "subcalc-extension" {
 			if let incomingString = navigationAction.request.url?.path {
-				// used to share plaintext strings
-				if let shareableString = incomingString.deletePrefix("//share-string/" ) {
-					shareString(content: shareableString)
+				// used to share text strings
+				// can be used from Share > Download text and Share > Download code in the React app
+				// may evenbe appropriate to not show Share > Email report in the ios app since Mail is an option from the activity controller used by the other download options
+				// or Share > Email report may just be able to use the same mailto: as the web app, and use ios default behavior for those links to open a mail view
+				if let textString = incomingString.deletePrefix("//share-text/" ) {
+					shareText(textString)
+				}
+				// used to share csv content
+				// can be used from Share > Download CSV in the React app
+				// assumes that the input string is valid csv data
+				if let csvString = incomingString.deletePrefix("//share-csv/" ) {
+					shareCSV(csvString, toFile: "Caucus.csv") // TODO: make a better filename w/ further input parsing? perhaps there is a filename, then another delimeter, then csv content?
 				}
 			}
 			decisionHandler(.cancel) // tells WKWebView to not actually get anything
+		// everything else uses the default ios handling, which may means Safari, Mail, Phone, etc.
 		} else {
 			UIApplication.shared.open(navigationAction.request.url!, options: [:], completionHandler: nil)
 			decisionHandler(.cancel) // tells WKWebView to not actually get anything
@@ -89,7 +133,6 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
 	// use ios alert controller for js alert panels instead of native js ones
 	// see https://medium.com/@dakeshi/tips-for-wkwebview-that-will-keep-you-from-going-troubles-c1990851385c
 	func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (() -> Void)) {
-		
 		let alertController = UIAlertController(title: "Notice", message: message, preferredStyle: .alert)
 		alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
 			completionHandler()
