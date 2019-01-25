@@ -8,8 +8,9 @@
 
 import UIKit
 import WebKit
+import MessageUI
 
-class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
+class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMailComposeViewControllerDelegate {
     
     //MARK: View Funcs
     override func viewDidLoad() {
@@ -125,6 +126,27 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
 			self.present(alertController, animated: true, completion: nil)
 		}
 	}
+	
+	// used to send email within the app
+	func shareEmail(_ to: String, withSubject subject: String?, andContent content: String?) {
+		// we want to send email feedback from native-land
+		if MFMailComposeViewController.canSendMail() {
+			let mailView = MFMailComposeViewController()
+			mailView.mailComposeDelegate = self
+			mailView.setToRecipients([to])
+			if (subject != nil) {
+				mailView.setSubject(subject!)
+			}
+			if (content != nil) {
+				mailView.setMessageBody(content!, isHTML: false)
+			}
+			self.present(mailView, animated: true, completion: nil)
+		} else {
+			let alertController = UIAlertController(title: "Cannot Send Email", message: "Please set up Mail before attempting to send email from SubCalc.", preferredStyle: .alert)
+			alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+			self.present(alertController, animated: true, completion: nil)
+		}
+	}
     
     //MARK: WebKit Delegates
 	
@@ -164,7 +186,29 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
 					shareCSV(csvString, toFile: filename)
 				}
 				decisionHandler(.cancel) // tells WKWebView to not actually get anything
-			// everything else uses the default ios handling, which may means Safari, Mail, Phone, etc.
+			// open mailto urls in mailview instead of Safari
+			} else if urlComps.scheme == "mailto" {
+				// example link: "mailto:email@Mailto.co.uk?subject=Subject Using Mailto.co.uk&body=Email test"
+				var subject: String? = nil
+				var content: String? = nil
+				if let queryItems = urlComps.queryItems {
+					for item in queryItems {
+						if item.name == "subject" {
+							if let sub = item.value {
+								subject = sub
+							}
+						}
+						if item.name == "body" {
+							if let con = item.value {
+								content = con
+							}
+						}
+					}
+				}
+				if let to = urlComps.path.removingPercentEncoding {
+					shareEmail(to, withSubject: subject, andContent: content)
+				}
+				decisionHandler(.cancel) // tells WKWebView to not actually get anything
 			} else {
 				UIApplication.shared.open(navigationAction.request.url!, options: [:], completionHandler: nil)
 				decisionHandler(.cancel) // tells WKWebView to not actually get anything
@@ -212,6 +256,11 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
 			}
 		}))
 		self.present(alertController, animated: true, completion: nil)
+	}
+	
+	//MARK: Mail Delegate
+	func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+		self.dismiss(animated: true, completion: nil)
 	}
     
     //MARK: Memory
