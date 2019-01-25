@@ -8,7 +8,6 @@
 
 import UIKit
 import WebKit
-import MessageUI
 
 class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
     
@@ -27,6 +26,11 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
 			webView.backgroundColor = UIColor(red:0.558, green:0.092, blue:0.191, alpha:1) // red
 			webView.navigationDelegate = self
 			webView.uiDelegate = self
+			
+			// attempt to load old SubCalc data file to local storage
+			attemptToMigrateOldSubCalcDataTo(webView)
+			
+			// replace the view with the web view
 			self.view = webView
 			
 			// build the query items passing details about the ios app
@@ -56,6 +60,26 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
 		return .lightContent
 	}
 	
+	//MARK: Helpers
+	
+	// this will try and migrate data from the old json file into the new local storage
+	func attemptToMigrateOldSubCalcDataTo(_ webView: WKWebView) {
+		let docDirectory = (NSSearchPathForDirectoriesInDomains(.documentDirectory,.userDomainMask,true)[0] as String)
+		if let subcalcJSON = try? String(contentsOfFile: docDirectory + "/subcalc.json") {
+			// import json into local storage as for the old app, for the React app to migrate itself
+			webView.evaluateJavaScript("localStorage.setItem('subcalc', \(subcalcJSON)") { (result, error) in
+				// delete the file if succeeded
+				if (error == nil) {
+					do {
+						try FileManager.default.removeItem(at: URL(fileURLWithPath: docDirectory + "/subcalc.json"))
+					} catch {
+						print("file deletion failed")
+					}
+				}
+			}
+		}
+	}
+	
 	//MARK: Actions from React App
 	
 	// share a text string using ios activity view controller
@@ -72,19 +96,19 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
 	//based on http://www.justindoan.com/tutorials/2016/9/9/creating-and-exporting-a-csv-file-in-swift
 	func shareCSV(_ csvContent: String, toFile filename: String) {
 		// set up the temporary path
-		let temporaryPath = NSURL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("csv_export")?.appendingPathComponent(filename)
+		let temporaryPath = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(filename)
 		// try to write the csv to the file
 		do {
-			try csvContent.write(to: temporaryPath!, atomically: true, encoding: String.Encoding.utf8)
+			try csvContent.write(to: temporaryPath, atomically: true, encoding: String.Encoding.utf8)
 			
 			// offer options to share the csv file
-			let activityViewController = UIActivityViewController(activityItems: [temporaryPath!], applicationActivities: [])
+			let activityViewController = UIActivityViewController(activityItems: [temporaryPath], applicationActivities: [])
 			activityViewController.completionWithItemsHandler = {
 				(activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) in
 				self.dismiss(animated: true, completion: nil)
 				// delete the temporary file
 				do {
-					try FileManager.default.removeItem(at: temporaryPath!)
+					try FileManager.default.removeItem(at: temporaryPath)
 				} catch {
 					print("file deletion failed")
 				}
