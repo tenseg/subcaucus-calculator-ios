@@ -94,9 +94,14 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
 	
 	// create a csv file and share it
 	//based on http://www.justindoan.com/tutorials/2016/9/9/creating-and-exporting-a-csv-file-in-swift
-	func shareCSV(_ csvContent: String, toFile filename: String) {
+	func shareCSV(_ csvContent: String, toFile filename: String?) {
+		// ensure a valid filename
+		var filename = filename // so that we can change it
+		if filename == nil {
+			filename = "Export.csv"
+		}
 		// set up the temporary path
-		let temporaryPath = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(filename)
+		let temporaryPath = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(filename!)
 		// try to write the csv to the file
 		do {
 			try csvContent.write(to: temporaryPath, atomically: true, encoding: String.Encoding.utf8)
@@ -125,32 +130,45 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
 	
 	// decide how to handle urls that are being loaded
 	func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: ((WKNavigationActionPolicy) -> Void)) {
-		// automatically load file URLs in this web view
-		if navigationAction.request.url?.scheme == "file" {
-			decisionHandler(.allow) // tells WKWebView to actually pick up this local file
-		// this scheme is used internally to passing data between react and swift
-		// use "subcalc-extension://_action_/_data_" where _action_ is from the below options and _data_ is the text you want to pass on to the swift from React
-		} else if navigationAction.request.url?.scheme == "subcalc-extension" {
-			if let incomingString = navigationAction.request.url?.path {
+		if let url = navigationAction.request.url  {
+			let urlComps = URLComponents(url: url, resolvingAgainstBaseURL: true)! // why is this an optional?
+			// automatically load file URLs in this web view
+			if urlComps.scheme == "file" {
+				decisionHandler(.allow) // tells WKWebView to actually pick up this local file
+			// this scheme is used internally to passing data between react and swift
+			// use "subcalc-extension://_action_/_data_" where _action_ is from the below options and _data_ is the text you want to pass on to the swift from React
+			} else if urlComps.scheme == "subcalc-extension" {
 				// used to share text strings
 				// can be used from Share > Download text and Share > Download code in the React app
 				// may evenbe appropriate to not show Share > Email report in the ios app since Mail is an option from the activity controller used by the other download options
 				// or Share > Email report may just be able to use the same mailto: as the web app, and use ios default behavior for those links to open a mail view
-				if let textString = incomingString.deletePrefix("//share-text/" ) {
+				if let textString = urlComps.path.deletePrefix("share-text/" )?.removingPercentEncoding {
 					shareText(textString)
 				}
 				// used to share csv content
 				// can be used from Share > Download CSV in the React app
 				// assumes that the input string is valid csv data
-				if let csvString = incomingString.deletePrefix("//share-csv/" ) {
-					shareCSV(csvString, toFile: "Caucus.csv") // TODO: make a better filename w/ further input parsing? perhaps there is a filename, then another delimeter, then csv content?
+				if let csvString = urlComps.path.deletePrefix("share-csv/" )?.removingPercentEncoding {
+					// pull the filename from the query items if it is there
+					var filename = "Meeting.csv"
+					if let queryItems = urlComps.queryItems {
+						for item in queryItems {
+							if item.name == "filename" {
+								if let value = item.value {
+									filename = value + ".csv"
+								}
+							}
+						}
+					}
+					// share to csv
+					shareCSV(csvString, toFile: filename)
 				}
+				decisionHandler(.cancel) // tells WKWebView to not actually get anything
+			// everything else uses the default ios handling, which may means Safari, Mail, Phone, etc.
+			} else {
+				UIApplication.shared.open(navigationAction.request.url!, options: [:], completionHandler: nil)
+				decisionHandler(.cancel) // tells WKWebView to not actually get anything
 			}
-			decisionHandler(.cancel) // tells WKWebView to not actually get anything
-		// everything else uses the default ios handling, which may means Safari, Mail, Phone, etc.
-		} else {
-			UIApplication.shared.open(navigationAction.request.url!, options: [:], completionHandler: nil)
-			decisionHandler(.cancel) // tells WKWebView to not actually get anything
 		}
 	}
 	
