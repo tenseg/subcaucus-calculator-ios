@@ -25,14 +25,27 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			webConfiguration.websiteDataStore = WKWebsiteDataStore.default() // persistent
 			let webView = WKWebView(frame: self.view.frame, configuration: webConfiguration)
 			webView.backgroundColor = UIColor(red:0.558, green:0.092, blue:0.191, alpha:1) // red
+			webView.translatesAutoresizingMaskIntoConstraints = false
 			webView.navigationDelegate = self
 			webView.uiDelegate = self
 			
 			// attempt to load old SubCalc data file to local storage
 			attemptToMigrateOldSubCalcDataTo(webView)
 			
-			// replace the view with the web view
-			self.view = webView
+			// add web view to the main view
+			self.view.addSubview(webView)
+			
+			// deal with safe area avoidance
+			let margins = self.view.layoutMarginsGuide
+			NSLayoutConstraint.activate([
+				webView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
+				webView.trailingAnchor.constraint(equalTo: margins.trailingAnchor)
+				])
+			let guide = self.view.safeAreaLayoutGuide
+			webView.trailingAnchor.constraint(equalTo: guide.trailingAnchor).isActive = true
+			webView.leadingAnchor.constraint(equalTo: guide.leadingAnchor).isActive = true
+			webView.bottomAnchor.constraint(equalTo: guide.bottomAnchor).isActive = true
+			webView.topAnchor.constraint(equalTo: guide.topAnchor).isActive = true
 			
 			// build the query items passing details about the ios app
 			var queryItems = [
