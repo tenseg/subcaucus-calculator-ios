@@ -78,16 +78,16 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	
 	// this will try and migrate data from the old json file into the new local storage
 	func attemptToMigrateOldSubCalcDataTo(_ webView: WKWebView) {
-		let docDirectory = (NSSearchPathForDirectoriesInDomains(.documentDirectory,.userDomainMask,true)[0] as String)
-		if let subcalcJSON = try? String(contentsOfFile: docDirectory + "/subcalc.json") {
+		let oldFile = (NSSearchPathForDirectoriesInDomains(.documentDirectory,.userDomainMask,true)[0] as String) + "/subcalc.json"
+		if let subcalcJSON = try? String(contentsOfFile: oldFile) {
 			// import json into local storage as for the old app, for the React app to migrate itself
 			webView.evaluateJavaScript("localStorage.setItem('subcalc', \(subcalcJSON)") { (result, error) in
 				// delete the file if succeeded
 				if (error == nil) {
 					do {
-						try FileManager.default.removeItem(at: URL(fileURLWithPath: docDirectory + "/subcalc.json"))
+						try FileManager.default.removeItem(at: URL(fileURLWithPath: oldFile))
 					} catch {
-						print("file deletion failed")
+						print("\(oldFile) deletion failed")
 					}
 				}
 			}
@@ -129,7 +129,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 				do {
 					try FileManager.default.removeItem(at: temporaryPath)
 				} catch {
-					print("file deletion failed")
+					print("\(temporaryPath) deletion failed")
 				}
 			}
 			self.present(activityViewController, animated: true, completion: nil)
@@ -141,7 +141,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	}
 	
 	// used to send email within the app
-	func shareEmail(_ to: String, withSubject subject: String?, andContent content: String?) {
+	func shareEmail(_ to: String, withSubject subject: String?, andBody body: String?) {
 		// we want to send email feedback from native-land
 		if MFMailComposeViewController.canSendMail() {
 			let mailView = MFMailComposeViewController()
@@ -150,8 +150,8 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			if (subject != nil) {
 				mailView.setSubject(subject!)
 			}
-			if (content != nil) {
-				mailView.setMessageBody(content!, isHTML: false)
+			if (body != nil) {
+				mailView.setMessageBody(body!, isHTML: false)
 			}
 			self.present(mailView, animated: true, completion: nil)
 		} else {
@@ -203,7 +203,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			} else if urlComps.scheme == "mailto" {
 				// example link: "mailto:email@Mailto.co.uk?subject=Subject Using Mailto.co.uk&body=Email test"
 				var subject: String? = nil
-				var content: String? = nil
+				var body: String? = nil
 				if let queryItems = urlComps.queryItems {
 					for item in queryItems {
 						if item.name == "subject" {
@@ -212,14 +212,14 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 							}
 						}
 						if item.name == "body" {
-							if let con = item.value {
-								content = con
+							if let bod = item.value {
+								body = bod
 							}
 						}
 					}
 				}
 				if let to = urlComps.path.removingPercentEncoding {
-					shareEmail(to, withSubject: subject, andContent: content)
+					shareEmail(to, withSubject: subject, andBody: body)
 				}
 				decisionHandler(.cancel) // tells WKWebView to not actually get anything
 			} else {
