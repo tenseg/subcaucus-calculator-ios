@@ -160,6 +160,41 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			self.present(alertController, animated: true, completion: nil)
 		}
 	}
+	
+	//MARK: Handling Our Own URL Scheme
+	
+	// we separate out handling of our url scheme from the webview delegate both to make it easier to find and change and so that the app delegate can use it to handle incoming urls from other apps
+	func handleSubcalcURLComponents(_ urlComps: URLComponents) {
+		// used to share text strings
+		// can be used from Share > Download text and Share > Download code in the React app
+		// may evenbe appropriate to not show Share > Email report in the ios app since Mail is an option from the activity controller used by the other download options
+		// or Share > Email report may just be able to use the same mailto: as the web app, and use ios default behavior for those links to open a mail view
+		if urlComps.host == "share-text" {
+			if let text = urlComps.path.deletePrefix("/")?.removingPercentEncoding {
+				shareText(text)
+			}
+		}
+		// used to share csv content
+		// can be used from Share > Download CSV in the React app
+		// assumes that the input string is valid csv data
+		if urlComps.host == "share-csv" {
+			// pull the filename from the query items if it is there
+			var filename = "Meeting.csv"
+			if let queryItems = urlComps.queryItems {
+				for item in queryItems {
+					if item.name == "filename" {
+						if let value = item.value {
+							filename = value + ".csv"
+						}
+					}
+				}
+			}
+			// share to csv
+			if let csv = urlComps.path.deletePrefix("/")?.removingPercentEncoding {
+				shareCSV(csv, toFile: filename)
+			}
+		}
+	}
     
     //MARK: WebKit Delegates
 	
@@ -170,34 +205,10 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			// automatically load file URLs in this web view
 			if urlComps.scheme == "file" {
 				decisionHandler(.allow) // tells WKWebView to actually pick up this local file
-			// this scheme is used internally to passing data between react and swift
-			// use "subcalc-extension://_action_/_data_" where _action_ is from the below options and _data_ is the text you want to pass on to the swift from React
-			} else if urlComps.scheme == "subcalc-extension" {
-				// used to share text strings
-				// can be used from Share > Download text and Share > Download code in the React app
-				// may evenbe appropriate to not show Share > Email report in the ios app since Mail is an option from the activity controller used by the other download options
-				// or Share > Email report may just be able to use the same mailto: as the web app, and use ios default behavior for those links to open a mail view
-				if let textString = urlComps.path.deletePrefix("share-text/" )?.removingPercentEncoding {
-					shareText(textString)
-				}
-				// used to share csv content
-				// can be used from Share > Download CSV in the React app
-				// assumes that the input string is valid csv data
-				if let csvString = urlComps.path.deletePrefix("share-csv/" )?.removingPercentEncoding {
-					// pull the filename from the query items if it is there
-					var filename = "Meeting.csv"
-					if let queryItems = urlComps.queryItems {
-						for item in queryItems {
-							if item.name == "filename" {
-								if let value = item.value {
-									filename = value + ".csv"
-								}
-							}
-						}
-					}
-					// share to csv
-					shareCSV(csvString, toFile: filename)
-				}
+			// this scheme is used to pass data between react and swift
+			// use "subcalc://_action_/_data_" where _action_ is from the below options and _data_ is the text you want to pass on to the swift from React
+			} else if urlComps.scheme == "subcalc" {
+				handleSubcalcURLComponents(urlComps)
 				decisionHandler(.cancel) // tells WKWebView to not actually get anything
 			// open mailto urls in mailview instead of Safari
 			} else if urlComps.scheme == "mailto" {
