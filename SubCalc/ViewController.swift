@@ -76,7 +76,9 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	
 	//MARK: Helpers
 	
-	// this will try and migrate data from the old json file into the new local storage
+	/// This will try and migrate data from the old json file into the new local storage
+	///
+	/// - Parameter webView: The webview to import into.
 	func attemptToMigrateOldSubCalcDataTo(_ webView: WKWebView) {
 		let oldFile = (NSSearchPathForDirectoriesInDomains(.documentDirectory,.userDomainMask,true)[0] as String) + "/subcalc.json"
 		if let subcalcJSON = try? String(contentsOfFile: oldFile) {
@@ -87,16 +89,33 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 					do {
 						try FileManager.default.removeItem(at: URL(fileURLWithPath: oldFile))
 					} catch {
-						print("\(oldFile) deletion failed")
+						print("\(oldFile) deletion failed \n \(String(describing: error))")
 					}
 				}
 			}
 		}
 	}
 	
+	/// Imports JSON of a snapshot into local storage
+	///
+	/// - Parameters:
+	///   - json: The json to import.
+	///   - webView: The webview to import into.
+	func importJSON(_ json: String, to webView: WKWebView) {
+		// import json into local storage as for the old app, for the React app to migrate itself
+		webView.evaluateJavaScript("localStorage.setItem('import', \(json)") { (result, error) in
+			// delete the file if succeeded
+			if (error == nil) {
+				print("import failed: \(json) \n \(String(describing: error))")
+			}
+		}
+	}
+	
 	//MARK: Actions from React App
 	
-	// share a text string using ios activity view controller
+	/// Share a text string using the iOS activity view controller
+	///
+	/// - Parameter textContent: The text to share.
 	func shareText(_ textContent: String) {
 		let activityViewController = UIActivityViewController(activityItems: [textContent], applicationActivities: nil)
 		activityViewController.completionWithItemsHandler = {
@@ -106,8 +125,12 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		self.present(activityViewController, animated: true, completion: nil)
 	}
 	
-	// create a csv file and share it
-	//based on http://www.justindoan.com/tutorials/2016/9/9/creating-and-exporting-a-csv-file-in-swift
+	/// Create a csv file and sharse it
+	/// Based on http://www.justindoan.com/tutorials/2016/9/9/creating-and-exporting-a-csv-file-in-swift
+	///
+	/// - Parameters:
+	///   - csvContent: The CSV content to put in the file.
+	///   - filename: The name to give the file, not including ".csv".
 	func shareCSV(_ csvContent: String, toFile filename: String?) {
 		// ensure a valid filename
 		var filename = filename // so that we can change it
@@ -140,7 +163,12 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		}
 	}
 	
-	// used to send email within the app
+	/// Use to send email within the app
+	///
+	/// - Parameters:
+	///   - to: Recipient email address.
+	///   - subject: Email subject.
+	///   - body: Email body.
 	func shareEmail(_ to: String, withSubject subject: String?, andBody body: String?) {
 		// we want to send email feedback from native-land
 		if MFMailComposeViewController.canSendMail() {
@@ -163,7 +191,9 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	
 	//MARK: Handling Our Own URL Scheme
 	
-	// we separate out handling of our url scheme from the webview delegate both to make it easier to find and change and so that the app delegate can use it to handle incoming urls from other apps
+	/// We separate out handling of our url scheme from the webview delegate to both make it easier to find and change and so that the app delegate can use it to handle incoming urls from other apps
+	///
+	/// - Parameter urlComps: The URL components object that has the details of the URL that was used.
 	func handleSubcalcURLComponents(_ urlComps: URLComponents) {
 		// used to share text strings
 		// can be used from Share > Download text and Share > Download code in the React app
@@ -174,6 +204,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 				shareText(text)
 			}
 		}
+		
 		// used to share csv content
 		// can be used from Share > Download CSV in the React app
 		// assumes that the input string is valid csv data
@@ -192,6 +223,16 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			// share to csv
 			if let csv = urlComps.path.deletePrefix("/")?.removingPercentEncoding {
 				shareCSV(csv, toFile: filename)
+			}
+		}
+		
+		// used to import a snapshot
+		// the snapshot is the json that gets produced from the "Download code" sharing option
+		if urlComps.host == "import" {
+			if let json = urlComps.path.deletePrefix("/")?.removingPercentEncoding {
+				if let webView = self.view.subviews[1] as? WKWebView {
+					importJSON(json, to: webView)
+				}
 			}
 		}
 	}
@@ -295,8 +336,11 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 }
 
 extension String {
-	// deletes the prefix if it has that prefix
-	// based on https://www.hackingwithswift.com/example-code/strings/how-to-remove-a-prefix-from-a-string
+	/// Deletes the prefix if it has that prefix
+	/// Based on https://www.hackingwithswift.com/example-code/strings/how-to-remove-a-prefix-from-a-string
+	///
+	/// - Parameter prefix: The string to look for and delete.
+	/// - Returns: An optional string withe the prefix removed if found. If not found this returns nil.
 	func deletePrefix(_ prefix: String) -> String? {
 		guard self.hasPrefix(prefix) else { return nil }
 		return String(self.dropFirst(prefix.count))
