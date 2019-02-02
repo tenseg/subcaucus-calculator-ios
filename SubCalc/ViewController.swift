@@ -130,7 +130,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	///
 	/// - Parameters:
 	///   - csvContent: The CSV content to put in the file.
-	///   - filename: The name to give the file, not including ".csv".
+	///   - filename: The name to give the file.
 	func shareCSV(_ csvContent: String, toFile filename: String?) {
 		// ensure a valid filename
 		var filename = filename // so that we can change it
