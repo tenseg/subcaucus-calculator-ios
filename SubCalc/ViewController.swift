@@ -76,7 +76,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	
 	//MARK: Helpers
 	
-	/// This will try and migrate data from the old json file into the new local storage
+	/// This will try and migrate data from the old json file into the new local storage.
 	///
 	/// - Parameter webView: The webview to import into.
 	func attemptToMigrateOldSubCalcDataTo(_ webView: WKWebView) {
@@ -96,7 +96,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		}
 	}
 	
-	/// Imports JSON of a snapshot into local storage
+	/// Imports JSON of a snapshot into local storage.
 	///
 	/// - Parameters:
 	///   - json: The json to import.
@@ -113,7 +113,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	
 	//MARK: Actions from React App
 	
-	/// Share a text string using the iOS activity view controller
+	/// Share a text string using the iOS activity view controller.
 	///
 	/// - Parameter textContent: The text to share.
 	func shareText(_ textContent: String) {
@@ -125,8 +125,8 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		self.present(activityViewController, animated: true, completion: nil)
 	}
 	
-	/// Create a csv file and sharse it
-	/// Based on http://www.justindoan.com/tutorials/2016/9/9/creating-and-exporting-a-csv-file-in-swift
+	/// Create a csv file and sharse it.
+	/// Based on: http://www.justindoan.com/tutorials/2016/9/9/creating-and-exporting-a-csv-file-in-swift
 	///
 	/// - Parameters:
 	///   - csvContent: The CSV content to put in the file.
@@ -163,13 +163,13 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		}
 	}
 	
-	/// Use to send email within the app
+	/// Use to send email within the app.
 	///
 	/// - Parameters:
 	///   - to: Recipient email address.
 	///   - subject: Email subject.
 	///   - body: Email body.
-	func shareEmail(_ to: String, withSubject subject: String?, andBody body: String?) {
+	func sendEmail(_ to: String, withSubject subject: String?, andBody body: String?) {
 		// we want to send email feedback from native-land
 		if MFMailComposeViewController.canSendMail() {
 			let mailView = MFMailComposeViewController()
@@ -191,16 +191,15 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	
 	//MARK: Handling Our Own URL Scheme
 	
-	/// We separate out handling of our url scheme from the webview delegate to both make it easier to find and change and so that the app delegate can use it to handle incoming urls from other apps
+	/// We separate out handling of our url scheme from the webview delegate to both make it easier to find and change and so that the app delegate can use it to handle incoming urls from other apps.
 	///
 	/// - Parameter urlComps: The URL components object that has the details of the URL that was used.
 	func handleSubcalcURLComponents(_ urlComps: URLComponents) {
 		// used to share text strings
 		// can be used from Share > Download text and Share > Download code in the React app
-		// may evenbe appropriate to not show Share > Email report in the ios app since Mail is an option from the activity controller used by the other download options
-		// or Share > Email report may just be able to use the same mailto: as the web app, and use ios default behavior for those links to open a mail view
+		// Share > Email report will just be able to use the same mailto: as the web app, as we direct those to mail compose view controller anyway
 		if urlComps.host == "share-text" {
-			if let text = urlComps.path.deletePrefix("/")?.removingPercentEncoding {
+			if let text = urlComps.path.deletePrefix("/") {
 				shareText(text)
 			}
 		}
@@ -209,27 +208,16 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		// can be used from Share > Download CSV in the React app
 		// assumes that the input string is valid csv data
 		if urlComps.host == "share-csv" {
-			// pull the filename from the query items if it is there
-			var filename = "Meeting.csv"
-			if let queryItems = urlComps.queryItems {
-				for item in queryItems {
-					if item.name == "filename" {
-						if let value = item.value {
-							filename = value + ".csv"
-						}
-					}
-				}
-			}
 			// share to csv
-			if let csv = urlComps.path.deletePrefix("/")?.removingPercentEncoding {
-				shareCSV(csv, toFile: filename)
+			if let csv = urlComps.path.deletePrefix("/") {
+				shareCSV(csv, toFile: urlComps.queryValueFor("filename") ?? "Meeting" + ".csv")
 			}
 		}
 		
 		// used to import a snapshot
 		// the snapshot is the json that gets produced from the "Download code" sharing option
 		if urlComps.host == "import" {
-			if let json = urlComps.path.deletePrefix("/")?.removingPercentEncoding {
+			if let json = urlComps.path.deletePrefix("/") {
 				if let webView = self.view.subviews[1] as? WKWebView {
 					importJSON(json, to: webView)
 				}
@@ -254,24 +242,10 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			// open mailto urls in mailview instead of Safari
 			} else if urlComps.scheme == "mailto" {
 				// example link: "mailto:email@Mailto.co.uk?subject=Subject Using Mailto.co.uk&body=Email test"
-				var subject: String? = nil
-				var body: String? = nil
-				if let queryItems = urlComps.queryItems {
-					for item in queryItems {
-						if item.name == "subject" {
-							if let sub = item.value {
-								subject = sub
-							}
-						}
-						if item.name == "body" {
-							if let bod = item.value {
-								body = bod
-							}
-						}
-					}
-				}
+				let subject = urlComps.queryValueFor("subject")
+				let body = urlComps.queryValueFor("body")
 				if let to = urlComps.path.removingPercentEncoding {
-					shareEmail(to, withSubject: subject, andBody: body)
+					sendEmail(to, withSubject: subject, andBody: body)
 				}
 				decisionHandler(.cancel) // tells WKWebView to not actually get anything
 			} else {
@@ -336,13 +310,32 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 }
 
 extension String {
-	/// Deletes the prefix if it has that prefix
-	/// Based on https://www.hackingwithswift.com/example-code/strings/how-to-remove-a-prefix-from-a-string
+	/// Deletes the prefix if it has that prefix.
+	/// Based on: https://www.hackingwithswift.com/example-code/strings/how-to-remove-a-prefix-from-a-string
 	///
 	/// - Parameter prefix: The string to look for and delete.
 	/// - Returns: An optional string withe the prefix removed if found. If not found this returns nil.
 	func deletePrefix(_ prefix: String) -> String? {
 		guard self.hasPrefix(prefix) else { return nil }
 		return String(self.dropFirst(prefix.count))
+	}
+}
+
+extension URLComponents {
+	/// Get the value for the passed query key if one exists.
+	///
+	/// - Parameter key: The key to look for.
+	/// - Returns: The string value in the query for the key that was passed.
+	func queryValueFor(_ key: String) -> String? {
+		if let queryItems = self.queryItems {
+			for item in queryItems {
+				if item.name == key {
+					if let value = item.value {
+						return value
+					}
+				}
+			}
+		}
+		return nil
 	}
 }
