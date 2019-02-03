@@ -21,9 +21,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	
 	func application(_ application: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:] ) -> Bool {
 		if let urlComps = URLComponents(url: url, resolvingAgainstBaseURL: true) {
-			if urlComps.scheme == "subcalc" {
-				let viewController = self.window?.rootViewController as! ViewController
-				viewController.handleSubcalcURLComponents(urlComps)
+			var allowURLHandling = true
+			// allow only some hosts on the released app
+			#if RELEASE
+				let allowedHosts = [
+					"import"
+				]
+				allowURLHandling = allowedHosts.contains(urlComps.host!)
+			#endif
+			// only route if the url is for our app
+			if urlComps.scheme == "subcalc" && allowURLHandling {
+				if let viewController = self.window?.rootViewController as? ViewController {
+					viewController.handleSubcalcURLComponents(urlComps)
+				}
 				return true
 			}
 		}
