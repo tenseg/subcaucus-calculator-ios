@@ -14,8 +14,6 @@
 		AC2A2D3A1C0E668700196FBF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC2A2D381C0E668700196FBF /* LaunchScreen.storyboard */; };
 		AC2A2D451C0E668700196FBF /* SubCalcTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2A2D441C0E668700196FBF /* SubCalcTests.swift */; };
 		AC2A2D501C0E668700196FBF /* SubCalcUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2A2D4F1C0E668700196FBF /* SubCalcUITests.swift */; };
-		ACF337A21C1A3A3B009896DD /* red-320x568.png in Resources */ = {isa = PBXBuildFile; fileRef = ACF337A11C1A3A3B009896DD /* red-320x568.png */; };
-		ACF337A41C1A3AE3009896DD /* red-568x320.png in Resources */ = {isa = PBXBuildFile; fileRef = ACF337A31C1A3AE3009896DD /* red-568x320.png */; };
 		FA1985A321F3993800C8668F /* react in Resources */ = {isa = PBXBuildFile; fileRef = FA1985A221F3993800C8668F /* react */; };
 		FA1985A421F3993800C8668F /* react in Resources */ = {isa = PBXBuildFile; fileRef = FA1985A221F3993800C8668F /* react */; };
 		FA1985A521F3993800C8668F /* react in Resources */ = {isa = PBXBuildFile; fileRef = FA1985A221F3993800C8668F /* react */; };
@@ -54,8 +52,6 @@
 		AC2A2D511C0E668700196FBF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AC2A2D6C1C0E723200196FBF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		AC2A2D6E1C0E72C600196FBF /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
-		ACF337A11C1A3A3B009896DD /* red-320x568.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-320x568.png"; sourceTree = "<group>"; };
-		ACF337A31C1A3AE3009896DD /* red-568x320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-568x320.png"; sourceTree = "<group>"; };
 		FA1985A221F3993800C8668F /* react */ = {isa = PBXFileReference; lastKnownFileType = folder; path = react; sourceTree = "<group>"; };
 		FA64F4C321F7B86D00D48113 /* SubCalc.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SubCalc.entitlements; sourceTree = "<group>"; };
 		FAE7BBC01C1A400900BAA676 /* retrieve-buildnum-commit.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "retrieve-buildnum-commit.sh"; sourceTree = "<group>"; };
@@ -152,8 +148,6 @@
 			isa = PBXGroup;
 			children = (
 				AC2A2D361C0E668700196FBF /* Assets.xcassets */,
-				ACF337A31C1A3AE3009896DD /* red-568x320.png */,
-				ACF337A11C1A3A3B009896DD /* red-320x568.png */,
 			);
 			name = Assets;
 			sourceTree = "<group>";
@@ -293,10 +287,8 @@
 			files = (
 				FA1985A321F3993800C8668F /* react in Resources */,
 				AC2A2D3A1C0E668700196FBF /* LaunchScreen.storyboard in Resources */,
-				ACF337A21C1A3A3B009896DD /* red-320x568.png in Resources */,
 				AC2A2D371C0E668700196FBF /* Assets.xcassets in Resources */,
 				AC2A2D351C0E668700196FBF /* Main.storyboard in Resources */,
-				ACF337A41C1A3AE3009896DD /* red-568x320.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -334,7 +326,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/bash\n#  Run this script after the 'Copy Bundle Resources' build phase\n#  It will compute the git commit number and write that to the CFBundleVersion of the target's built Info.plist\n#  From http://tgoode.com/2014/06/05/sensible-way-increment-bundle-version-cfbundleversion-xcode/#code\n\nbranch=${1:-'master'}\nbuildNumber=$(expr $(git rev-list $branch --count) - $(git rev-list HEAD..$branch --count))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}.dSYM/Contents/Info.plist\"\n";
+			shellScript = "#!/bin/bash\n#  Run this script after the 'Copy Bundle Resources' build phase\n#  It will compute the git commit number and write that to the CFBundleVersion of the target's built Info.plist\n#  From http://tgoode.com/2014/06/05/sensible-way-increment-bundle-version-cfbundleversion-xcode/#code\n\nbuildNumber=$(git rev-list --all --count)\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${TARGET_BUILD_DIR}/Info.plist}\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}.dSYM/Contents/Info.plist\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
