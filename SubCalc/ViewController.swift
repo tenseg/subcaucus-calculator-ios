@@ -17,8 +17,8 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
         super.viewDidLoad()
 		
 		// load the react app
-		// this should always get the path, but needs if let to unwrap it
-        if let htmlPath = Bundle.main.path(forResource: "react/index", ofType: "html") {
+		// this should always get the components to the react app, but needs if var to unwrap everything
+		if var urlComps = URLComponents(url: URL(fileURLWithPath: Bundle.main.path(forResource: "react/index", ofType: "html") ?? ""), resolvingAgainstBaseURL: false) {
 			// set up the web view and replace our view with it
 			// there is nothing of substance in IB for this app's main GUI
 			let webConfiguration = WKWebViewConfiguration()
@@ -60,9 +60,6 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			#if DEBUG // see https://kitefaster.com/2016/01/23/how-to-specify-debug-and-release-flags-in-xcode-with-swift/
 				queryItems.append(URLQueryItem(name: "debug", value: "yes"))
 			#endif
-			
-			// build the url to the react app
-			var urlComps = URLComponents(url: URL(fileURLWithPath: htmlPath), resolvingAgainstBaseURL: false)!
 			urlComps.queryItems = queryItems
 			
 			// load the react app
@@ -196,9 +193,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		// subcalc://share-text/__text__
 		//
 		if urlComps.host == "share-text" {
-			if let text = urlComps.path.deletePrefix("/") {
-				shareText(text)
-			}
+			shareText(urlComps.path.deletePrefix("/"))
 		}
 		
 		// used to share csv content
@@ -209,10 +204,8 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		// assumes that the path string is valid csv data
 		if urlComps.host == "share-csv" {
 			// share to csv
-			if let csv = urlComps.path.deletePrefix("/") {
-				let filename = urlComps.queryValueFor("filename") ?? "Meeting"
-				shareCSV(csv, toFile: "\(filename.deleteExtensionComponent()).csv")
-			}
+			let filename = urlComps.queryValueFor("filename") ?? "Meeting"
+			shareCSV(urlComps.path.deletePrefix("/"), toFile: "\(filename.deleteExtensionComponent()).csv")
 		}
 		
 		// used to import a snapshot:
@@ -221,10 +214,8 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		//
 		// the snapshot can be the json that gets produced from the "Download code" sharing option
 		if urlComps.host == "import" {
-			if let data = urlComps.path.deletePrefix("/") {
-				if let webView = self.view.subviews[1] as? WKWebView {
-					importData(data, to: webView)
-				}
+			if let webView = self.view.subviews[1] as? WKWebView {
+				importData(urlComps.path.deletePrefix("/"), to: webView)
 			}
 		}
 	}
@@ -233,8 +224,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	
 	// decide how to handle urls that are being loaded
 	func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: ((WKNavigationActionPolicy) -> Void)) {
-		if let url = navigationAction.request.url  {
-			let urlComps = URLComponents(url: url, resolvingAgainstBaseURL: true)! // why is this an optional?
+		if let urlComps = URLComponents(string: navigationAction.request.url?.absoluteString ?? "") {
 			// automatically load file URLs in this web view
 			if urlComps.scheme == "file" {
 				decisionHandler(.allow) // tells WKWebView to actually pick up this local file
@@ -314,9 +304,9 @@ extension String {
 	/// See: https://www.hackingwithswift.com/example-code/strings/how-to-remove-a-prefix-from-a-string
 	///
 	/// - Parameter prefix: The string to look for and delete.
-	/// - Returns: An optional string withe the prefix removed if found. If not found this returns nil.
-	func deletePrefix(_ prefix: String) -> String? {
-		guard self.hasPrefix(prefix) else { return nil }
+	/// - Returns: A string withe the prefix removed if found. If not found this returns the original string.
+	func deletePrefix(_ prefix: String) -> String {
+		guard self.hasPrefix(prefix) else { return self }
 		return String(self.dropFirst(prefix.count))
 	}
 	
