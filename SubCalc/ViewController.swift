@@ -205,7 +205,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		if urlComps.host == "share-csv" {
 			// share to csv
 			let filename = urlComps.queryValueFor("filename") ?? "Meeting"
-			shareCSV(urlComps.path.deletePrefix("/"), toFile: "\(filename.deleteExtensionComponent()).csv")
+			shareCSV(urlComps.path.deletePrefix("/"), toFile: "\(filename.deleteSuffix(".csv")).csv")
 		}
 		
 		// used to import a snapshot:
@@ -300,7 +300,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 }
 
 extension String {
-	/// Deletes the prefix if it has that prefix.
+	/// Deletes the prefix if it exists.
 	/// See: https://www.hackingwithswift.com/example-code/strings/how-to-remove-a-prefix-from-a-string
 	///
 	/// - Parameter prefix: The string to look for and delete.
@@ -311,17 +311,14 @@ extension String {
 	}
 	
 	
-	/// Deletes the portion of the text after the last period. Meant to remove any possible file extension.
+	/// Deletes the suffix if it exists.
+	/// See: https://www.hackingwithswift.com/example-code/strings/how-to-remove-a-prefix-from-a-string
 	///
-	/// - Returns: The string with the extension removed or the original string if no extension found.
-	func deleteExtensionComponent() -> String {
-		var components = self.components(separatedBy: ".")
-		if components.count > 1 { // If there is a file extension
-			components.removeLast()
-			return components.joined(separator: ".")
-		} else {
-			return self
-		}
+	/// - Parameter suffix: The string to look for and delete.
+	/// - Returns: A string withe the suffix removed if found. If not found this returns the original string.
+	func deleteSuffix(_ suffix: String) -> String {
+		guard self.hasSuffix(suffix) else { return self }
+		return String(self.dropLast(suffix.count))
 	}
 }
 
