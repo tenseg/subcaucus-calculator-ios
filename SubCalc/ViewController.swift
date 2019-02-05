@@ -51,10 +51,10 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			var queryItems = [
 				URLQueryItem(name: "app", value: "yes"),
 			]
-			if let version = Bundle.main.infoDictionary!["CFBundleShortVersionString"] {
+			if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] {
 				queryItems.append(URLQueryItem(name: "version", value: String(describing: version)))
 			}
-			if let build = Bundle.main.infoDictionary!["CFBundleVersion"] {
+			if let build = Bundle.main.infoDictionary?["CFBundleVersion"] {
 				queryItems.append(URLQueryItem(name: "build", value: String(describing: build)))
 			}
 			#if DEBUG // see https://kitefaster.com/2016/01/23/how-to-specify-debug-and-release-flags-in-xcode-with-swift/
@@ -63,6 +63,8 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			urlComps.queryItems = queryItems
 			
 			// load the react app
+			// we should always have a url since the urlcomps was made with one to even get here
+			// but since it is an optional property we must insist on it being there
 			webView.load(URLRequest(url: urlComps.url!))
 		}
 	}
@@ -203,9 +205,8 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		//
 		// assumes that the path string is valid csv data
 		if urlComps.host == "share-csv" {
-			// share to csv
 			let filename = urlComps.queryValueFor("filename") ?? "Meeting"
-			shareCSV(urlComps.path.deletePrefix("/"), toFile: "\(filename.deleteSuffix(".csv")).csv")
+			shareCSV(urlComps.path.deletePrefix("/"), toFile: "\(filename.ensureSuffix(".csv"))")
 		}
 		
 		// used to import a snapshot:
@@ -229,13 +230,12 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			if urlComps.scheme == "file" {
 				decisionHandler(.allow) // tells WKWebView to actually pick up this local file
 			// this scheme is used to pass data between react and swift
-			// use "subcalc://_action_/_data_" where _action_ is from the below options and _data_ is the text you want to pass on to the swift from React
 			} else if urlComps.scheme == "subcalc" {
 				handleSubcalcURLComponents(urlComps)
 				decisionHandler(.cancel) // tells WKWebView to not actually get anything
 			// open mailto urls in mailview instead of Safari
 			} else if urlComps.scheme == "mailto" {
-				// example link: "mailto:email@Mailto.co.uk?subject=Subject Using Mailto.co.uk&body=Email test"
+				// example url: "mailto:email@Mailto.co.uk?subject=Subject Using Mailto.co.uk&body=Email test"
 				sendEmail(urlComps.host!, withSubject: urlComps.queryValueFor("subject"), andBody: urlComps.queryValueFor("body"))
 				decisionHandler(.cancel) // tells WKWebView to not actually get anything
 			} else {
@@ -319,6 +319,16 @@ extension String {
 	func deleteSuffix(_ suffix: String) -> String {
 		guard self.hasSuffix(suffix) else { return self }
 		return String(self.dropLast(suffix.count))
+	}
+	
+	
+	/// Make sure the string has the given suffix.
+	///
+	/// - Parameter suffix: The desired suffix.
+	/// - Returns: The string with the suffix.
+	func ensureSuffix(_ suffix: String) -> String {
+		guard self.hasSuffix(suffix) else { return self + suffix }
+		return self
 	}
 }
 

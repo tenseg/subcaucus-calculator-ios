@@ -1,6 +1,6 @@
 # TODO #
 
-Note that all TODO items are henceforth being tracked in the Issue Tracker on Bitbucket.
+Note that all TODO items are henceforth being tracked in the Issue Tracker on Gitea.
 
 # DONE #
 
