@@ -80,6 +80,12 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	/// - Parameter webView: The webview to import into.
 	func attemptToMigrateOldSubCalcDataTo(_ webView: WKWebView) {
 		let oldFile = (NSSearchPathForDirectoriesInDomains(.documentDirectory,.userDomainMask,true)[0] as String) + "/subcalc.json"
+		// if debugging print the path so we can examine the simulator's container in Finder
+		#if DEBUG
+			print("--------Container path--------")
+			print(oldFile)
+			print("------------------------------")
+		#endif
 		if let subcalcJSON = try? String(contentsOfFile: oldFile) {
 			// import json into local storage as for the old app, for the React app to migrate itself
 			webView.evaluateJavaScript("localStorage.setItem('subcalc', \(subcalcJSON)") { (result, error) in
