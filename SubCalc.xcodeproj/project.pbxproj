@@ -53,6 +53,7 @@
 		AC2A2D6C1C0E723200196FBF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		AC2A2D6E1C0E72C600196FBF /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
 		FA1985A221F3993800C8668F /* react */ = {isa = PBXFileReference; lastKnownFileType = folder; path = react; sourceTree = "<group>"; };
+		FA1A3BF6220A613D004C077D /* SubCalc 1 Data.xcappdata */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = "SubCalc 1 Data.xcappdata"; sourceTree = "<group>"; };
 		FA64F4C321F7B86D00D48113 /* SubCalc.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SubCalc.entitlements; sourceTree = "<group>"; };
 		FAE7BBC01C1A400900BAA676 /* retrieve-buildnum-commit.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "retrieve-buildnum-commit.sh"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -85,6 +86,7 @@
 		AC2A2D231C0E668700196FBF = {
 			isa = PBXGroup;
 			children = (
+				FA1A3BF6220A613D004C077D /* SubCalc 1 Data.xcappdata */,
 				FAE7BBC01C1A400900BAA676 /* retrieve-buildnum-commit.sh */,
 				AC2A2D6E1C0E72C600196FBF /* TODO.md */,
 				AC2A2D6C1C0E723200196FBF /* README.md */,

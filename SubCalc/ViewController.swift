@@ -11,7 +11,12 @@ import WebKit
 import MessageUI
 
 class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMailComposeViewControllerDelegate {
-    
+	
+	//MARK: Instance Vars
+	
+	/// Javascript commmand: callback (result, error)
+	var javascriptQueue: [[String: (Any?, Any?) -> Void]] = [[:]]
+	
     //MARK: View Funcs
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +35,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			webView.uiDelegate = self
 			
 			// attempt to load old SubCalc data file to local storage
-			attemptToMigrateOldSubCalcDataTo(webView)
+			attemptToMigrateOldSubCalcData()
 			
 			// add web view to the main view
 			self.view.addSubview(webView)
@@ -76,9 +81,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	//MARK: Helpers
 	
 	/// This will try and migrate data from the old json file into the new local storage.
-	///
-	/// - Parameter webView: The webview to import into.
-	func attemptToMigrateOldSubCalcDataTo(_ webView: WKWebView) {
+	func attemptToMigrateOldSubCalcData() {
 		let oldFile = (NSSearchPathForDirectoriesInDomains(.documentDirectory,.userDomainMask,true)[0] as String) + "/subcalc.json"
 		// if debugging print the path so we can examine the simulator's container in Finder
 		#if DEBUG
@@ -87,17 +90,15 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			print("------------------------------")
 		#endif
 		if let subcalcJSON = try? String(contentsOfFile: oldFile) {
-			// import json into local storage as for the old app, for the React app to migrate itself
-			webView.evaluateJavaScript("localStorage.setItem('subcalc', \(subcalcJSON)") { (result, error) in
-				// delete the file if succeeded
-				if (error == nil) {
-					do {
-						try FileManager.default.removeItem(at: URL(fileURLWithPath: oldFile))
-					} catch {
-						print("\(oldFile) deletion failed \n \(String(describing: error))")
-					}
+			javascriptQueue.append(["localStorage.setItem('subcalc', '\(subcalcJSON)'": { (result, error) in
+				if error == nil {
+					// do { // TODO: uncomment
+//						try FileManager.default.removeItem(at: URL(fileURLWithPath: oldFile))
+//					} catch {
+//						print("\(oldFile) deletion failed \n \(String(describing: error))")
+//					}
 				}
-			}
+				}])
 		}
 	}
 	
@@ -106,14 +107,12 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	/// - Parameters:
 	///   - data: The string data to import.
 	///   - webView: The webview to import into.
-	func importData(_ data: String, to webView: WKWebView) {
-		// import json into local storage as for the old app, for the React app to migrate itself
-		webView.evaluateJavaScript("localStorage.setItem('import', \(data)") { (result, error) in
-			// delete the file if succeeded
-			if (error == nil) {
+	func importData(_ data: String) {
+		javascriptQueue.append(["localStorage.setItem('import', '\(data))'": { (result, error) in
+			if error == nil {
 				print("import failed: \(data) \n \(String(describing: error))")
 			}
-		}
+		}])
 	}
 	
 	//MARK: Actions from React App
@@ -221,9 +220,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		//
 		// the snapshot can be the json that gets produced from the "Download code" sharing option
 		if urlComps.host == "import" {
-			if let webView = self.view.subviews[1] as? WKWebView {
-				importData(urlComps.path.deletePrefix("/"), to: webView)
-			}
+			importData(urlComps.path.deletePrefix("/"))
 		}
 	}
     
@@ -249,6 +246,20 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 				decisionHandler(.cancel) // tells WKWebView to not actually get anything
 			}
 		}
+	}
+	
+	// run javascript that has been queued after loads finish
+	func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+		// loop all commands to run
+		for command in javascriptQueue {
+			if command.keys.count > 0 {
+				let javascript = command.keys[command.startIndex]
+				webView.evaluateJavaScript(javascript) { (result, error) in
+					command[javascript]!(result, error)
+				}
+			}
+		}
+		javascriptQueue.removeAll()
 	}
 	
 	// use ios alert controller for js alert panels instead of native js ones
