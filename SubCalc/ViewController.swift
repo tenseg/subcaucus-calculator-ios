@@ -90,13 +90,15 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			print("------------------------------")
 		#endif
 		if let subcalcJSON = try? String(contentsOfFile: oldFile) {
-			javascriptQueue.append(["localStorage.setItem('subcalc', '\(subcalcJSON)'": { (result, error) in
+			javascriptQueue.append(["localStorage.setItem('subcalc', '\(subcalcJSON)')": { (result, error) in
 				if error == nil {
-					// do { // TODO: uncomment
-//						try FileManager.default.removeItem(at: URL(fileURLWithPath: oldFile))
-//					} catch {
-//						print("\(oldFile) deletion failed \n \(String(describing: error))")
-//					}
+					 do {
+						try FileManager.default.removeItem(at: URL(fileURLWithPath: oldFile))
+					} catch {
+						print("\(oldFile) deletion failed \n \(String(describing: error))")
+					}
+				} else {
+					print("migration failed \n \(String(describing: error))")
 				}
 				}])
 		}
@@ -108,8 +110,8 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	///   - data: The string data to import.
 	///   - webView: The webview to import into.
 	func importData(_ data: String) {
-		javascriptQueue.append(["localStorage.setItem('import', '\(data))'": { (result, error) in
-			if error == nil {
+		javascriptQueue.append(["localStorage.setItem('import', '\(data)')": { (result, error) in
+			if error != nil {
 				print("import failed: \(data) \n \(String(describing: error))")
 			}
 		}])
