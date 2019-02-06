@@ -15,7 +15,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	//MARK: Instance Vars
 	
 	/// Javascript commmand: callback (result, error)
-	var javascriptQueue: [[String: (Any?, Any?) -> Void]] = [[:]]
+	var javascriptQueue: [[String: (Any?, Error?) -> Void]] = [[:]]
 	
     //MARK: View Funcs
     override func viewDidLoad() {
@@ -100,7 +100,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 				} else {
 					print("migration failed \n \(String(describing: error))")
 				}
-				}])
+			}])
 		}
 	}
 	
