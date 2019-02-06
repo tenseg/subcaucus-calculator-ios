@@ -121,7 +121,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	func importData(_ data: String) {
 		if let webView = self.view.subviews[1] as? WKWebView {
 			if var urlComps = URLComponents(url: webView.url!, resolvingAgainstBaseURL: false) {
-				urlComps.queryItems?.append(URLQueryItem(name: "snapshot", value: data))
+				urlComps.queryItems?.append(URLQueryItem(name: "snapshot", value: data.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)))
 				webView.load(URLRequest(url: urlComps.url!))
 			}
 		}
