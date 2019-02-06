@@ -248,6 +248,9 @@
 							com.apple.DataProtection = {
 								enabled = 1;
 							};
+							com.apple.SafariKeychain = {
+								enabled = 1;
+							};
 						};
 					};
 					AC2A2D3F1C0E668700196FBF = {
