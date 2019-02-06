@@ -81,6 +81,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	//MARK: Helpers
 	
 	/// This will try and migrate data from the old json file into the new local storage.
+	/// It writes out to `subcalc` either way, which is a signal to React to continue.
 	func attemptToMigrateOldSubCalcData() {
 		let oldFile = (NSSearchPathForDirectoriesInDomains(.documentDirectory,.userDomainMask,true)[0] as String) + "/subcalc.json"
 		// if debugging print the path so we can examine the simulator's container in Finder
@@ -89,19 +90,20 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			print(oldFile)
 			print("------------------------------")
 		#endif
-		if let subcalcJSON = try? String(contentsOfFile: oldFile) {
-			javascriptQueue.append(["localStorage.setItem('subcalc', '\(subcalcJSON)')": { (result, error) in
-				if error == nil {
-					 do {
-						try FileManager.default.removeItem(at: URL(fileURLWithPath: oldFile))
-					} catch {
-						print("\(oldFile) deletion failed \n \(String(describing: error))")
-					}
-				} else {
-					print("migration failed \n \(String(describing: error))")
+		// try to get json from the old file
+		let subcalcJSON = try? String(contentsOfFile: oldFile)
+		// queue the javascript to write out to `subcalc` either the json or blank array
+		javascriptQueue.append(["localStorage.setItem('subcalc', '\(subcalcJSON ?? "[]")')": { (result, error) in
+			if error == nil && (subcalcJSON != nil) {
+				do {
+					try FileManager.default.removeItem(at: URL(fileURLWithPath: oldFile))
+				} catch {
+					print("\(oldFile) deletion failed \n \(String(describing: error))")
 				}
-			}])
-		}
+			} else {
+				print("migration failed \n \(String(describing: error))")
+			}
+		}])
 	}
 	
 	/// Imports JSON of a snapshot into local storage.
