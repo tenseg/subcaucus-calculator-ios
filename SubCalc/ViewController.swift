@@ -111,12 +111,11 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	/// - Parameters:
 	///   - data: The string data to import.
 	///   - webView: The webview to import into.
-	func importData(_ data: String) {
-		javascriptQueue.append(["localStorage.setItem('import', '\(data)')": { (result, error) in
-			if error != nil {
-				print("import failed: \(data) \n \(String(describing: error))")
-			}
-		}])
+	func importData(_ data: String, to webView: WKWebView) {
+		if var urlComps = URLComponents(url: webView.url!, resolvingAgainstBaseURL: false) {
+			urlComps.queryItems?.append(URLQueryItem(name: "snapshot", value: data))
+			webView.load(URLRequest(url: urlComps.url!))
+		}
 	}
 	
 	//MARK: Actions from React App
@@ -226,7 +225,9 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		//
 		// the snapshot can be the json that gets produced from the "Download code" sharing option
 		if urlComps.host == "import" {
-			importData(urlComps.path.deletePrefix("/"))
+			if let webView = self.view.subviews[1] as? WKWebView {
+				importData(urlComps.percentEncodedPath.deletePrefix("/"), to: webView)
+			}
 		}
 	}
     
