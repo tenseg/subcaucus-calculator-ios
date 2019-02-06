@@ -34,9 +34,6 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			webView.navigationDelegate = self
 			webView.uiDelegate = self
 			
-			// attempt to load old SubCalc data file to local storage
-			attemptToMigrateOldSubCalcData()
-			
 			// add web view to the main view
 			self.view.addSubview(webView)
 			
@@ -54,7 +51,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			
 			// build the query items passing details about the ios app
 			var queryItems = [
-				URLQueryItem(name: "app", value: "yes"),
+				URLQueryItem(name: "app", value: "iOS"),
 			]
 			if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] {
 				queryItems.append(URLQueryItem(name: "version", value: String(describing: version)))
@@ -65,7 +62,9 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			#if DEBUG // see https://kitefaster.com/2016/01/23/how-to-specify-debug-and-release-flags-in-xcode-with-swift/
 				queryItems.append(URLQueryItem(name: "debug", value: "yes"))
 			#endif
-			urlComps.queryItems = queryItems
+			
+			// attempt to add old subcalc data to the query before adding the entire query to the url components
+			urlComps.queryItems = attemptToMigrateOldSubCalcDataWith(queryItems)
 			
 			// load the react app
 			// we should always have a url since the urlcomps was made with one to even get here
@@ -81,8 +80,11 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	//MARK: Helpers
 	
 	/// This will try and migrate data from the old json file into the new local storage.
-	/// It writes out to `subcalc` either way, which is a signal to React to continue.
-	func attemptToMigrateOldSubCalcData() {
+	///
+	/// - Parameter query: Array of query items.
+	/// - Returns: The modified array of query items.
+	func attemptToMigrateOldSubCalcDataWith(_ query: Array<URLQueryItem>) -> Array<URLQueryItem> {
+		var query = query // we must make the input a var so we can append to it later
 		let oldFile = (NSSearchPathForDirectoriesInDomains(.documentDirectory,.userDomainMask,true)[0] as String) + "/subcalc.json"
 		// if debugging print the path so we can examine the simulator's container in Finder
 		#if DEBUG
@@ -91,19 +93,25 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			print("------------------------------")
 		#endif
 		// try to get json from the old file
-		let subcalcJSON = try? String(contentsOfFile: oldFile)
-		// queue the javascript to write out to `subcalc` either the json or blank array
-		javascriptQueue.append(["localStorage.setItem('subcalc', '\(subcalcJSON ?? "[]")')": { (result, error) in
-			if error == nil && (subcalcJSON != nil) {
-				do {
-					try FileManager.default.removeItem(at: URL(fileURLWithPath: oldFile))
-				} catch {
-					print("\(oldFile) deletion failed \n \(String(describing: error))")
+		if let subcalcJSON = try? String(contentsOfFile: oldFile) {
+			// queue the javascript to write out to local storage as a backup
+			javascriptQueue.append(["localStorage.setItem('oldSubcalcDataVersion1', '\(subcalcJSON)')": { (result, error) in
+				if error == nil {
+					do {
+						try FileManager.default.removeItem(at: URL(fileURLWithPath: oldFile))
+					} catch {
+						print("\(oldFile) deletion failed \n \(String(describing: error))")
+					}
+				} else {
+					print("migration failed \n \(String(describing: error))")
 				}
-			} else {
-				print("migration failed \n \(String(describing: error))")
-			}
-		}])
+			}])
+			
+			// add json to the query
+			query.append(URLQueryItem(name: "subcalc1", value: subcalcJSON.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)))
+		}
+		
+		return query
 	}
 	
 	/// Imports JSON of a snapshot into local storage.
