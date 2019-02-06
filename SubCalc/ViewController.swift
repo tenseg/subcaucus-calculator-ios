@@ -170,12 +170,14 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	///   - to: Recipient email address.
 	///   - subject: Email subject.
 	///   - body: Email body.
-	func sendEmail(_ to: String, withSubject subject: String?, andBody body: String?) {
+	func sendEmail(_ to: String?, withSubject subject: String?, andBody body: String?) {
 		// we want to send email feedback from native-land
 		if MFMailComposeViewController.canSendMail() {
 			let mailView = MFMailComposeViewController()
 			mailView.mailComposeDelegate = self
-			mailView.setToRecipients([to])
+			if (to != nil) {
+				mailView.setToRecipients([to!])
+			}
 			if (subject != nil) {
 				mailView.setSubject(subject!)
 			}
@@ -241,7 +243,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			// open mailto urls in mailview instead of Safari
 			} else if urlComps.scheme == "mailto" {
 				// example url: "mailto:email@Mailto.co.uk?subject=Subject Using Mailto.co.uk&body=Email test"
-				sendEmail(urlComps.host!, withSubject: urlComps.queryValueFor("subject"), andBody: urlComps.queryValueFor("body"))
+				sendEmail(urlComps.host, withSubject: urlComps.queryValueFor("subject"), andBody: urlComps.queryValueFor("body"))
 				decisionHandler(.cancel) // tells WKWebView to not actually get anything
 			} else {
 				UIApplication.shared.open(navigationAction.request.url!, options: [:], completionHandler: nil)
