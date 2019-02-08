@@ -17,6 +17,7 @@
 		FA1985A321F3993800C8668F /* react in Resources */ = {isa = PBXBuildFile; fileRef = FA1985A221F3993800C8668F /* react */; };
 		FA1985A421F3993800C8668F /* react in Resources */ = {isa = PBXBuildFile; fileRef = FA1985A221F3993800C8668F /* react */; };
 		FA1985A521F3993800C8668F /* react in Resources */ = {isa = PBXBuildFile; fileRef = FA1985A221F3993800C8668F /* react */; };
+		FAC65F6F220E1CBC00C303E8 /* SubCalc.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = FA64F4C321F7B86D00D48113 /* SubCalc.entitlements */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -290,6 +291,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAC65F6F220E1CBC00C303E8 /* SubCalc.entitlements in Resources */,
 				FA1985A321F3993800C8668F /* react in Resources */,
 				AC2A2D3A1C0E668700196FBF /* LaunchScreen.storyboard in Resources */,
 				AC2A2D371C0E668700196FBF /* Assets.xcassets in Resources */,
