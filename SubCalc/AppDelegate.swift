@@ -46,7 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			if let urlComps = URLComponents(url: userActivity.webpageURL!, resolvingAgainstBaseURL: false) {
 				if let snapshotData = urlComps.queryValueFor("snapshot") {
 					if let viewController = self.window?.rootViewController as? ViewController {
-						viewController.importData(snapshotData)
+						viewController.importSnapshot(snapshotData)
 					}
 				}
 			}
