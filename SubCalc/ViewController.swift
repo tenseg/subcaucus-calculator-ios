@@ -17,6 +17,10 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	/// Javascript commmand: callback (result, error)
 	var javascriptQueue: [[String: (Any?, Error?) -> Void]] = [[:]]
 	
+	/// Layout constraints for iOS 10
+	var ios10PortraitConstraints: [NSLayoutConstraint] = []
+	var ios10LandscapeConstraints: [NSLayoutConstraint] = []
+	
     //MARK: View Funcs
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,7 +48,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 				NSLayoutConstraint.activate([
 					webView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
 					webView.trailingAnchor.constraint(equalTo: margins.trailingAnchor)
-					])
+				])
 				let guide = self.view.safeAreaLayoutGuide
 				webView.trailingAnchor.constraint(equalTo: guide.trailingAnchor).isActive = true
 				webView.leadingAnchor.constraint(equalTo: guide.leadingAnchor).isActive = true
@@ -52,12 +56,19 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 				webView.topAnchor.constraint(equalTo: guide.topAnchor).isActive = true
 			} else {
 				// just avoid the status bar prior to iOS 11
-				NSLayoutConstraint.activate([
+				ios10PortraitConstraints = [
 					webView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0),
 					webView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0),
-					webView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 22),
+					webView.topAnchor.constraint(equalTo: self.topLayoutGuide.topAnchor, constant: 22),
 					webView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0)
-					])
+				]
+				ios10LandscapeConstraints = [
+					webView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0),
+					webView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0),
+					webView.topAnchor.constraint(equalTo: self.topLayoutGuide.topAnchor, constant: 0),
+					webView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0)
+				]
+				NSLayoutConstraint.activate(ios10PortraitConstraints)
 			}
 			
 			// build the query items passing details about the ios app
@@ -86,6 +97,19 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	
 	override var preferredStatusBarStyle: UIStatusBarStyle {
 		return .lightContent
+	}
+	
+	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+		if #available(iOS 11.0, *) {} else {
+			if UIDevice.current.orientation == .landscapeRight || UIDevice.current.orientation == .landscapeLeft {
+				NSLayoutConstraint.deactivate(ios10PortraitConstraints)
+				NSLayoutConstraint.activate(ios10LandscapeConstraints)
+			} else {
+				NSLayoutConstraint.deactivate(ios10LandscapeConstraints)
+				NSLayoutConstraint.activate(ios10PortraitConstraints)
+			}
+		}
+		super.viewWillTransition(to: size, with: coordinator)
 	}
 	
 	//MARK: Helpers
@@ -340,6 +364,10 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+	
+	deinit {
+		NotificationCenter.default.removeObserver(self)
+	}
 }
 
 extension String {
