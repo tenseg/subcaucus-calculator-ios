@@ -37,17 +37,28 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			// add web view to the main view
 			self.view.addSubview(webView)
 			
-			// deal with safe area avoidance
-			let margins = self.view.layoutMarginsGuide
-			NSLayoutConstraint.activate([
-				webView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
-				webView.trailingAnchor.constraint(equalTo: margins.trailingAnchor)
-				])
-			let guide = self.view.safeAreaLayoutGuide
-			webView.trailingAnchor.constraint(equalTo: guide.trailingAnchor).isActive = true
-			webView.leadingAnchor.constraint(equalTo: guide.leadingAnchor).isActive = true
-			webView.bottomAnchor.constraint(equalTo: guide.bottomAnchor).isActive = true
-			webView.topAnchor.constraint(equalTo: guide.topAnchor).isActive = true
+			// deal with layout
+			if #available(iOS 11.0, *) {
+				// safe area avoidance on iOS 11 and later
+				let margins = self.view.layoutMarginsGuide
+				NSLayoutConstraint.activate([
+					webView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
+					webView.trailingAnchor.constraint(equalTo: margins.trailingAnchor)
+					])
+				let guide = self.view.safeAreaLayoutGuide
+				webView.trailingAnchor.constraint(equalTo: guide.trailingAnchor).isActive = true
+				webView.leadingAnchor.constraint(equalTo: guide.leadingAnchor).isActive = true
+				webView.bottomAnchor.constraint(equalTo: guide.bottomAnchor).isActive = true
+				webView.topAnchor.constraint(equalTo: guide.topAnchor).isActive = true
+			} else {
+				// just avoid the status bar prior to iOS 11
+				NSLayoutConstraint.activate([
+					webView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0),
+					webView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0),
+					webView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 22),
+					webView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0)
+					])
+			}
 			
 			// build the query items passing details about the ios app
 			var queryItems = [
