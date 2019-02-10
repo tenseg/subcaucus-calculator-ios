@@ -173,6 +173,8 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			(activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) in
 			self.dismiss(animated: true, completion: nil)
 		}
+		activityViewController.popoverPresentationController?.sourceView = self.view
+		activityViewController.popoverPresentationController?.sourceRect = CGRect(x: view.center.x, y: view.center.y, width: 0, height: 0)
 		self.present(activityViewController, animated: true, completion: nil)
 	}
 	
@@ -201,6 +203,8 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 					print("\(temporaryPath) deletion failed")
 				}
 			}
+			activityViewController.popoverPresentationController?.sourceView = self.view
+			activityViewController.popoverPresentationController?.sourceRect = CGRect(x: view.center.x, y: view.center.y, width: 0, height: 0)
 			self.present(activityViewController, animated: true, completion: nil)
 		} catch {
 			let alertController = UIAlertController(title: "CSV Download Failed", message: "The CSV download has failed. Please try again.", preferredStyle: .alert)
