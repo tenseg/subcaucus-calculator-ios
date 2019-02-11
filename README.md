@@ -1,6 +1,6 @@
 # subcalc-ios
 
-This is the iOS app for the SubCalc web app. It is an app that hosts the web app in a `WKWebView`. As such, this app also serves as a great example for how to use both `WKWebView` and `URLComponents` in a project.
+This is the iOS app for the SubCalc web app. It is an app that hosts a built-in copy of the web app in a `WKWebView`. As such, this app also serves as a great example for how to use both `WKWebView` and `URLComponents` in a project.
 
 ## React App
 
@@ -12,7 +12,16 @@ In order to get the submodule when first cloning this project use:
 2. `cd React`
 3. `npm install`
 
-Do not develop the web app using the copy in this project. Instead, clone it separately somewhere else and develop and test it there. When you have a stable version update the submodule to that, which will put it in a detached head state:
+**Do not develop the web app using the copy in this project.** Instead, clone it separately somewhere else and develop and test it there. When you have a stable version update the submodule to that, which will put it in a detached head state:
 
 1. `cd React`
 2. `git checkout __hash__`
+3. Commit the changes to the submodule in the repo of this project
+
+## Versioning
+
+We use [SemVer](http://semver.org/) for versioning.
+
+## Authors
+
+* Alexander Celeste – [Tenseg LLC](https://www.tenseg.net)
