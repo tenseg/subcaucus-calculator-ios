@@ -352,7 +352,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Build the React app and copy it into the built iOS app\nappInfo=\"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/Info.plist\"\nexport REACT_APP_IOS_VERSION=$(/usr/libexec/PlistBuddy -c \"Print :CFBundleShortVersionString\" \"$appInfo\")\nexport REACT_APP_IOS_BUILD=$(/usr/libexec/PlistBuddy -c \"Print :CFBundleVersion\" \"$appInfo\")\n/usr/local/bin/npm run --prefix $SRCROOT/React build\nmkdir ${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/react\nmv $SRCROOT/React/build/* ${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/react\nrm -r $SRCROOT/React/build/\nexit 0 # to avoid typescript complaint about package.json\n\n";
+			shellScript = "# Build the React app and copy it into the built iOS app\nappInfo=\"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/Info.plist\"\nexport REACT_APP_IOS_VERSION=$(/usr/libexec/PlistBuddy -c \"Print :CFBundleShortVersionString\" \"$appInfo\")\nexport REACT_APP_IOS_BUILD=$(/usr/libexec/PlistBuddy -c \"Print :CFBundleVersion\" \"$appInfo\")\n/usr/local/bin/npm run --prefix $SRCROOT/React build\nmkdir ${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/react\nmv $SRCROOT/React/build/* ${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/react\nrm -r $SRCROOT/React/build/\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
