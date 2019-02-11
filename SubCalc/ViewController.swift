@@ -72,15 +72,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			}
 			
 			// build the query items passing details about the ios app
-			var queryItems = [
-				URLQueryItem(name: "app", value: "iOS"),
-			]
-			if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] {
-				queryItems.append(URLQueryItem(name: "version", value: String(describing: version)))
-			}
-			if let build = Bundle.main.infoDictionary?["CFBundleVersion"] {
-				queryItems.append(URLQueryItem(name: "build", value: String(describing: build)))
-			}
+			var queryItems: [URLQueryItem] = []
 			#if DEBUG // see https://kitefaster.com/2016/01/23/how-to-specify-debug-and-release-flags-in-xcode-with-swift/
 				queryItems.append(URLQueryItem(name: "debug", value: "yes"))
 			#endif

@@ -15,7 +15,6 @@
 		AC2A2D451C0E668700196FBF /* SubCalcTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2A2D441C0E668700196FBF /* SubCalcTests.swift */; };
 		AC2A2D501C0E668700196FBF /* SubCalcUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2A2D4F1C0E668700196FBF /* SubCalcUITests.swift */; };
 		FAC65F6F220E1CBC00C303E8 /* SubCalc.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = FA64F4C321F7B86D00D48113 /* SubCalc.entitlements */; };
-		FAC65F762211EC2F00C303E8 /* .gitmodules in Resources */ = {isa = PBXBuildFile; fileRef = FAC65F752211EC2F00C303E8 /* .gitmodules */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -183,8 +182,8 @@
 				AC2A2D281C0E668700196FBF /* Sources */,
 				AC2A2D291C0E668700196FBF /* Frameworks */,
 				AC2A2D2A1C0E668700196FBF /* Resources */,
-				FAC65F70221122A600C303E8 /* Build SubCalc React App */,
 				FA19859F21ED93FC00C8668F /* Save Git Commit Number as Build Number */,
+				FAC65F70221122A600C303E8 /* Build SubCalc React App */,
 			);
 			buildRules = (
 			);
@@ -294,7 +293,6 @@
 			files = (
 				FAC65F6F220E1CBC00C303E8 /* SubCalc.entitlements in Resources */,
 				AC2A2D3A1C0E668700196FBF /* LaunchScreen.storyboard in Resources */,
-				FAC65F762211EC2F00C303E8 /* .gitmodules in Resources */,
 				AC2A2D371C0E668700196FBF /* Assets.xcassets in Resources */,
 				AC2A2D351C0E668700196FBF /* Main.storyboard in Resources */,
 			);
@@ -325,6 +323,8 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
+				"$(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
 			);
 			name = "Save Git Commit Number as Build Number";
 			outputFileListPaths = (
@@ -343,6 +343,7 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
+				"$(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)",
 			);
 			name = "Build SubCalc React App";
 			outputFileListPaths = (
@@ -351,7 +352,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Build the React app and copy it into the built iOS app\necho \"Building React app\"\n/usr/local/bin/npm run --prefix $SRCROOT/React build\nmkdir ${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/react\nmv $SRCROOT/React/build/* ${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/react\nrm -r $SRCROOT/React/build/\nexit 0 # to avoid typescript complaint about package.json\n\n";
+			shellScript = "# Build the React app and copy it into the built iOS app\nappInfo=\"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/Info.plist\"\nexport REACT_APP_IOS_VERSION=$(/usr/libexec/PlistBuddy -c \"Print :CFBundleShortVersionString\" \"$appInfo\")\nexport REACT_APP_IOS_BUILD=$(/usr/libexec/PlistBuddy -c \"Print :CFBundleVersion\" \"$appInfo\")\n/usr/local/bin/npm run --prefix $SRCROOT/React build\nmkdir ${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/react\nmv $SRCROOT/React/build/* ${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/react\nrm -r $SRCROOT/React/build/\nexit 0 # to avoid typescript complaint about package.json\n\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
