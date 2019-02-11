@@ -51,6 +51,8 @@
 		AC2A2D6C1C0E723200196FBF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		FA1A3BF6220A613D004C077D /* SubCalc 1 Data.xcappdata */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = "SubCalc 1 Data.xcappdata"; sourceTree = "<group>"; };
 		FA64F4C321F7B86D00D48113 /* SubCalc.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SubCalc.entitlements; sourceTree = "<group>"; };
+		FAC65F732211DD7100C303E8 /* React */ = {isa = PBXFileReference; lastKnownFileType = folder; path = React; sourceTree = "<group>"; };
+		FAC65F742211DEBD00C303E8 /* CHANGES.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGES.md; sourceTree = "<group>"; };
 		FAE7BBC01C1A400900BAA676 /* retrieve-buildnum-commit.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "retrieve-buildnum-commit.sh"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -85,6 +87,8 @@
 				FA1A3BF6220A613D004C077D /* SubCalc 1 Data.xcappdata */,
 				FAE7BBC01C1A400900BAA676 /* retrieve-buildnum-commit.sh */,
 				AC2A2D6C1C0E723200196FBF /* README.md */,
+				FAC65F742211DEBD00C303E8 /* CHANGES.md */,
+				FAC65F732211DD7100C303E8 /* React */,
 				AC2A2D2E1C0E668700196FBF /* SubCalc */,
 				AC2A2D431C0E668700196FBF /* SubCalcTests */,
 				AC2A2D4E1C0E668700196FBF /* SubCalcUITests */,

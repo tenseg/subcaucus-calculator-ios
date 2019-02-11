@@ -4,7 +4,7 @@ This is the iOS app for the SubCalc web app. It is an app that hosts a built-in 
 
 ## React App
 
-The SubCaalc React app is included as a Git submodule in this project. The files are in the `React/` folder at the root of this project's folder, but not included in the Xcode project itself. There is a *Run Script* build phase that runs  `npm run build`  and moves the resulting web app into the built iOS app bundle.
+The SubCaalc React app is included as a Git submodule in this project. The files are in the `React/` folder at the root of this project's folder. There is a *Run Script* build phase that runs  `npm run build`  and moves the resulting web app into the built iOS app bundle.
 
 In order to get the submodule when first cloning this project use: 
 
@@ -20,7 +20,7 @@ In order to get the submodule when first cloning this project use:
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning.
+We use [SemVer](http://semver.org/) for versioning. See the [version history](CHANGES.md) of this project for changes.
 
 ## Authors
 
