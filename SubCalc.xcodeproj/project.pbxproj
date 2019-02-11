@@ -14,9 +14,6 @@
 		AC2A2D3A1C0E668700196FBF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC2A2D381C0E668700196FBF /* LaunchScreen.storyboard */; };
 		AC2A2D451C0E668700196FBF /* SubCalcTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2A2D441C0E668700196FBF /* SubCalcTests.swift */; };
 		AC2A2D501C0E668700196FBF /* SubCalcUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2A2D4F1C0E668700196FBF /* SubCalcUITests.swift */; };
-		FA1985A321F3993800C8668F /* react in Resources */ = {isa = PBXBuildFile; fileRef = FA1985A221F3993800C8668F /* react */; };
-		FA1985A421F3993800C8668F /* react in Resources */ = {isa = PBXBuildFile; fileRef = FA1985A221F3993800C8668F /* react */; };
-		FA1985A521F3993800C8668F /* react in Resources */ = {isa = PBXBuildFile; fileRef = FA1985A221F3993800C8668F /* react */; };
 		FAC65F6F220E1CBC00C303E8 /* SubCalc.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = FA64F4C321F7B86D00D48113 /* SubCalc.entitlements */; };
 /* End PBXBuildFile section */
 
@@ -52,10 +49,8 @@
 		AC2A2D4F1C0E668700196FBF /* SubCalcUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubCalcUITests.swift; sourceTree = "<group>"; };
 		AC2A2D511C0E668700196FBF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AC2A2D6C1C0E723200196FBF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		FA1985A221F3993800C8668F /* react */ = {isa = PBXFileReference; lastKnownFileType = folder; path = react; sourceTree = "<group>"; };
 		FA1A3BF6220A613D004C077D /* SubCalc 1 Data.xcappdata */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = "SubCalc 1 Data.xcappdata"; sourceTree = "<group>"; };
 		FA64F4C321F7B86D00D48113 /* SubCalc.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SubCalc.entitlements; sourceTree = "<group>"; };
-		FAC65F6D220E0A6300C303E8 /* React.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = React.md; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.markdown; };
 		FAE7BBC01C1A400900BAA676 /* retrieve-buildnum-commit.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "retrieve-buildnum-commit.sh"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -90,7 +85,6 @@
 				FA1A3BF6220A613D004C077D /* SubCalc 1 Data.xcappdata */,
 				FAE7BBC01C1A400900BAA676 /* retrieve-buildnum-commit.sh */,
 				AC2A2D6C1C0E723200196FBF /* README.md */,
-				FAC65F6D220E0A6300C303E8 /* React.md */,
 				AC2A2D2E1C0E668700196FBF /* SubCalc */,
 				AC2A2D431C0E668700196FBF /* SubCalcTests */,
 				AC2A2D4E1C0E668700196FBF /* SubCalcUITests */,
@@ -111,7 +105,6 @@
 		AC2A2D2E1C0E668700196FBF /* SubCalc */ = {
 			isa = PBXGroup;
 			children = (
-				FA1985A221F3993800C8668F /* react */,
 				FAE7BBC31C1A439600BAA676 /* Assets */,
 				FAE7BBC21C1A438B00BAA676 /* Code */,
 				FAE7BBC41C1A43B400BAA676 /* Interfaces */,
@@ -183,6 +176,7 @@
 				AC2A2D281C0E668700196FBF /* Sources */,
 				AC2A2D291C0E668700196FBF /* Frameworks */,
 				AC2A2D2A1C0E668700196FBF /* Resources */,
+				FAC65F70221122A600C303E8 /* ShellScript */,
 				FA19859F21ED93FC00C8668F /* ShellScript */,
 			);
 			buildRules = (
@@ -292,7 +286,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				FAC65F6F220E1CBC00C303E8 /* SubCalc.entitlements in Resources */,
-				FA1985A321F3993800C8668F /* react in Resources */,
 				AC2A2D3A1C0E668700196FBF /* LaunchScreen.storyboard in Resources */,
 				AC2A2D371C0E668700196FBF /* Assets.xcassets in Resources */,
 				AC2A2D351C0E668700196FBF /* Main.storyboard in Resources */,
@@ -303,7 +296,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA1985A421F3993800C8668F /* react in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -311,7 +303,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA1985A521F3993800C8668F /* react in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -333,7 +324,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/bash\n#  Run this script after the 'Copy Bundle Resources' build phase\n#  It will compute the git commit number and write that to the CFBundleVersion of the target's built Info.plist\n#  From http://tgoode.com/2014/06/05/sensible-way-increment-bundle-version-cfbundleversion-xcode/#code\n\nbuildNumber=$(git rev-list --all --count)\nappInfo=\"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/Info.plist\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$appInfo\"\ndebugInfo=\"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}.dSYM/Contents/Info.plist\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$debugInfo\"\n";
+			shellScript = "#  Run this script after the 'Copy Bundle Resources' build phase\n#  It will compute the git commit number and write that to the CFBundleVersion of the target's built Info.plist\n#  From http://tgoode.com/2014/06/05/sensible-way-increment-bundle-version-cfbundleversion-xcode/#code\n\nbuildNumber=$(git rev-list --all --count)\nappInfo=\"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/Info.plist\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$appInfo\"\ndebugInfo=\"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}.dSYM/Contents/Info.plist\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$debugInfo\"\n";
+		};
+		FAC65F70221122A600C303E8 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Build the React app and copy it into the built iOS app\necho \"Building React app\"\n/usr/local/bin/npm run --prefix $SRCROOT/React build\nmkdir ${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/react\nmv $SRCROOT/React/build/* ${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/react\nrm -r $SRCROOT/React/build/\nexit 0 # to avoid typescript complaint about package.json\n\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

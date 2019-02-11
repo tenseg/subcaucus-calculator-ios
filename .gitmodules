@@ -1,0 +1,3 @@
+[submodule "React"]
+	path = React
+	url = ssh://git@grand.clst.org:22456/tenseg/subcalc-pr.git
