@@ -15,6 +15,7 @@
 		AC2A2D451C0E668700196FBF /* SubCalcTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2A2D441C0E668700196FBF /* SubCalcTests.swift */; };
 		AC2A2D501C0E668700196FBF /* SubCalcUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2A2D4F1C0E668700196FBF /* SubCalcUITests.swift */; };
 		FAC65F6F220E1CBC00C303E8 /* SubCalc.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = FA64F4C321F7B86D00D48113 /* SubCalc.entitlements */; };
+		FAC65F762211EC2F00C303E8 /* .gitmodules in Resources */ = {isa = PBXBuildFile; fileRef = FAC65F752211EC2F00C303E8 /* .gitmodules */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,7 @@
 		FA64F4C321F7B86D00D48113 /* SubCalc.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SubCalc.entitlements; sourceTree = "<group>"; };
 		FAC65F732211DD7100C303E8 /* React */ = {isa = PBXFileReference; lastKnownFileType = folder; path = React; sourceTree = "<group>"; };
 		FAC65F742211DEBD00C303E8 /* CHANGES.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGES.md; sourceTree = "<group>"; };
+		FAC65F752211EC2F00C303E8 /* .gitmodules */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitmodules; sourceTree = "<group>"; };
 		FAE7BBC01C1A400900BAA676 /* retrieve-buildnum-commit.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "retrieve-buildnum-commit.sh"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -84,6 +86,7 @@
 		AC2A2D231C0E668700196FBF = {
 			isa = PBXGroup;
 			children = (
+				FAC65F752211EC2F00C303E8 /* .gitmodules */,
 				FA1A3BF6220A613D004C077D /* SubCalc 1 Data.xcappdata */,
 				FAE7BBC01C1A400900BAA676 /* retrieve-buildnum-commit.sh */,
 				AC2A2D6C1C0E723200196FBF /* README.md */,
@@ -291,6 +294,7 @@
 			files = (
 				FAC65F6F220E1CBC00C303E8 /* SubCalc.entitlements in Resources */,
 				AC2A2D3A1C0E668700196FBF /* LaunchScreen.storyboard in Resources */,
+				FAC65F762211EC2F00C303E8 /* .gitmodules in Resources */,
 				AC2A2D371C0E668700196FBF /* Assets.xcassets in Resources */,
 				AC2A2D351C0E668700196FBF /* Main.storyboard in Resources */,
 			);
