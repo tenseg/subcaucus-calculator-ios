@@ -176,8 +176,8 @@
 				AC2A2D281C0E668700196FBF /* Sources */,
 				AC2A2D291C0E668700196FBF /* Frameworks */,
 				AC2A2D2A1C0E668700196FBF /* Resources */,
-				FAC65F70221122A600C303E8 /* ShellScript */,
-				FA19859F21ED93FC00C8668F /* ShellScript */,
+				FAC65F70221122A600C303E8 /* Build SubCalc React App */,
+				FA19859F21ED93FC00C8668F /* Save Git Commit Number as Build Number */,
 			);
 			buildRules = (
 			);
@@ -309,7 +309,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		FA19859F21ED93FC00C8668F /* ShellScript */ = {
+		FA19859F21ED93FC00C8668F /* Save Git Commit Number as Build Number */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -318,6 +318,7 @@
 			);
 			inputPaths = (
 			);
+			name = "Save Git Commit Number as Build Number";
 			outputFileListPaths = (
 			);
 			outputPaths = (
@@ -326,7 +327,7 @@
 			shellPath = /bin/sh;
 			shellScript = "#  Run this script after the 'Copy Bundle Resources' build phase\n#  It will compute the git commit number and write that to the CFBundleVersion of the target's built Info.plist\n#  From http://tgoode.com/2014/06/05/sensible-way-increment-bundle-version-cfbundleversion-xcode/#code\n\nbuildNumber=$(git rev-list --all --count)\nappInfo=\"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/Info.plist\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$appInfo\"\ndebugInfo=\"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}.dSYM/Contents/Info.plist\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$debugInfo\"\n";
 		};
-		FAC65F70221122A600C303E8 /* ShellScript */ = {
+		FAC65F70221122A600C303E8 /* Build SubCalc React App */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -335,6 +336,7 @@
 			);
 			inputPaths = (
 			);
+			name = "Build SubCalc React App";
 			outputFileListPaths = (
 			);
 			outputPaths = (
