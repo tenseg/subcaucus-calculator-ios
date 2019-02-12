@@ -262,7 +262,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		// used to import a snapshot:
 		//
 		// subcalc://import/__json__
-		// subcalc://inport?snapshot=__json__
+		// subcalc://import?snapshot=__json__
 		//
 		// the snapshot can be the json that gets produced from the "Download code" sharing option
 		if urlComps.host == "import" {
