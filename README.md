@@ -15,13 +15,19 @@ Before the first build you must set up the SubCalc React app submodule:
 2. `cd React`
 3. `npm install`
 
-## React App Considerations
+## Web app Considerations
 
-**Do not develop this web app using the copy in this project.** Instead, clone it separately somewhere else and develop and test it there. When you have a stable version update the submodule to that, which will put it in a detached head state:
+**Do not develop the SubCalc web app using the copy in this project.** Instead, clone it separately somewhere else and develop and test it there. When you have a stable version update the submodule to that, which will put it in a detached head state:
 
 1. `cd React`
 2. `git checkout __hash__`
-3. Commit the changes to the submodule in the repo of this project
+3. Commit the changes to the submodule in the repo of this project using `git commit -am __message__` since Xcode can't seem to recgnize there are changes that need committing if all that is changed is the updated submodule
+
+We reccommend [Visual Studio Code](https://code.visualstudio.com) as the environment to develop and test the SubCalc web app.
+
+## Deployment
+
+You can build this app yourself in Xcode for the iOS Simulator or your own personal devices using Apple's Personal Provisioning. Tenseg LLC distributes the app on the [iOS App Store](https://itunes.apple.com/us/app/subcalc/id352454097?mt=8) for the general public.
 
 ## Versioning
 
@@ -30,3 +36,8 @@ We use [SemVer](http://semver.org/) for versioning. See the [version history](CH
 ## Authors
 
 * Alexander Celeste – [Tenseg LLC](https://www.tenseg.net)
+* Eric Celeste – [Tenseg LLC](https://www.tenseg.net)
+
+## Acknowledgments
+
+We have relied on numerous helpful articles and threads online to learn things as we went about writing the code of this app. Those are referenced throughout the source code where appropriate.
