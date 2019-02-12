@@ -15,6 +15,8 @@ Before the first build you must set up the SubCalc React app submodule:
 2. `cd React`
 3. `npm install`
 
+The first build sometimes fails. The best we can tell this is a side-effect of the *Run Script* build phases used to write the Git commit number as the build number and build the React app with Xcode's new build system. The workaround we've found is simply to run *Product > Clean Build Folder* once and then subsequent builds should succeed. We aren't sure what is happening, but know that this tends to fix the problem and that it is usually just a getting started thing.
+
 ## Web app Considerations
 
 **Do not develop the SubCalc web app using the copy in this project.** Instead, clone it separately somewhere else and develop and test it there. When you have a stable version update the submodule to that, which will put it in a detached head state:
@@ -23,7 +25,7 @@ Before the first build you must set up the SubCalc React app submodule:
 2. `git checkout __hash__`
 3. Commit the changes to the submodule in the repo of this project using `git commit -am __message__` since Xcode can't seem to recgnize there are changes that need committing if all that is changed is the updated submodule
 
-We reccommend [Visual Studio Code](https://code.visualstudio.com) as the environment to develop and test the SubCalc web app.
+We reccommend [Visual Studio Code](https://code.visualstudio.com) as the environment to use to develop and test the SubCalc web app.
 
 ## Deployment
 
