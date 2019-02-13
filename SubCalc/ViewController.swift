@@ -141,15 +141,17 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		return query
 	}
 	
-	/// Imports JSON of a snapshot into local storage.
+	/// Imports content into SubCalc.
 	///
 	/// - Parameters:
-	///   - content: The string to import.
-	func importSnapshot(_ content: String) {
-		if let webView = self.view.subviews[1] as? WKWebView {
-			if var urlComps = URLComponents(url: webView.url!, resolvingAgainstBaseURL: false) {
-				urlComps.queryItems?.append(URLQueryItem(name: "snapshot", value: content.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)))
-				webView.load(URLRequest(url: urlComps.url!))
+	///   - query: The array of query items to import.
+	func importQuery(_ query: [URLQueryItem]?) {
+		if let query = query {
+			if let webView = self.view.subviews[1] as? WKWebView {
+				if var urlComps = URLComponents(url: webView.url!, resolvingAgainstBaseURL: false) {
+					urlComps.queryItems = urlComps.queryItems ?? [] + query
+					webView.load(URLRequest(url: urlComps.url!))
+				}
 			}
 		}
 	}
@@ -261,12 +263,11 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		
 		// used to import a snapshot:
 		//
-		// subcalc://import/__json__
 		// subcalc://import?snapshot=__json__
 		//
 		// the snapshot can be the json that gets produced from the "Download code" sharing option
 		if urlComps.host == "import" {
-			importSnapshot(urlComps.queryValueFor("snapshot") ?? urlComps.path.deletePrefix("/"))
+			importQuery(urlComps.queryItems)
 		}
 	}
     

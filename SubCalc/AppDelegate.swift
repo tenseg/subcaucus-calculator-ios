@@ -44,10 +44,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// if coming from universal links
 		if userActivity.activityType == NSUserActivityTypeBrowsingWeb {
 			if let urlComps = URLComponents(url: userActivity.webpageURL!, resolvingAgainstBaseURL: false) {
-				if let snapshotData = urlComps.queryValueFor("snapshot") {
-					if let viewController = self.window?.rootViewController as? ViewController {
-						viewController.importSnapshot(snapshotData)
-					}
+				if let viewController = self.window?.rootViewController as? ViewController {
+					viewController.importQuery(urlComps.queryItems)
 				}
 			}
 		}
