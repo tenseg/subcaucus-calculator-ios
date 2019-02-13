@@ -51,10 +51,10 @@
 		AC2A2D6C1C0E723200196FBF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		FA1A3BF6220A613D004C077D /* SubCalc 1 Data.xcappdata */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = "SubCalc 1 Data.xcappdata"; sourceTree = "<group>"; };
 		FA64F4C321F7B86D00D48113 /* SubCalc.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SubCalc.entitlements; sourceTree = "<group>"; };
+		FAC1D9472214908A0012239C /* Build-Phases */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Build-Phases"; sourceTree = "<group>"; };
 		FAC65F732211DD7100C303E8 /* React */ = {isa = PBXFileReference; lastKnownFileType = folder; path = React; sourceTree = "<group>"; };
 		FAC65F742211DEBD00C303E8 /* CHANGES.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGES.md; sourceTree = "<group>"; };
 		FAC65F752211EC2F00C303E8 /* .gitmodules */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitmodules; sourceTree = "<group>"; };
-		FAE7BBC01C1A400900BAA676 /* retrieve-buildnum-commit.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "retrieve-buildnum-commit.sh"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,9 +87,9 @@
 			children = (
 				FAC65F752211EC2F00C303E8 /* .gitmodules */,
 				FA1A3BF6220A613D004C077D /* SubCalc 1 Data.xcappdata */,
-				FAE7BBC01C1A400900BAA676 /* retrieve-buildnum-commit.sh */,
 				AC2A2D6C1C0E723200196FBF /* README.md */,
 				FAC65F742211DEBD00C303E8 /* CHANGES.md */,
+				FAC1D9472214908A0012239C /* Build-Phases */,
 				FAC65F732211DD7100C303E8 /* React */,
 				AC2A2D2E1C0E668700196FBF /* SubCalc */,
 				AC2A2D431C0E668700196FBF /* SubCalcTests */,
@@ -333,7 +333,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#  Run this script after the 'Copy Bundle Resources' build phase\n#  It will compute the git commit number and write that to the CFBundleVersion of the target's built Info.plist\n#  From http://tgoode.com/2014/06/05/sensible-way-increment-bundle-version-cfbundleversion-xcode/#code\n\nbuildNumber=$(git rev-list --all --count)\nappInfo=\"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/Info.plist\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$appInfo\"\ndebugInfo=\"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}.dSYM/Contents/Info.plist\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$debugInfo\"\n";
+			shellScript = "$SRCROOT/Build-Phases/save-git-count-as-buildnum.sh\n";
 		};
 		FAC65F70221122A600C303E8 /* Build SubCalc React App */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -353,7 +353,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Build the React app and copy it into the built iOS app\nappInfo=\"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/Info.plist\"\nexport REACT_APP_IOS_VERSION=$(/usr/libexec/PlistBuddy -c \"Print :CFBundleShortVersionString\" \"$appInfo\")\nexport REACT_APP_IOS_BUILD=$(/usr/libexec/PlistBuddy -c \"Print :CFBundleVersion\" \"$appInfo\")\n/usr/local/bin/npm run --prefix $SRCROOT/React build\nmkdir -p ${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/react\nrm -r ${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/react/*\nmv $SRCROOT/React/build/* ${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/react\nrm -r $SRCROOT/React/build/\n";
+			shellScript = "$SRCROOT/Build-Phases/build-react-app.sh\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

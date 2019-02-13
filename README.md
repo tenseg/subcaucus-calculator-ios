@@ -7,7 +7,7 @@ This is the iOS app for the SubCalc web app. It is an app that hosts a built-in 
 To build this project the following must be installed on your Mac:
 
 * [Xcode](https://itunes.apple.com/us/app/xcode/id497799835?mt=12)
-* [Node.js](https://nodejs.org/en/) (or `brew install node` if you have [Homebrew](https://brew.sh) installed)
+* [Node.js](https://nodejs.org/) (or `brew install node` if you have [Homebrew](https://brew.sh) installed)
 
 Before the first build you must set up the SubCalc React app submodule:
 
