@@ -12,6 +12,12 @@ if ! which npm > /dev/null; then
 	exit 1
 fi
 
+# check for the submodule
+if [ ! "$(ls -A $SRCROOT/React)" ]; then
+echo "error: React submodule not set up. Please run: \n 1. git submodule update --init --recursive \n 2. cd React \n 3. npm install"
+	exit 1
+fi
+
 # save version and debug info to the environment
 appInfo="${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/Info.plist"
 export REACT_APP_IOS_VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$appInfo")
