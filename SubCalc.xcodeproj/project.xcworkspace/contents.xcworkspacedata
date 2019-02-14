@@ -2,9 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:../Build-Phases">
-   </FileRef>
-   <FileRef
       location = "self:SubCalc.xcodeproj">
    </FileRef>
 </Workspace>

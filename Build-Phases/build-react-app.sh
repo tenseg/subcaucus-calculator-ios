@@ -12,10 +12,13 @@ if ! which npm > /dev/null; then
 	exit 1
 fi
 
-# save version info to the environment
+# save version and debug info to the environment
 appInfo="${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/Info.plist"
 export REACT_APP_IOS_VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$appInfo")
 export REACT_APP_IOS_BUILD=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "$appInfo")
+if [ "${CONFIGURATION}" = "Debug" ]; then
+	export REACT_APP_IOS_DEBUG="yes"
+fi
 
 # build the react app
 /usr/local/bin/npm run --prefix $SRCROOT/React build
