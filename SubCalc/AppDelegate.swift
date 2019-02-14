@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		if let urlComps = URLComponents(url: url, resolvingAgainstBaseURL: true) {
 			var allowURLHandling = true
 			// allow only some hosts on the released app
-			#if RELEASE
+			#if RELEASE // see https://kitefaster.com/2016/01/23/how-to-specify-debug-and-release-flags-in-xcode-with-swift/
 				let allowedHosts = [
 					"import"
 				]

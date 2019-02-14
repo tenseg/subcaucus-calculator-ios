@@ -71,14 +71,8 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 				NSLayoutConstraint.activate(ios10PortraitConstraints)
 			}
 			
-			// build the query items passing details about the ios app
-			var queryItems: [URLQueryItem] = []
-			#if DEBUG // see https://kitefaster.com/2016/01/23/how-to-specify-debug-and-release-flags-in-xcode-with-swift/
-				queryItems.append(URLQueryItem(name: "debug", value: "yes"))
-			#endif
-			
 			// attempt to add old subcalc data to the query before adding the entire query to the url components
-			urlComps.queryItems = attemptToMigrateOldSubCalcDataWith(queryItems)
+			urlComps.queryItems = attemptToMigrateOldSubCalcDataWith([])
 			
 			// load the react app
 			// we should always have a url since the urlcomps was made with one to even get here
