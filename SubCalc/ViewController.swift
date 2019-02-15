@@ -143,7 +143,11 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		if let query = query {
 			if let webView = self.view.subviews[1] as? WKWebView {
 				if var urlComps = URLComponents(url: webView.url!, resolvingAgainstBaseURL: false) {
-					urlComps.queryItems = urlComps.queryItems ?? [] + query
+					if let queries = urlComps.queryItems {
+						urlComps.queryItems = queries + query
+					} else {
+						urlComps.queryItems = query
+					}
 					webView.load(URLRequest(url: urlComps.url!))
 				}
 			}
@@ -233,6 +237,19 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		}
 	}
 	
+	
+	/// Used to get the clipboard contents and pass it through to the web app via importing
+	/// see https://stackoverflow.com/a/26377004
+	func retrieveClipboardContents() {
+		if let pastedString = UIPasteboard.general.string {
+			if let urlComps = URLComponents(string: pastedString) {
+				importQuery(urlComps.queryItems)
+			} else {
+				importQuery([URLQueryItem(name: "clipboard", value: pastedString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed))])
+			}
+		}
+	}
+	
 	//MARK: Handling Our Own URL Scheme
 	
 	/// We separate out handling of our url scheme from the webview delegate to let the app delegate use it to handle incoming urls from other apps.
@@ -266,6 +283,15 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		// the snapshot can be the json that gets produced from the "Download code" sharing option
 		if urlComps.host == "import" {
 			importQuery(urlComps.queryItems)
+		}
+		
+		// used to get the clipboard contents
+		//
+		// subcalc://get-clipboard
+		//
+		// it will reload the web app with a get param that contains the clipboard contents
+		if urlComps.host == "get-clipboard" {
+			retrieveClipboardContents()
 		}
 	}
     
