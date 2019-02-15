@@ -129,7 +129,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			}])
 			
 			// add json to the query
-			query.append(URLQueryItem(name: "subcalc1", value: subcalcJSON.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)))
+			query.append(URLQueryItem(name: "subcalc1", value: subcalcJSON))
 		}
 		
 		return query

@@ -49,7 +49,6 @@
 		AC2A2D4F1C0E668700196FBF /* SubCalcUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubCalcUITests.swift; sourceTree = "<group>"; };
 		AC2A2D511C0E668700196FBF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AC2A2D6C1C0E723200196FBF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		FA1A3BF6220A613D004C077D /* SubCalc 1 Data.xcappdata */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = "SubCalc 1 Data.xcappdata"; sourceTree = "<group>"; };
 		FA64F4C321F7B86D00D48113 /* SubCalc.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SubCalc.entitlements; sourceTree = "<group>"; };
 		FAC1D9472214908A0012239C /* Build-Phases */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Build-Phases"; sourceTree = "<group>"; };
 		FAC65F732211DD7100C303E8 /* React */ = {isa = PBXFileReference; lastKnownFileType = folder; path = React; sourceTree = "<group>"; };
@@ -86,7 +85,6 @@
 			isa = PBXGroup;
 			children = (
 				FAC65F752211EC2F00C303E8 /* .gitmodules */,
-				FA1A3BF6220A613D004C077D /* SubCalc 1 Data.xcappdata */,
 				AC2A2D6C1C0E723200196FBF /* README.md */,
 				FAC65F742211DEBD00C303E8 /* CHANGES.md */,
 				FAC1D9472214908A0012239C /* Build-Phases */,
