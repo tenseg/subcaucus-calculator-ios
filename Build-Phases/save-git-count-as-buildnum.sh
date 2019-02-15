@@ -6,6 +6,10 @@
 #  Created by Alexander Celeste on 2/13/19.
 #  Copyright © 2019 Tenseg. All rights reserved.
 
+# input files:
+#	* $(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)
+#	* ${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}
+
 #  Run this script after the 'Copy Bundle Resources' build phase
 #  It will compute the git commit number and write that to the CFBundleVersion of the target's built Info.plist
 #  From http://tgoode.com/2014/06/05/sensible-way-increment-bundle-version-cfbundleversion-xcode/#code

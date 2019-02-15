@@ -6,6 +6,10 @@
 #  Created by Alexander Celeste on 2/13/19.
 #  Copyright © 2019 Tenseg. All rights reserved.
 
+# input files:
+#	* $(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)
+#	* ${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}
+
 # check for npm
 if ! which npm > /dev/null; then
 	echo "error: Node.js is not installed. Visit https://nodejs.org/ to learn more."
@@ -14,7 +18,7 @@ fi
 
 # check for the submodule
 if [ ! "$(ls -A $SRCROOT/React)" ]; then
-echo "error: React submodule not set up. Please run: \n 1. git submodule update --init --recursive \n 2. cd React \n 3. npm install"
+	echo "error: React submodule not set up. Please run git submodule update --init --recursive"
 	exit 1
 fi
 
@@ -25,6 +29,9 @@ export REACT_APP_IOS_BUILD=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion"
 if [ "${CONFIGURATION}" = "Debug" ]; then
 	export REACT_APP_IOS_DEBUG="yes"
 fi
+
+# install any new dependencies
+/usr/local/bin/npm --prefix $SRCROOT/React install $SRCROOT/React
 
 # build the react app
 /usr/local/bin/npm run --prefix $SRCROOT/React build

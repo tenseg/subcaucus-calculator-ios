@@ -9,13 +9,9 @@ To build this project the following must be installed on your Mac:
 * [Xcode](https://itunes.apple.com/us/app/xcode/id497799835?mt=12)
 * [Node.js](https://nodejs.org/) (or `brew install node` if you have [Homebrew](https://brew.sh) installed)
 
-Before the first build you must set up the SubCalc React app submodule:
+Before the first build you must set up the SubCalc React app submodule:  `git submodule update --init --recursive`. If you don't do this the build will fail and Xcode will ask you to run the command.
 
-1. `git submodule update --init --recursive`
-2. `cd React`
-3. `npm install`
-
-The first build sometimes fails. The best we can tell this is a side-effect of the *Run Script* build phases used to write the Git commit number as the build number and build the React app with Xcode's new build system. The workaround we've found is simply to run *Product > Clean Build Folder* once and then subsequent builds should succeed. We aren't sure what is happening, but know that this tends to fix the problem and that it is usually just a getting started thing.
+The first build sometimes fails anyway. The best we can tell this is a side-effect of the *Run Script* build phases used to write the Git commit number as the build number and build the React app with Xcode's new build system. The workaround we've found is simply to run *Product > Clean Build Folder* once and then subsequent builds should succeed. We aren't sure what is happening, but know that this tends to fix the problem and that it is usually just a getting started thing.
 
 ## Web app Considerations
 
