@@ -237,7 +237,6 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		}
 	}
 	
-	
 	/// Used to get the clipboard contents and pass it through to the web app via importing
 	/// see https://stackoverflow.com/a/26377004
 	func retrieveClipboardContents() {
@@ -247,6 +246,10 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			} else {
 				importQuery([URLQueryItem(name: "clipboard", value: pastedString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed))])
 			}
+		} else {
+			let alertController = UIAlertController(title: "Clipboard Empty", message: "There is nothing on your clipboard to paste.", preferredStyle: .alert)
+			alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+			self.present(alertController, animated: true, completion: nil)
 		}
 	}
 	
