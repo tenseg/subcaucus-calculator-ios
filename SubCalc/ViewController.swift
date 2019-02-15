@@ -170,18 +170,18 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		self.present(activityViewController, animated: true, completion: nil)
 	}
 	
-	/// Create a csv file and sharse it using the iOS activity view controller.
+	/// Create a file and sharse it using the iOS activity view controller.
 	/// See: http://www.justindoan.com/tutorials/2016/9/9/creating-and-exporting-a-csv-file-in-swift
 	///
 	/// - Parameters:
-	///   - csvContent: The CSV content to put in the file.
+	///   - fileContent: The CSV content to put in the file.
 	///   - filename: The name to give the file. Defaults to "Export.csv".
-	func shareCSV(_ csvContent: String, toFile filename: String = "Export.csv") {
+	func shareFile(_ fileContent: String, toFile filename: String = "Export.csv") {
 		// set up the temporary path
 		let temporaryPath = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(filename)
 		// try to write the csv to the file
 		do {
-			try csvContent.write(to: temporaryPath, atomically: true, encoding: String.Encoding.utf8)
+			try fileContent.write(to: temporaryPath, atomically: true, encoding: String.Encoding.utf8)
 			
 			// offer options to share the csv file
 			let activityViewController = UIActivityViewController(activityItems: [temporaryPath], applicationActivities: [])
@@ -199,7 +199,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			activityViewController.popoverPresentationController?.sourceRect = CGRect(x: view.center.x, y: view.center.y, width: 0, height: 0)
 			self.present(activityViewController, animated: true, completion: nil)
 		} catch {
-			let alertController = UIAlertController(title: "CSV Download Failed", message: "The CSV download has failed. Please try again.", preferredStyle: .alert)
+			let alertController = UIAlertController(title: "File Download Failed", message: "The file download has failed. Please try again.", preferredStyle: .alert)
 			alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
 			self.present(alertController, animated: true, completion: nil)
 		}
@@ -276,7 +276,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		// assumes that the path string is valid csv data
 		if urlComps.host == "share-csv" {
 			let filename = urlComps.queryValueFor("filename") ?? "Meeting"
-			shareCSV(urlComps.path.deletePrefix("/"), toFile: "\(filename.ensureSuffix(".csv"))")
+			shareFile(urlComps.path.deletePrefix("/"), toFile: "\(filename.ensureSuffix(".csv"))")
 		}
 		
 		// used to import a snapshot:
