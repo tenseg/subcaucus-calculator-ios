@@ -15,7 +15,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	//MARK: Instance Vars
 	
 	/// Javascript commmand: callback (result, error)
-	var javascriptQueue: [[String: (Any?, Error?) -> Void]] = [[:]]
+	var javascriptQueue: [String: (Any?, Error?) -> Void] = [:]
 	
 	/// Layout constraints for iOS 10
 	var ios10PortraitConstraints: [NSLayoutConstraint] = []
@@ -116,7 +116,8 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		// try to get json from the old file
 		if let subcalcJSON = try? String(contentsOfFile: oldFile) {
 			// queue the javascript to write out to local storage as a backup
-			javascriptQueue.append(["localStorage.setItem('oldSubcalcDataVersion1', '\(subcalcJSON)')": { (result, error) in
+            javascriptQueue["localStorage.setItem('iOSsubcalc2backup', \"\(subcalcJSON.replacingOccurrences(of: "\"", with: "\\\""))\")"] = {
+                (result, error) in
 				if error == nil {
 					do {
 						try FileManager.default.removeItem(at: URL(fileURLWithPath: oldFile))
@@ -126,10 +127,10 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 				} else {
 					print("migration failed \n \(String(describing: error))")
 				}
-			}])
+			}
 			
 			// add json to the query
-			query.append(URLQueryItem(name: "subcalc1", value: subcalcJSON))
+			query.append(URLQueryItem(name: "subcalc2", value: subcalcJSON))
 		}
 		
 		return query
@@ -324,14 +325,12 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	
 	// run javascript that has been queued after loads finish
 	func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        print("navingation did finish")
 		// loop all commands to run
 		for command in javascriptQueue {
-			if command.keys.count > 0 {
-				let javascript = command.keys[command.startIndex]
-				webView.evaluateJavaScript(javascript) { (result, error) in
-					command[javascript]!(result, error)
-				}
-			}
+            webView.evaluateJavaScript(command.key) { (result, error) in
+                command.value(result, error)
+            }
 		}
 		javascriptQueue.removeAll()
 	}
