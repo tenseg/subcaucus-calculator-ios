@@ -108,7 +108,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		var query = query // we must make the input a var so we can append to it later
 		let oldFile = (NSSearchPathForDirectoriesInDomains(.documentDirectory,.userDomainMask,true)[0] as String) + "/subcalc.json"
 		// if debugging print the path so we can examine the simulator's container in Finder
-		#if DEBUG
+		#if DEBUG // see https://kitefaster.com/2016/01/23/how-to-specify-debug-and-release-flags-in-xcode-with-swift/
 			print("--------Container path--------")
 			print(oldFile)
 			print("------------------------------")
@@ -244,7 +244,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			if let urlComps = URLComponents(string: pastedString) {
 				importQuery(urlComps.queryItems)
 			} else {
-				importQuery([URLQueryItem(name: "clipboard", value: pastedString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed))])
+				importQuery([URLQueryItem(name: "clipboard", value: pastedString)])
 			}
 		} else {
 			let alertController = UIAlertController(title: "Clipboard Empty", message: "There is nothing on your clipboard to paste.", preferredStyle: .alert)
