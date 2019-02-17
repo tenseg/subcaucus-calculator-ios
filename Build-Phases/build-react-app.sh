@@ -8,8 +8,8 @@
 
 # input files:
 #	* $(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)
-#	* ${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}
 
+# so that we error out when individual commands have errors
 set -e
 
 # check for npm
@@ -25,7 +25,7 @@ if [ ! "$(ls -A $SRCROOT/React)" ]; then
 fi
 
 # save version and debug info to the environment
-appInfo="${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/Info.plist"
+appInfo="${TARGET_BUILD_DIR}/${INFOPLIST_PATH}"
 export REACT_APP_IOS_VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$appInfo")
 export REACT_APP_IOS_BUILD=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "$appInfo")
 export CI=true

@@ -8,7 +8,7 @@
 
 # input files:
 #	* $(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)
-#	* ${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}
+#	* ${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}.dSYM/Contents/Info.plist
 
 #  Run this script after the 'Copy Bundle Resources' build phase
 #  It will compute the git commit number and write that to the CFBundleVersion of the target's built Info.plist
@@ -20,7 +20,7 @@ buildNumber=$(expr $(git rev-list $branch --count) - $(git rev-list HEAD..$branc
 echo "Updating build number to $buildNumber using branch '$branch' in production plist."
 /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $buildNumber" "${TARGET_BUILD_DIR}/${INFOPLIST_PATH}"
 
-debugInfoPlistPath = "${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}.dSYM/Contents/Info.plist"
+debugInfoPlistPath="${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}.dSYM/Contents/Info.plist"
 if [ -f "${debugInfoPlistPath}" ]; then
     echo "Updating build number to $buildNumber using branch '$branch' in debug dSYM plist."
     /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $buildNumber" "${debugInfoPlistPath}"
