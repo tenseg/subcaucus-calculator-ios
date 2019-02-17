@@ -3,7 +3,7 @@
 //  SubCalc
 //
 //  Created by Eric Celeste on 15.12.01.
-//  Copyright © 2015 Eric Celeste. All rights reserved.
+//  Copyright © 2019 Tenseg LLC.
 //
 
 import UIKit
