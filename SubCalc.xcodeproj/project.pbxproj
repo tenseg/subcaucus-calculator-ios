@@ -50,6 +50,7 @@
 		AC2A2D511C0E668700196FBF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AC2A2D6C1C0E723200196FBF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		FA64F4C321F7B86D00D48113 /* SubCalc.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SubCalc.entitlements; sourceTree = "<group>"; };
+		FA9957C7221A0DCD00B97F70 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		FAC1D9472214908A0012239C /* Build-Phases */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Build-Phases"; sourceTree = "<group>"; };
 		FAC65F732211DD7100C303E8 /* React */ = {isa = PBXFileReference; lastKnownFileType = folder; path = React; sourceTree = "<group>"; };
 		FAC65F742211DEBD00C303E8 /* CHANGES.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGES.md; sourceTree = "<group>"; };
@@ -87,6 +88,7 @@
 				FAC65F752211EC2F00C303E8 /* .gitmodules */,
 				AC2A2D6C1C0E723200196FBF /* README.md */,
 				FAC65F742211DEBD00C303E8 /* CHANGES.md */,
+				FA9957C7221A0DCD00B97F70 /* LICENSE */,
 				FAC1D9472214908A0012239C /* Build-Phases */,
 				FAC65F732211DD7100C303E8 /* React */,
 				AC2A2D2E1C0E668700196FBF /* SubCalc */,
