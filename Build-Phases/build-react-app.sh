@@ -12,15 +12,21 @@
 # so that we error out when individual commands have errors
 set -e
 
-# check for npm
-if ! which npm > /dev/null; then
-	echo "error: Node.js is not installed. Visit https://nodejs.org/ to learn more."
+# check for node
+if ! which node > /dev/null; then
+	echo "error: Node.js is not installed. Run: brew install node."
+	exit 1
+fi
+
+# check for yarn
+if ! which yarn > /dev/null; then
+	echo "error: Yarn is not installed. Run: brew install yarn."
 	exit 1
 fi
 
 # check for the submodule
 if [ ! "$(ls -A $SRCROOT/React)" ]; then
-	echo "error: React submodule not set up. Please run git submodule update --init --recursive"
+	echo "error: React submodule not set up. Please run git submodule update --init --recursive, followed by yarn in the submodule's folder."
 	exit 1
 fi
 
@@ -34,7 +40,7 @@ if [ "${CONFIGURATION}" = "Debug" ]; then
 fi
 
 # build the react app
-/usr/local/bin/npm run --prefix $SRCROOT/React build
+/usr/local/bin/yarn --cwd $SRCROOT/React run build
 
 # move the built react app into the iOS app bundle
 mkdir -p ${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/react

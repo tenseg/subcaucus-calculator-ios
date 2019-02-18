@@ -7,9 +7,15 @@ This is the iOS app for the [Subcaucus Calculator](https://github.com/tenseg/sub
 To build this project the following must be installed on your Mac:
 
 * [Xcode](https://itunes.apple.com/us/app/xcode/id497799835?mt=12)
-* [Node.js](https://nodejs.org/) (or `brew install node` if you have [Homebrew](https://brew.sh) installed)
+* [Homebrew](https://brew.sh) installed using the default `/usr/local` prefix
+* [Node.js](https://nodejs.org/): Run  `brew install node`
+* [Yarn](https://yarnpkg.com/en/): Run `brew install yarn`
 
-Before the first build you must set up the Subcaucus Calculator React app submodule:  `git submodule update --init --recursive`. If you don't do this the build will fail and Xcode will ask you to run the command.
+Before the first build you must set up the Subcaucus Calculator React app submodule:
+
+1. `git submodule update --init --recursive`
+2. `cd React`
+3. `yarn`
 
 The first build sometimes fails anyway. The best we can tell this is a side-effect of the *Run Script* build phases used to write the Git commit number as the build number and build the React app with Xcode's new build system. The workaround we've found is simply to run *Product > Clean Build Folder* once and then subsequent builds should succeed. We aren't sure what is happening, but know that this tends to fix the problem and that it is usually just a getting started thing.
 
@@ -21,7 +27,7 @@ The first build sometimes fails anyway. The best we can tell this is a side-effe
 2. `git checkout __hash__`
 3. Commit the changes to the submodule in the repo of this project using `git commit -am __message__` since Xcode can't seem to recgnize there are changes that need committing with regard to submodules
 
-We reccommend [Visual Studio Code](https://code.visualstudio.com) as the environment to use to develop and test the subcaucus-calculator web app.
+We reccommend [Visual Studio Code](https://code.visualstudio.com) as the environment to use to develop and test the Subcaucus Calculator web app.
 
 ## Deployment
 
@@ -29,7 +35,7 @@ You can build this app yourself in Xcode for the iOS Simulator or your own perso
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. See the [version history](CHANGES.md) of this project for changes.
+See the [version history](CHANGES.md) of this project for changes.
 
 ## Authors
 
