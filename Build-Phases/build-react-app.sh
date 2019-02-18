@@ -4,7 +4,7 @@
 #  SubCalc
 #
 #  Created by Alexander Celeste on 2/13/19.
-#  Copyright © 2019 Tenseg. All rights reserved.
+#  Copyright © 2019 Tenseg LLC.
 
 # input files:
 #	* $(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)
