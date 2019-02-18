@@ -1,8 +1,8 @@
 #  Version History
 
-## 3.0.0
+## 3.0.0 – February 2019
 
-It has been a while since we've updated SubCalc. With caucuses coming up we thought that we'd release an update to bring SubCalc in line with the 2018-2019 Official Call of the DFL. SubCalc has been completely redesigned and rewritten from the ground up and includes these new features:
+Caucuses are coming up again, so we thought that we would give SubCalc some love. SubCalc has been completely redesigned and rewritten from the ground up and includes these new features:
 
 * Save multiple snapshots of meetings
 * Duplicate a meeting
@@ -11,8 +11,10 @@ It has been a while since we've updated SubCalc. With caucuses coming up we thou
 * Share snapshots as text, code, spreadsheet, or a link to the iOS share sheet
 * Import snapshots via link either by viewing in Safari or using the Paste clipboard option in the app
 * More detailed explanations of the numbers this calculator gives you
-* Quickly reset the members column for the next walk
+* Quickly reset the members column for the next walk (thanks CT for the suggestion)
 * Quickly remove empty rows
+* Now available as a public open source project on Github
+
 
 ## 2.0.1 – 4 February 2016
 
