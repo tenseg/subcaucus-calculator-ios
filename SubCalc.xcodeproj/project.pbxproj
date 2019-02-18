@@ -14,6 +14,7 @@
 		AC2A2D3A1C0E668700196FBF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC2A2D381C0E668700196FBF /* LaunchScreen.storyboard */; };
 		AC2A2D451C0E668700196FBF /* SubCalcTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2A2D441C0E668700196FBF /* SubCalcTests.swift */; };
 		AC2A2D501C0E668700196FBF /* SubCalcUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2A2D4F1C0E668700196FBF /* SubCalcUITests.swift */; };
+		FA0FD1FD221B562F00E625E6 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = FA0FD1FC221B562F00E625E6 /* .gitignore */; };
 		FAC65F6F220E1CBC00C303E8 /* SubCalc.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = FA64F4C321F7B86D00D48113 /* SubCalc.entitlements */; };
 /* End PBXBuildFile section */
 
@@ -49,6 +50,7 @@
 		AC2A2D4F1C0E668700196FBF /* SubCalcUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubCalcUITests.swift; sourceTree = "<group>"; };
 		AC2A2D511C0E668700196FBF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AC2A2D6C1C0E723200196FBF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		FA0FD1FC221B562F00E625E6 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		FA64F4C321F7B86D00D48113 /* SubCalc.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SubCalc.entitlements; sourceTree = "<group>"; };
 		FA9957C7221A0DCD00B97F70 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		FAC1D9472214908A0012239C /* Build-Phases */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Build-Phases"; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 		AC2A2D231C0E668700196FBF = {
 			isa = PBXGroup;
 			children = (
+				FA0FD1FC221B562F00E625E6 /* .gitignore */,
 				FAC65F752211EC2F00C303E8 /* .gitmodules */,
 				AC2A2D6C1C0E723200196FBF /* README.md */,
 				FAC65F742211DEBD00C303E8 /* CHANGES.md */,
@@ -291,6 +294,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA0FD1FD221B562F00E625E6 /* .gitignore in Resources */,
 				FAC65F6F220E1CBC00C303E8 /* SubCalc.entitlements in Resources */,
 				AC2A2D3A1C0E668700196FBF /* LaunchScreen.storyboard in Resources */,
 				AC2A2D371C0E668700196FBF /* Assets.xcassets in Resources */,

@@ -10,7 +10,9 @@
 #	* $(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)
 
 # so that we error out when individual commands have errors
-set -e
+if [ "${CONFIGURATION}" = "Debug" ]; then
+	set -e
+fi
 
 # check for node
 if ! which node > /dev/null; then
