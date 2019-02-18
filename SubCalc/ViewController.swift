@@ -2,7 +2,7 @@
 //  ViewController.swift
 //  SubCalc
 //
-//  Created by Eric Celeste on 15.12.01.
+//  Created by Eric Celeste on 2015.12.01.
 //  Copyright © 2019 Tenseg LLC.
 //
 
