@@ -13,8 +13,5 @@ project.xcworkspace/
 VersionX-revision.h
 build/
 *.[oa]
-.hg
-.svn
-CVS
 *~.nib
 *.swp
