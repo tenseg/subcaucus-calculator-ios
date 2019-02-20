@@ -10,9 +10,7 @@
 #	* $(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)
 
 # so that we error out when individual commands have errors
-if [ "${CONFIGURATION}" = "Debug" ]; then
-	set -e
-fi
+set -e
 
 # check for node
 if ! which node > /dev/null; then
@@ -33,7 +31,7 @@ if [ ! "$(ls -A $SRCROOT/React)" ]; then
 fi
 
 # save version and debug info to the environment
-appInfo="${TARGET_BUILD_DIR}/${INFOPLIST_PATH}"
+appInfo="${CONFIGURATION_BUILD_DIR}/${WRAPPER_NAME}/Info.plist"
 export REACT_APP_IOS_VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$appInfo")
 export REACT_APP_IOS_BUILD=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "$appInfo")
 export CI=true
@@ -42,10 +40,11 @@ if [ "${CONFIGURATION}" = "Debug" ]; then
 fi
 
 # build the react app
-/usr/local/bin/yarn --cwd $SRCROOT/React run build
+/usr/local/bin/yarn --cwd "/$SRCROOT/React" run build
 
 # move the built react app into the iOS app bundle
-mkdir -p ${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/react
-rm -rf ${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/react/*
-mv $SRCROOT/React/build/* ${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/react
-rm -rf $SRCROOT/React/build/
+mkdir -p "${CONFIGURATION_BUILD_DIR}/${WRAPPER_NAME}/react"
+rm -rf "${CONFIGURATION_BUILD_DIR}/${WRAPPER_NAME}/react/"*
+MOVE="${CONFIGURATION_BUILD_DIR}/${WRAPPER_NAME}/react/"
+mv "$SRCROOT/React/build/"* "${CONFIGURATION_BUILD_DIR}/${WRAPPER_NAME}/react/"
+rm -rf "$SRCROOT/React/build/"
