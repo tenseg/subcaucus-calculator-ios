@@ -27,62 +27,72 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		
 		// load the react app if it is found in the app bundle
 		if let htmlPath = Bundle.main.path(forResource: "react/index", ofType: "html") {
-			var urlComps = URLComponents(url: URL(fileURLWithPath: htmlPath), resolvingAgainstBaseURL: false)
 			// set up the web view and replace our view with it
 			// there is nothing of substance in IB for this app's main GUI
 			let webConfiguration = WKWebViewConfiguration()
 			webConfiguration.websiteDataStore = WKWebsiteDataStore.default() // persistent
 			let webView = WKWebView(frame: self.view.frame, configuration: webConfiguration)
+			webView.isOpaque = false
 			webView.backgroundColor = UIColor(red:0.558, green:0.092, blue:0.191, alpha:1) // red
-			webView.translatesAutoresizingMaskIntoConstraints = false
 			webView.navigationDelegate = self
 			webView.uiDelegate = self
 			
-			// add web view to the main view
-			self.view.addSubview(webView)
-			
-			// deal with layout
-			if #available(iOS 11.0, *) {
-				// safe area avoidance on iOS 11 and later
-				let margins = self.view.layoutMarginsGuide
-				NSLayoutConstraint.activate([
-					webView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
-					webView.trailingAnchor.constraint(equalTo: margins.trailingAnchor)
-				])
-				let guide = self.view.safeAreaLayoutGuide
-				webView.trailingAnchor.constraint(equalTo: guide.trailingAnchor).isActive = true
-				webView.leadingAnchor.constraint(equalTo: guide.leadingAnchor).isActive = true
-				webView.bottomAnchor.constraint(equalTo: guide.bottomAnchor).isActive = true
-				webView.topAnchor.constraint(equalTo: guide.topAnchor).isActive = true
-			} else {
-				// just avoid the status bar prior to iOS 11
-				ios10PortraitConstraints = [
-					webView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0),
-					webView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0),
-					webView.topAnchor.constraint(equalTo: self.topLayoutGuide.topAnchor, constant: 22),
-					webView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0)
-				]
-				ios10LandscapeConstraints = [
-					webView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0),
-					webView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0),
-					webView.topAnchor.constraint(equalTo: self.topLayoutGuide.topAnchor, constant: 0),
-					webView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0)
-				]
-				NSLayoutConstraint.activate(ios10PortraitConstraints)
+			// create the url components used to load the react app
+			if var urlComps = URLComponents(url: URL(fileURLWithPath: htmlPath), resolvingAgainstBaseURL: false) {
+				// attempt to migrate subcalc 2 data
+				urlComps.queryItems = attemptToMigrateOldSubCalcDataWith([])
+				
+				// load the react app
+				// we should always have a url since the urlcomps was made with one to even get here
+				// but since it is an optional property we must insist on it being there
+				webView.load(URLRequest(url: urlComps.url!))
+				
+				// add web view to the main view
+				self.view.addSubview(webView)
+				setUpConstraintsFor(webView)
 			}
-			
-			// attempt to add old subcalc data to the query before adding the entire query to the url components
-			urlComps!.queryItems = attemptToMigrateOldSubCalcDataWith([])
-			
-			// load the react app
-			// we should always have a url since the urlcomps was made with one to even get here
-			// but since it is an optional property we must insist on it being there
-			webView.load(URLRequest(url: urlComps!.url!))
 		}
 	}
 	
 	override var preferredStatusBarStyle: UIStatusBarStyle {
 		return .lightContent
+	}
+	
+	
+	/// Set up the display constraints for the web view.
+	///
+	/// - Parameter webView: The web view to set up constraints for.
+	func setUpConstraintsFor(_ webView: WKWebView) {
+		webView.translatesAutoresizingMaskIntoConstraints = false
+		// deal with layout
+		if #available(iOS 11.0, *) {
+			// safe area avoidance on iOS 11 and later
+			let margins = self.view.layoutMarginsGuide
+			NSLayoutConstraint.activate([
+				webView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
+				webView.trailingAnchor.constraint(equalTo: margins.trailingAnchor)
+				])
+			let guide = self.view.safeAreaLayoutGuide
+			webView.trailingAnchor.constraint(equalTo: guide.trailingAnchor).isActive = true
+			webView.leadingAnchor.constraint(equalTo: guide.leadingAnchor).isActive = true
+			webView.bottomAnchor.constraint(equalTo: guide.bottomAnchor).isActive = true
+			webView.topAnchor.constraint(equalTo: guide.topAnchor).isActive = true
+		} else {
+			// just avoid the status bar prior to iOS 11
+			ios10PortraitConstraints = [
+				webView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0),
+				webView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0),
+				webView.topAnchor.constraint(equalTo: self.topLayoutGuide.topAnchor, constant: 22),
+				webView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0)
+			]
+			ios10LandscapeConstraints = [
+				webView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0),
+				webView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0),
+				webView.topAnchor.constraint(equalTo: self.topLayoutGuide.topAnchor, constant: 0),
+				webView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0)
+			]
+			NSLayoutConstraint.activate(ios10PortraitConstraints)
+		}
 	}
 	
 	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -125,7 +135,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 						print("\(oldFile) deletion failed \n \(String(describing: error))")
 					}
 				} else {
-					print("migration failed \n \(String(describing: error))")
+					print("backup failed \n \(String(describing: error))")
 				}
 			}
 			
@@ -325,7 +335,6 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	
 	// run javascript that has been queued after loads finish
 	func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        print("navingation did finish")
 		// loop all commands to run
 		for command in javascriptQueue {
             webView.evaluateJavaScript(command.key) { (result, error) in

@@ -2,8 +2,12 @@
 
 ## 3.1.0-dev
 
-We've made a few improvements and added a couple new features, including:
+We've made a few improvements and added a couple new feature.
 
+Improvements:
+* There was a breif flash of white when opening the app, this should now be gone
+
+New features:
 * Analysis charts that let you know how many members or delegates associate themselves with a candidate or issue
 * _
 
