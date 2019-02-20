@@ -5,7 +5,8 @@
 We've made a few improvements and added a couple new feature.
 
 Improvements:
-* There was a breif flash of white when opening the app, this should now be gone
+* There was a brief flash of white when opening the app, this should now be gone
+* _
 
 New features:
 * Analysis charts that let you know how many members or delegates associate themselves with a candidate or issue

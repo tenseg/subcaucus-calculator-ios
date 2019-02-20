@@ -253,10 +253,14 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	func retrieveClipboardContents() {
 		if let pastedString = UIPasteboard.general.string {
 			if let urlComps = URLComponents(string: pastedString) {
-				importQuery(urlComps.queryItems)
-			} else {
-				importQuery([URLQueryItem(name: "clipboard", value: pastedString)])
+				if urlComps.host == "scimport.tenseg.net" {
+					importQuery(urlComps.queryItems)
+					return // skip the alert about invalid contents, since clipboard contents were valid
+				}
 			}
+			let alertController = UIAlertController(title: "Invalid Clipboard Contents", message: "Your clipboard isn't a SubCalc import URL.", preferredStyle: .alert)
+			alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+			self.present(alertController, animated: true, completion: nil)
 		} else {
 			let alertController = UIAlertController(title: "Clipboard Empty", message: "There is nothing on your clipboard to paste.", preferredStyle: .alert)
 			alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
