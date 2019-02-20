@@ -1,19 +1,18 @@
 #  Version History
 
-## 3.0.1 – February 2019
+## 3.1.0-dev
 
-Emergency bugfix to get the new interface working. Version 3.0.0 brought these new features:
+We've made a few improvements and added a couple new features, including:
 
-* Save multiple snapshots of meetings
-* Duplicate a meeting
-* Sort the subcaucus name and members columns (thanks CT for the suggestion)
-* Hide the delegates column (thanks CT for the suggestion)
-* Share snapshots as text, code, spreadsheet, or a link to the iOS share sheet
-* Import snapshots via link either by viewing in Safari or using the Paste clipboard option in the app
-* More detailed explanations of the numbers this calculator gives you
-* Quickly reset the members column for the next walk (thanks CT for the suggestion)
-* Quickly remove empty rows
-* Now available as a public open source project on Github
+* Analysis charts that let you know how many members or delegates associate themselves with a candidate or issue
+* _
+
+## 3.0.1 – 20 February 2019
+
+A couple of small changes for 3.0.1:
+
+* On smaller devices the yellow cards could be placed out of view, that should now be fixed
+* Keep the menu and the subcaucus headers on the screen even when scrolling
 
 ## 3.0.0 – 19 February 2019
 

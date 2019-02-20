@@ -25,9 +25,9 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
     override func viewDidLoad() {
         super.viewDidLoad()
 		
-		// load the react app
-		// this should always get the components to the react app, but needs if var to unwrap everything
-		if var urlComps = URLComponents(url: URL(fileURLWithPath: Bundle.main.path(forResource: "react/index", ofType: "html") ?? ""), resolvingAgainstBaseURL: false) {
+		// load the react app if it is found in the app bundle
+		if let htmlPath = Bundle.main.path(forResource: "react/index", ofType: "html") {
+			var urlComps = URLComponents(url: URL(fileURLWithPath: htmlPath), resolvingAgainstBaseURL: false)
 			// set up the web view and replace our view with it
 			// there is nothing of substance in IB for this app's main GUI
 			let webConfiguration = WKWebViewConfiguration()
@@ -72,12 +72,12 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			}
 			
 			// attempt to add old subcalc data to the query before adding the entire query to the url components
-			urlComps.queryItems = attemptToMigrateOldSubCalcDataWith([])
+			urlComps!.queryItems = attemptToMigrateOldSubCalcDataWith([])
 			
 			// load the react app
 			// we should always have a url since the urlcomps was made with one to even get here
 			// but since it is an optional property we must insist on it being there
-			webView.load(URLRequest(url: urlComps.url!))
+			webView.load(URLRequest(url: urlComps!.url!))
 		}
 	}
 	
