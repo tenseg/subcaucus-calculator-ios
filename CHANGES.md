@@ -5,6 +5,7 @@
 We've added the ability to analyze how many members, delegates, and subcaucuses were associated to given words used in their names. Want to know how many delegates are coming from subcaucuses that were formed around issues of the environment? That is the kind of question the new analysis view can answer.
 
 Additional improvements:
+
 * There was a brief flash of white when opening the app, this should now be gone
 * Sharing data always had the data unsorted, now when sharing data it will use the same sort that you're seeing in the calculator
 * Assorted improvements for accessibility
