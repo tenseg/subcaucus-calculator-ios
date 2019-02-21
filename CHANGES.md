@@ -1,16 +1,12 @@
 #  Version History
 
-## 3.1.0-dev
+## 3.1.0 – February 2019
 
-We've made a few improvements and added a couple new feature.
+We've added the ability to analyze how many members, delegates, and subcaucuses were associated to given words used in their names. Want to know how many delegates are coming from subcaucuses that were formed around issues of the environment? That is the kind of question the new analysis view can answer.
 
-Improvements:
+Additional improvements:
 * There was a brief flash of white when opening the app, this should now be gone
-* _
-
-New features:
-* Analysis charts that let you know how many members or delegates associate themselves with a candidate or issue
-* _
+* Sharing data always had the data unsorted, now when sharing data it will use the same sort that you're seeing in the calculator
 
 ## 3.0.1 – 20 February 2019
 
