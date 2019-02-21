@@ -7,6 +7,7 @@ We've added the ability to analyze how many members, delegates, and subcaucuses 
 Additional improvements:
 * There was a brief flash of white when opening the app, this should now be gone
 * Sharing data always had the data unsorted, now when sharing data it will use the same sort that you're seeing in the calculator
+* Assorted improvements for accessibility
 
 ## 3.0.1 – 20 February 2019
 
