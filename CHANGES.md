@@ -2,10 +2,10 @@
 
 ## 3.1.1 – February 2019
 
-This version has minor fixes, including:
+This version has minor improvements, including:
 
 * Added version number to bottom of screen and exports
-* Fixed an embarrassing typo on the welcome card (you would think we could spell "subcaucus" by now)
+* Fixed an embarrassing typo on the welcome card (you would think we could spell "subcaucus" by now)-+
 
 ## 3.1.0 – 22 February 2019
 
