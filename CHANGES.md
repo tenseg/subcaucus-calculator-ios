@@ -1,11 +1,12 @@
 #  Version History
 
-## 3.1.1 – February 2019
+## 3.1.1– February 2019
 
 This version has minor improvements, including:
 
-* Added version number to bottom of screen and exports
-* Fixed an embarrassing typo on the welcome card (you would think we could spell "subcaucus" by now)-+
+* Added version number to bottom of screen and exports (thanks CT)
+* Fixed an embarrassing typo on the welcome card (thanks SC, you would think we could spell "subcaucus" by now)
+* Corrected the button color for the button to access the analyzer
 
 ## 3.1.0 – 22 February 2019
 
