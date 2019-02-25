@@ -25,7 +25,7 @@ buildNumber=$(expr $(git rev-list $branch --count) - $(git rev-list HEAD..$branc
 echo "Updating build number to $buildNumber using branch '$branch' in production plist."
 /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $buildNumber" "${TARGET_BUILD_DIR}/${INFOPLIST_PATH}"
 
-# write to the dsym bundle iif available
+# write to the dsym bundle if available
 debugInfoPlistPath="${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}.dSYM/Contents/Info.plist"
 if [ -f "${debugInfoPlistPath}" ]; then
     echo "Updating build number to $buildNumber using branch '$branch' in debug dSYM plist."
