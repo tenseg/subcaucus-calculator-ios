@@ -108,6 +108,15 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		super.viewWillTransition(to: size, with: coordinator)
 	}
 	
+	
+	/// We use keyboard shortcusts primarilly for debugging, but most are handy in production as well
+	override var keyCommands: [UIKeyCommand]? {
+		let commands = [
+			UIKeyCommand(input: "p", modifierFlags: .command, action: #selector(printWebContent), discoverabilityTitle: "Print")
+		]
+		return commands
+	}
+	
 	//MARK: Helpers
 	
 	/// This will try and migrate data from the old json file into the new local storage.
@@ -268,6 +277,27 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		}
 	}
 	
+	
+	/// Displays the print UI to allow the user to print the currently-displayed conents of the web view
+	/// needs @objc because it is called, in part, from a keyboard shortcut
+	/// see https://nshipster.com/uiprintinteractioncontroller/
+	@objc func printWebContent() {
+		if let webView = self.view.subviews[1] as? WKWebView {
+			// set up print info
+			let printInfo = UIPrintInfo(dictionary: nil)
+			printInfo.jobName = "SubCalc"
+			printInfo.duplex = .longEdge
+			printInfo.outputType = .grayscale
+			
+			// set up and display the print controller
+			let printController = UIPrintInteractionController.shared
+			printController.printInfo = printInfo
+			printController.showsNumberOfCopies = true
+			printController.printFormatter = webView.viewPrintFormatter()
+			printController.present(animated: true, completionHandler: nil)
+		}
+	}
+	
 	//MARK: Handling Our Own URL Scheme
 	
 	/// We separate out handling of our url scheme from the webview delegate to let the app delegate use it to handle incoming urls from other apps.
@@ -310,6 +340,15 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		// it will reload the web app with a get param that contains the clipboard contents
 		if urlComps.host == "get-clipboard" {
 			retrieveClipboardContents()
+		}
+		
+		// used to trigger the print view
+		//
+		// subcalc://print
+		//
+		// you can also trigger printing with command-p
+		if urlComps.host == "print" {
+			printWebContent()
 		}
 	}
     
