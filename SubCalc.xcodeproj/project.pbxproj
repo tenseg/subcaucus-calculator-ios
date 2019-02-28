@@ -16,6 +16,7 @@
 		AC2A2D501C0E668700196FBF /* SubCalcUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2A2D4F1C0E668700196FBF /* SubCalcUITests.swift */; };
 		FA0FD1FD221B562F00E625E6 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = FA0FD1FC221B562F00E625E6 /* .gitignore */; };
 		FAC65F6F220E1CBC00C303E8 /* SubCalc.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = FA64F4C321F7B86D00D48113 /* SubCalc.entitlements */; };
+		FAE759982228847F0036DC67 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE759972228847E0036DC67 /* Utilities.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,7 @@
 		FAC65F732211DD7100C303E8 /* React */ = {isa = PBXFileReference; lastKnownFileType = folder; path = React; sourceTree = "<group>"; };
 		FAC65F742211DEBD00C303E8 /* CHANGES.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGES.md; sourceTree = "<group>"; };
 		FAC65F752211EC2F00C303E8 /* .gitmodules */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitmodules; sourceTree = "<group>"; };
+		FAE759972228847E0036DC67 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,6 +147,7 @@
 			children = (
 				AC2A2D2F1C0E668700196FBF /* AppDelegate.swift */,
 				AC2A2D311C0E668700196FBF /* ViewController.swift */,
+				FAE759972228847E0036DC67 /* Utilities.swift */,
 			);
 			name = Code;
 			sourceTree = "<group>";
@@ -365,6 +368,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAE759982228847F0036DC67 /* Utilities.swift in Sources */,
 				AC2A2D321C0E668700196FBF /* ViewController.swift in Sources */,
 				AC2A2D301C0E668700196FBF /* AppDelegate.swift in Sources */,
 			);
