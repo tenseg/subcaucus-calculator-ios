@@ -3,7 +3,7 @@
 //  SubCalc
 //
 //  Created by Alexander Celeste on 2/28/19.
-//  Copyright © 2019 Tenseg.
+//  Copyright © 2019 Tenseg LLC.
 //
 
 import Foundation

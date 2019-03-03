@@ -264,7 +264,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			if let urlComps = URLComponents(string: pastedString) {
 				importQuery(urlComps.queryItems)
 			} else {
-				let alertController = UIAlertController(title: "Clipboard Not a URL", message: "Your clipboard isn't a URL. Only URLs work to be pasted into SubCalc", preferredStyle: .alert)
+				let alertController = UIAlertController(title: "Clipboard Not a URL", message: "Your clipboard isn't a URL. Only URLs work to be pasted into SubCalc.", preferredStyle: .alert)
 				alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
 				self.present(alertController, animated: true, completion: nil)
 			}
