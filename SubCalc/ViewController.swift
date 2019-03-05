@@ -10,7 +10,7 @@ import UIKit
 import WebKit
 import MessageUI
 
-class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMailComposeViewControllerDelegate, UIPrintInteractionControllerDelegate {
+class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMailComposeViewControllerDelegate {
 	
 	//MARK: Instance Vars
 	
@@ -295,7 +295,6 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			
 			// set up and display the print controller
 			let printController = UIPrintInteractionController.shared
-			printController.delegate = self
 			printController.printInfo = printInfo
 			printController.showsNumberOfCopies = true
 			printController.printFormatter = webView.viewPrintFormatter()
@@ -439,12 +438,6 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	//MARK: Mail Delegate
 	func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
 		self.dismiss(animated: true, completion: nil)
-	}
-	
-	//MARK: Print Delegate
-	func printInteractionControllerParentViewController(_ printInteractionController: UIPrintInteractionController) -> UIViewController? {
-		let vc = TSPrintViewController()
-		return vc
 	}
     
     //MARK: Memory
