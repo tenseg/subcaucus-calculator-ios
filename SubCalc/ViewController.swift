@@ -10,7 +10,7 @@ import UIKit
 import WebKit
 import MessageUI
 
-class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMailComposeViewControllerDelegate {
+class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMailComposeViewControllerDelegate, UIPrintInteractionControllerDelegate {
 	
 	//MARK: Instance Vars
 	
@@ -285,19 +285,17 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	/// Displays the print UI to allow the user to print the currently-displayed conents of the web view
 	/// needs @objc because it is called, in part, from a keyboard shortcut
 	/// see https://nshipster.com/uiprintinteractioncontroller/
-	///
-	/// - Parameters:
-	///   - jobName: The name of the print job, may show up as PDF filename or on some printer displays.
-	@objc func printWebContent(_ jobName: String = "SubCalc") {
+	@objc func printWebContent() {
 		if let webView = self.view.subviews[1] as? WKWebView {
 			// set up print info
 			let printInfo = UIPrintInfo(dictionary: nil)
-			printInfo.jobName = jobName
+			printInfo.jobName = "SubCalc"
 			printInfo.duplex = .longEdge
 			printInfo.outputType = .grayscale
 			
 			// set up and display the print controller
 			let printController = UIPrintInteractionController.shared
+			printController.delegate = self
 			printController.printInfo = printInfo
 			printController.showsNumberOfCopies = true
 			printController.printFormatter = webView.viewPrintFormatter()
@@ -355,8 +353,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		//
 		// you can also trigger printing with command-p
 		if urlComps.host == "print" {
-			let jobName = urlComps.queryValueFor("name") ?? "SubCalc"
-			printWebContent(jobName)
+			printWebContent()
 		}
 	}
     
@@ -443,6 +440,12 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
 		self.dismiss(animated: true, completion: nil)
 	}
+	
+	//MARK: Print Delegate
+	func printInteractionControllerParentViewController(_ printInteractionController: UIPrintInteractionController) -> UIViewController? {
+		let vc = TSPrintViewController()
+		return vc
+	}
     
     //MARK: Memory
     override func didReceiveMemoryWarning() {
@@ -452,5 +455,18 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	
 	deinit {
 		NotificationCenter.default.removeObserver(self)
+	}
+}
+
+
+/// This view controller is used to manage the print interaction controller
+class TSPrintViewController: UIViewController {
+	override var preferredStatusBarStyle: UIStatusBarStyle {
+		return .default
+	}
+	
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		setNeedsStatusBarAppearanceUpdate()
 	}
 }
