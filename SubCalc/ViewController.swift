@@ -450,16 +450,3 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		NotificationCenter.default.removeObserver(self)
 	}
 }
-
-
-/// This view controller is used to manage the print interaction controller
-class TSPrintViewController: UIViewController {
-	override var preferredStatusBarStyle: UIStatusBarStyle {
-		return .default
-	}
-	
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		setNeedsStatusBarAppearanceUpdate()
-	}
-}
