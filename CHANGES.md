@@ -2,7 +2,7 @@
 
 ## 3.1.2 – March 2019
 
-This version adds the ability to print the main table of subcaucuses. You are also able to save a PDF by long pressing on the preview within the Print dialog.
+This version adds the ability to print the main table of subcaucuses. You are also able to save a PDF by long pressing on the preview within the Print screen.
 
 ## 3.1.1– 25 February 2019
 

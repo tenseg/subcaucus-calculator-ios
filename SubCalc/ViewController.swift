@@ -262,14 +262,20 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	func retrieveClipboardContents() {
 		if let pastedString = UIPasteboard.general.string {
 			if let urlComps = URLComponents(string: pastedString) {
-				importQuery(urlComps.queryItems)
+				if let query = urlComps.queryItems {
+					importQuery(query)
+				} else {
+					let alertController = UIAlertController(title: "URL Has No Query Items", message: "The URL you pasted has no query items. SubCalc only supports pasting URLs with query items.", preferredStyle: .alert)
+					alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+					self.present(alertController, animated: true, completion: nil)
+				}
 			} else {
-				let alertController = UIAlertController(title: "Clipboard Not a URL", message: "Your clipboard isn't a URL. Only URLs work to be pasted into SubCalc.", preferredStyle: .alert)
+				let alertController = UIAlertController(title: "Clipboard Not a URL", message: "Your clipboard isn't a URL. Only URLs can be pasted into SubCalc.", preferredStyle: .alert)
 				alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
 				self.present(alertController, animated: true, completion: nil)
 			}
 		} else {
-			let alertController = UIAlertController(title: "Clipboard Empty", message: "There is nothing on your clipboard to paste.", preferredStyle: .alert)
+			let alertController = UIAlertController(title: "Clipboard Not Text", message: "There is nothing on your clipboard that can be pasted into SubCalc.", preferredStyle: .alert)
 			alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
 			self.present(alertController, animated: true, completion: nil)
 		}
