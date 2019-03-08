@@ -14,6 +14,9 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	
 	//MARK: Instance Vars
 	
+	/// The web view in which the React app loads
+	var webView: WKWebView = WKWebView()
+	
 	/// Javascript commmand: callback (result, error)
 	var javascriptQueue: [String: (Any?, Error?) -> Void] = [:]
 	
@@ -31,7 +34,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			// there is nothing of substance in IB for this app's main GUI
 			let webConfiguration = WKWebViewConfiguration()
 			webConfiguration.websiteDataStore = WKWebsiteDataStore.default() // persistent
-			let webView = WKWebView(frame: self.view.frame, configuration: webConfiguration)
+			webView = WKWebView(frame: self.view.frame, configuration: webConfiguration)
 			webView.isOpaque = false
 			webView.backgroundColor = UIColor(red:0.558, green:0.092, blue:0.191, alpha:1) // red
 			webView.navigationDelegate = self
@@ -49,7 +52,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 				
 				// add web view to the main view
 				self.view.addSubview(webView)
-				setUpConstraintsFor(webView)
+				setUpConstraints()
 			}
 		}
 	}
@@ -62,7 +65,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	/// Set up the display constraints for the web view.
 	///
 	/// - Parameter webView: The web view to set up constraints for.
-	func setUpConstraintsFor(_ webView: WKWebView) {
+	func setUpConstraints() {
 		webView.translatesAutoresizingMaskIntoConstraints = false
 		// deal with layout
 		if #available(iOS 11.0, *) {
@@ -161,15 +164,13 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	///   - query: The array of query items to import.
 	func importQuery(_ query: [URLQueryItem]?) {
 		if let query = query {
-			if let webView = self.view.subviews[1] as? WKWebView {
-				if var urlComps = URLComponents(url: webView.url!, resolvingAgainstBaseURL: false) {
-					if let queries = urlComps.queryItems {
-						urlComps.queryItems = queries + query
-					} else {
-						urlComps.queryItems = query
-					}
-					webView.load(URLRequest(url: urlComps.url!))
+			if var urlComps = URLComponents(url: webView.url!, resolvingAgainstBaseURL: false) {
+				if let queries = urlComps.queryItems {
+					urlComps.queryItems = queries + query
+				} else {
+					urlComps.queryItems = query
 				}
+				webView.load(URLRequest(url: urlComps.url!))
 			}
 		}
 	}
@@ -284,45 +285,45 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	
 	/// Displays the print UI to allow the user to print the currently-displayed conents of the web view
 	/// needs @objc because it is called, in part, from a keyboard shortcut
-	/// this is the old-style print-only method, unfortunately only 3D Touch allows PDF from this
+	/// This is the old-style print-only method, unfortunately only 3D Touch allows PDF from this
 	/// see https://nshipster.com/uiprintinteractioncontroller/
 	@objc func printWebContent() {
-		if let webView = self.view.subviews[1] as? WKWebView {
-			// set up print info
-			let printInfo = UIPrintInfo(dictionary: nil)
-			printInfo.jobName = "SubCalc"
-			printInfo.duplex = .longEdge
-			printInfo.outputType = .grayscale
-			
-			// set up and display the print controller
-			let printController = UIPrintInteractionController.shared
-			printController.printInfo = printInfo
-			printController.showsNumberOfCopies = true
-			printController.printFormatter = webView.viewPrintFormatter()
-			printController.present(animated: true, completionHandler: nil)
-		}
+		// set up print info
+		let printInfo = UIPrintInfo(dictionary: nil)
+		printInfo.jobName = "SubCalc"
+		printInfo.duplex = .longEdge
+		printInfo.outputType = .grayscale
+		
+		// set up and display the print controller
+		let printController = UIPrintInteractionController.shared
+		printController.printInfo = printInfo
+		printController.showsNumberOfCopies = true
+		printController.printFormatter = webView.viewPrintFormatter()
+		printController.present(animated: true, completionHandler: nil)
 	}
 	
 	
 	/// This implements the printing capability through the new-style activity share sheet
-	/// which includes Create PDF as well as Print
+	/// which includes Create PDF as well as Print and Save to Books
+	/// However Create PDF is inconsistent about actually creating a PDF with content
+	/// and when it does it isn't in the right proportions for a printed page
+	/// As far as I can tell online it is supposed to work fine, but is being buggy in the OS
 	func showPrintAndPDFActivities() {
-		if let webView = self.view.subviews[1] as? WKWebView {
-			// set up print info
-			let printInfo = UIPrintInfo(dictionary: nil)
-			printInfo.jobName = "SubCalc"
-			printInfo.duplex = .longEdge
-			printInfo.outputType = .grayscale
-			
-			let activityViewController = UIActivityViewController(activityItems: [printInfo, webView.viewPrintFormatter()], applicationActivities: nil)
-			activityViewController.completionWithItemsHandler = {
-				(activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) in
-				self.dismiss(animated: true, completion: nil)
-			}
-			activityViewController.popoverPresentationController?.sourceView = self.view
-			activityViewController.popoverPresentationController?.sourceRect = CGRect(x: view.center.x, y: view.center.y, width: 0, height: 0)
-			self.present(activityViewController, animated: true, completion: nil)
+		// set up print info
+		let printInfo = UIPrintInfo(dictionary: nil)
+		printInfo.jobName = "SubCalc"
+		printInfo.duplex = .longEdge
+		printInfo.outputType = .grayscale
+		
+		// create and show the share sheet
+		let activityViewController = UIActivityViewController(activityItems: [printInfo, webView.viewPrintFormatter()], applicationActivities: nil)
+		activityViewController.completionWithItemsHandler = {
+			(activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) in
+			self.dismiss(animated: true, completion: nil)
 		}
+		activityViewController.popoverPresentationController?.sourceView = self.view
+		activityViewController.popoverPresentationController?.sourceRect = CGRect(x: view.center.x, y: view.center.y, width: 0, height: 0)
+		self.present(activityViewController, animated: true, completion: nil)
 	}
 	
 	//MARK: Handling Our Own URL Scheme
@@ -375,7 +376,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		//
 		// you can also trigger printing with command-p
 		if urlComps.host == "print" {
-			// ensure that while developing the more capable print and pdf function the release only uses the old-style
+			// ensure that while developing the more capable print and pdf function the release still uses the old-style
 			#if RELEASE
 				printWebContent()
 			#else
