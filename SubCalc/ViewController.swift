@@ -376,12 +376,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		//
 		// you can also trigger printing with command-p
 		if urlComps.host == "print" {
-			// ensure that while developing the more capable print and pdf function the release still uses the old-style
-			#if RELEASE
-				printWebContent()
-			#else
-				showPrintAndPDFActivities()
-			#endif
+			printWebContent()
 		}
 	}
     
