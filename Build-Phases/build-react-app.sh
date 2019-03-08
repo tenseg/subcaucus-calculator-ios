@@ -45,6 +45,5 @@ fi
 # move the built react app into the iOS app bundle
 mkdir -p "${CONFIGURATION_BUILD_DIR}/${WRAPPER_NAME}/react"
 rm -rf "${CONFIGURATION_BUILD_DIR}/${WRAPPER_NAME}/react/"*
-MOVE="${CONFIGURATION_BUILD_DIR}/${WRAPPER_NAME}/react/"
 mv "$SRCROOT/React/build/"* "${CONFIGURATION_BUILD_DIR}/${WRAPPER_NAME}/react/"
 rm -rf "$SRCROOT/React/build/"

@@ -1,6 +1,6 @@
 #  Version History
 
-## 3.1.2 – March 2019
+## 3.1.2 – 7 March 2019
 
 This version adds the ability to print the table of subcaucuses. You are also able to save a PDF by long pressing on the preview within the Print screen.
 

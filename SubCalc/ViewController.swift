@@ -284,6 +284,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	
 	/// Displays the print UI to allow the user to print the currently-displayed conents of the web view
 	/// needs @objc because it is called, in part, from a keyboard shortcut
+	/// this is the old-style print-only method, unfortunately only 3D Touch allows PDF from this
 	/// see https://nshipster.com/uiprintinteractioncontroller/
 	@objc func printWebContent() {
 		if let webView = self.view.subviews[1] as? WKWebView {
@@ -299,6 +300,28 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 			printController.showsNumberOfCopies = true
 			printController.printFormatter = webView.viewPrintFormatter()
 			printController.present(animated: true, completionHandler: nil)
+		}
+	}
+	
+	
+	/// This implements the printing capability through the new-style activity share sheet
+	/// which includes Create PDF as well as Print
+	func showPrintAndPDFActivities() {
+		if let webView = self.view.subviews[1] as? WKWebView {
+			// set up print info
+			let printInfo = UIPrintInfo(dictionary: nil)
+			printInfo.jobName = "SubCalc"
+			printInfo.duplex = .longEdge
+			printInfo.outputType = .grayscale
+			
+			let activityViewController = UIActivityViewController(activityItems: [printInfo, webView.viewPrintFormatter()], applicationActivities: nil)
+			activityViewController.completionWithItemsHandler = {
+				(activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) in
+				self.dismiss(animated: true, completion: nil)
+			}
+			activityViewController.popoverPresentationController?.sourceView = self.view
+			activityViewController.popoverPresentationController?.sourceRect = CGRect(x: view.center.x, y: view.center.y, width: 0, height: 0)
+			self.present(activityViewController, animated: true, completion: nil)
 		}
 	}
 	
@@ -352,7 +375,12 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		//
 		// you can also trigger printing with command-p
 		if urlComps.host == "print" {
-			printWebContent()
+			// ensure that while developing the more capable print and pdf function the release only uses the old-style
+			#if RELEASE
+				printWebContent()
+			#else
+				showPrintAndPDFActivities()
+			#endif
 		}
 	}
     
