@@ -115,7 +115,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 	/// We use keyboard shortcusts primarilly for debugging, but most are handy in production as well
 	override var keyCommands: [UIKeyCommand]? {
 		let commands = [
-			UIKeyCommand(input: "p", modifierFlags: .command, action: #selector(printWebContent), discoverabilityTitle: "Print")
+			UIKeyCommand(input: "p", modifierFlags: .command, action: #selector(printWebContent))
 		]
 		return commands
 	}
