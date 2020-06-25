@@ -74,6 +74,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
+	override func buildMenu(with builder: UIMenuBuilder) {
+		super.buildMenu(with: builder)
+		guard builder.system == .main else { return }
 
+		// remove menu items
+		builder.remove(menu: .services)
+		builder.remove(menu: .file)
+		builder.remove(menu: .edit)
+		builder.remove(menu: .format)
+		builder.remove(menu: .toolbar)
+		
+		// add menu items
+	}
 }
 

@@ -31,9 +31,14 @@ if [ ! "$(ls -A $SRCROOT/React)" ]; then
 fi
 
 # save version and debug info to the environment
-appInfo="${CONFIGURATION_BUILD_DIR}/${WRAPPER_NAME}/Info.plist"
+if [ "${PLATFORM_FAMILY_NAME}" = "macOS" ]; then
+    appInfo="${CONFIGURATION_BUILD_DIR}/${WRAPPER_NAME}/Contents/Info.plist"
+else
+	appInfo="${CONFIGURATION_BUILD_DIR}/${WRAPPER_NAME}/Info.plist"
+fi;
 export REACT_APP_IOS_VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$appInfo")
 export REACT_APP_IOS_BUILD=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "$appInfo")
+export REACT_APP_PLATFORM=${PLATFORM_FAMILY_NAME}
 export CI=true
 if [ "${CONFIGURATION}" = "Debug" ]; then
 	export REACT_APP_IOS_DEBUG="yes"
@@ -50,8 +55,6 @@ if [ "${PLATFORM_FAMILY_NAME}" = "macOS" ]; then
 else
 	inner_path="react"
 fi;
-
-echo "Install dir: $inner_path"
 mkdir -p "${CONFIGURATION_BUILD_DIR}/${WRAPPER_NAME}/$inner_path"
 rm -rf "${CONFIGURATION_BUILD_DIR}/${WRAPPER_NAME}/$inner_path/"*
 mv "$SRCROOT/React/build/"* "${CONFIGURATION_BUILD_DIR}/${WRAPPER_NAME}/$inner_path/"
