@@ -42,8 +42,17 @@ fi
 # build the react app
 /usr/local/bin/yarn --cwd "/$SRCROOT/React" run build
 
-# move the built react app into the iOS app bundle
-mkdir -p "${CONFIGURATION_BUILD_DIR}/${WRAPPER_NAME}/react"
-rm -rf "${CONFIGURATION_BUILD_DIR}/${WRAPPER_NAME}/react/"*
-mv "$SRCROOT/React/build/"* "${CONFIGURATION_BUILD_DIR}/${WRAPPER_NAME}/react/"
+# move the built react app into the app bundle
+# different based on platform
+
+if [ "${PLATFORM_FAMILY_NAME}" = "macOS" ]; then
+    inner_path="Contents/Resources/react"
+else
+	inner_path="react"
+fi;
+
+echo "Install dir: $inner_path"
+mkdir -p "${CONFIGURATION_BUILD_DIR}/${WRAPPER_NAME}/$inner_path"
+rm -rf "${CONFIGURATION_BUILD_DIR}/${WRAPPER_NAME}/$inner_path/"*
+mv "$SRCROOT/React/build/"* "${CONFIGURATION_BUILD_DIR}/${WRAPPER_NAME}/$inner_path/"
 rm -rf "$SRCROOT/React/build/"
