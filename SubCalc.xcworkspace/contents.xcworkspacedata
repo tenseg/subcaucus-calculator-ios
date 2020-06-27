@@ -4,4 +4,10 @@
    <FileRef
       location = "container:SubCalc.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:Sparkle/Sparkle.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:CatalystSparkle/CatalystSparkle.xcodeproj">
+   </FileRef>
 </Workspace>
