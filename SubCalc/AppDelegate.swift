@@ -7,15 +7,37 @@
 //
 
 import UIKit
+#if targetEnvironment(macCatalyst)
+	import SparkleBridgeClient
+#endif
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+	// some optional vars
     var window: UIWindow?
-
-
+	#if targetEnvironment(macCatalyst)
+		var sparklePlugin: SparkleBridgePlugin?
+	#endif
+	
+	// required update driver
+	#if targetEnvironment(macCatalyst)
+		var sparkleDriver: CatalystSparkleDriver!
+	#endif
+	
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        // set up our sparkle update driver if in catalyst
+		#if targetEnvironment(macCatalyst)
+			sparkleDriver = CatalystSparkleDriver()
+			let result = SparkleBridgeClient.load(with: sparkleDriver)
+			switch result {
+				case .success(let plugin):
+					self.sparklePlugin = plugin
+				case .failure(let error):
+					print(error)
+			}
+		#endif
+		
         return true
     }
 	
@@ -74,17 +96,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
-	override func buildMenu(with builder: UIMenuBuilder) {
-		super.buildMenu(with: builder)
-		guard builder.system == .main else { return }
+	// macOS menu items
+	#if targetEnvironment(macCatalyst)
+		override func buildMenu(with builder: UIMenuBuilder) {
+			super.buildMenu(with: builder)
+			guard builder.system == .main else { return }
 
-		// remove menu items
-		builder.remove(menu: .services)
-		builder.remove(menu: .file)
-		builder.remove(menu: .edit)
-		builder.remove(menu: .format)
-		builder.remove(menu: .toolbar)
-		
-		// add menu items
-	}
+			// remove menu items we do not need
+			builder.remove(menu: .services)
+			builder.remove(menu: .file)
+			builder.remove(menu: .edit)
+			builder.remove(menu: .format)
+			builder.remove(menu: .toolbar)
+			
+			// add some custom menu items
+			if (self.sparklePlugin != nil) {
+				// check for updates menu item
+				builder.insertSibling(UIMenu(title: "Check for Updates...", image: nil, identifier: UIMenu.Identifier("checkForUpdates"), options: .displayInline, children: [UIKeyCommand(title: "Check for Updates...", image: nil, action: #selector(checkForUpdates), input: ".", modifierFlags: [.command], propertyList: nil, alternates: [], discoverabilityTitle: nil, attributes: [], state: .off)]), afterMenu: .about)
+			}
+		}
+	
+		// will only run if menu item exists, so we know we'll have a Sparkle plugin
+		@objc func checkForUpdates() {
+			self.sparklePlugin?.checkForUpdates()
+		}
+	#endif
 }
