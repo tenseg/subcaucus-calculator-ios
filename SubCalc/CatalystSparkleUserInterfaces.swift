@@ -9,6 +9,22 @@
 import SwiftUI
 import SparkleBridgeClient
 
+class SparkleUpdatesHostingController: UIHostingController<UpdateInfoView> {
+	let appDelegate = UIApplication.shared.delegate as! AppDelegate
+		@objc required dynamic init?(coder: NSCoder) {
+			super.init(coder: coder, rootView: UpdateInfoView(sparkleDriver: appDelegate.sparkleDriver))
+		}
+}
+
+struct UpdateInfoView: View {
+	@ObservedObject var sparkleDriver: CatalystSparkleDriver
+    
+    var body: some View {
+        Text("Update info")
+		.frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
 struct DownloadView: View {
     @ObservedObject var sparkleDriver: CatalystSparkleDriver
     

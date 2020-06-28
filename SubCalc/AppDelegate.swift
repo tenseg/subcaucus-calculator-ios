@@ -8,7 +8,7 @@
 
 import UIKit
 #if targetEnvironment(macCatalyst)
-	import SparkleBridgeClient
+import SparkleBridgeClient
 #endif
 
 @UIApplicationMain
@@ -17,25 +17,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	// some optional vars
     var window: UIWindow?
 	#if targetEnvironment(macCatalyst)
-		var sparklePlugin: SparkleBridgePlugin?
+	var sparklePlugin: SparkleBridgePlugin?
 	#endif
 	
 	// required update driver
 	#if targetEnvironment(macCatalyst)
-		var sparkleDriver: CatalystSparkleDriver!
+	var sparkleDriver: CatalystSparkleDriver!
 	#endif
 	
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // set up our sparkle update driver if in catalyst
 		#if targetEnvironment(macCatalyst)
-			sparkleDriver = CatalystSparkleDriver()
-			let result = SparkleBridgeClient.load(with: sparkleDriver)
-			switch result {
-				case .success(let plugin):
-					self.sparklePlugin = plugin
-				case .failure(let error):
-					print(error)
-			}
+		sparkleDriver = CatalystSparkleDriver()
+		let result = SparkleBridgeClient.load(with: sparkleDriver)
+		switch result {
+			case .success(let plugin):
+				self.sparklePlugin = plugin
+			case .failure(let error):
+				print(error)
+		}
 		#endif
 		
         return true
@@ -46,10 +46,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			var allowURLHandling = true
 			// allow only some hosts on the released app
 			#if RELEASE // see https://kitefaster.com/2016/01/23/how-to-specify-debug-and-release-flags-in-xcode-with-swift/
-				let allowedHosts = [
-					"import"
-				]
-				allowURLHandling = allowedHosts.contains(urlComps.host!)
+			let allowedHosts = [
+				"import"
+			]
+			allowURLHandling = allowedHosts.contains(urlComps.host!)
 			#endif
 			// only route if the url is for our app
 			if urlComps.scheme == "subcalc" && allowURLHandling {
@@ -96,29 +96,123 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
-	// macOS menu items
+	// macOS menu item functions
 	#if targetEnvironment(macCatalyst)
-		override func buildMenu(with builder: UIMenuBuilder) {
-			super.buildMenu(with: builder)
-			guard builder.system == .main else { return }
-
-			// remove menu items we do not need
-			builder.remove(menu: .services)
-			builder.remove(menu: .file)
-			builder.remove(menu: .edit)
-			builder.remove(menu: .format)
-			builder.remove(menu: .toolbar)
-			
-			// add some custom menu items
-			if (self.sparklePlugin != nil) {
-				// check for updates menu item
-				builder.insertSibling(UIMenu(title: "Check for Updates...", image: nil, identifier: UIMenu.Identifier("checkForUpdates"), options: .displayInline, children: [UIKeyCommand(title: "Check for Updates...", image: nil, action: #selector(checkForUpdates), input: ".", modifierFlags: [.command], propertyList: nil, alternates: [], discoverabilityTitle: nil, attributes: [], state: .off)]), afterMenu: .about)
-			}
+	// about screen
+	@IBAction func showAboutScreen() {
+		if let viewController = self.window?.rootViewController as? ViewController {
+			viewController.importQuery([URLQueryItem(name: "showAboutScreen", value: "")])
 		}
+	}
 	
-		// will only run if menu item exists, so we know we'll have a Sparkle plugin
-		@objc func checkForUpdates() {
-			self.sparklePlugin?.checkForUpdates()
+	// update interface
+	@IBAction func showManualUpdatesInterface() {
+		self.sparklePlugin?.checkForUpdates()
+	}
+	
+	// create a new meeting
+	@IBAction func showNewMeeting() {
+		if let viewController = self.window?.rootViewController as? ViewController {
+			viewController.importQuery([URLQueryItem(name: "showNewMeeting", value: "")])
 		}
+	}
+	
+	// open a snapshot
+	@IBAction func showOpenSnapshot() {
+		if let viewController = self.window?.rootViewController as? ViewController {
+			viewController.importQuery([URLQueryItem(name: "showOpenSnapshot", value: "")])
+		}
+	}
+	
+	// rename snapshot
+	@IBAction func showRenameSnapshot() {
+		if let viewController = self.window?.rootViewController as? ViewController {
+			viewController.importQuery([URLQueryItem(name: "showRenameSnapshot", value: "")])
+		}
+	}
+	
+	// duplicate snapshot
+	@IBAction func showDuplicateSnapshot() {
+		if let viewController = self.window?.rootViewController as? ViewController {
+			viewController.importQuery([URLQueryItem(name: "showDuplicateSnapshot", value: "")])
+		}
+	}
+	
+	// coin settings
+	@IBAction func showCoinSettings() {
+		if let viewController = self.window?.rootViewController as? ViewController {
+			viewController.importQuery([URLQueryItem(name: "showCoinSettings", value: "")])
+		}
+	}
+	
+	// email report
+	@IBAction func shareToEmail() {
+		if let viewController = self.window?.rootViewController as? ViewController {
+			viewController.importQuery([URLQueryItem(name: "shareToEmail", value: "")])
+		}
+	}
+	
+	// text document
+	@IBAction func shareToText() {
+		if let viewController = self.window?.rootViewController as? ViewController {
+			viewController.importQuery([URLQueryItem(name: "shareToText", value: "")])
+		}
+	}
+	
+	// csv spreadsheet
+	@IBAction func shareToCSV() {
+		if let viewController = self.window?.rootViewController as? ViewController {
+			viewController.importQuery([URLQueryItem(name: "shareToCSV", value: "")])
+		}
+	}
+	
+	// json code
+	@IBAction func shareToJSON() {
+		if let viewController = self.window?.rootViewController as? ViewController {
+			viewController.importQuery([URLQueryItem(name: "shareToJSON", value: "")])
+		}
+	}
+	
+	// link
+	@IBAction func shareToLink() {
+		if let viewController = self.window?.rootViewController as? ViewController {
+			viewController.importQuery([URLQueryItem(name: "shareToLink", value: "")])
+		}
+	}
+	
+	// paste from clipboard
+	@IBAction func pasteFromClipboard() {
+		if let viewController = self.window?.rootViewController as? ViewController {
+			viewController.importQuery([URLQueryItem(name: "pasteFromClipboard", value: "")])
+		}
+	}
+	
+	// print
+	@IBAction func printSnapshot() {
+		if let viewController = self.window?.rootViewController as? ViewController {
+			viewController.importQuery([URLQueryItem(name: "printSnapshot", value: "")])
+		}
+	}
+	
+	// instructions
+	@IBAction func showInstructions() {
+		if let viewController = self.window?.rootViewController as? ViewController {
+			viewController.importQuery([URLQueryItem(name: "showInstructions", value: "")])
+		}
+	}
+	
+	// data security
+	@IBAction func showDataSecurity() {
+		if let viewController = self.window?.rootViewController as? ViewController {
+			viewController.importQuery([URLQueryItem(name: "showDataSecurity", value: "")])
+		}
+	}
+	
+	// feedback
+	@IBAction func showFeedback() {
+		if let viewController = self.window?.rootViewController as? ViewController {
+			viewController.importQuery([URLQueryItem(name: "showFeedback", value: "")])
+		}
+	}	
 	#endif
 }

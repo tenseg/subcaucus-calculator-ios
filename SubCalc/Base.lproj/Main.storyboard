@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina6_5" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r" initialMenu="CLN-bC-2Lw">
+    <device id="mac" appearance="dark"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="UIMenu" message="Requires Xcode 11 or later." minToolsVersion="11.0" requiredIntegratedClassName="UICommandDiff"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -15,11 +13,11 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="SubCalc" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="React app not found." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OUm-Z4-RFn">
-                                <rect key="frame" x="106" y="242" width="160" height="21"/>
+                                <rect key="frame" x="106" y="198" width="166" height="20"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                 <nil key="highlightedColor"/>
@@ -36,7 +34,157 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="302.89855072463769" y="427.23214285714283"/>
+            <point key="canvasLocation" x="375" y="343"/>
+        </scene>
+        <!--Main Menu-->
+        <scene sceneID="47K-2e-sJw">
+            <objects>
+                <menu isSystemItem="YES" title="Main Menu" identifier="com.apple.menu.root" id="CLN-bC-2Lw" sceneMemberID="viewController">
+                    <children>
+                        <menu isSystemItem="YES" title="Application" identifier="com.apple.menu.application" id="Di8-CD-jeG">
+                            <children>
+                                <command title="About SubCalc" id="19o-Mo-klw">
+                                    <connections>
+                                        <action selector="showAboutScreen" destination="p4j-xn-FYS" id="IhK-Mc-y9V"/>
+                                    </connections>
+                                </command>
+                                <command title="Check for Updates..." input="." id="7wm-no-Cc9">
+                                    <keyModifierFlags key="modifierFlags" command="YES"/>
+                                    <connections>
+                                        <action selector="showManualUpdatesInterface" destination="p4j-xn-FYS" id="mnI-zM-Hkg"/>
+                                    </connections>
+                                </command>
+                            </children>
+                            <systemMenuChildDeletions>
+                                <menuDeletion anchor="com.apple.menu.about"/>
+                                <menuDeletion anchor="com.apple.menu.preferences"/>
+                                <menuDeletion anchor="com.apple.menu.services"/>
+                            </systemMenuChildDeletions>
+                        </menu>
+                        <menu title="Meetings" anchor="com.apple.menu.application" id="6TG-bK-kOT">
+                            <children>
+                                <command title="New Meeting" input="n" id="MaB-82-Svj">
+                                    <keyModifierFlags key="modifierFlags" command="YES"/>
+                                    <connections>
+                                        <action selector="showNewMeeting" destination="p4j-xn-FYS" id="TDB-lG-joh"/>
+                                    </connections>
+                                </command>
+                                <command title="Open Snapshot" input="o" id="23n-5l-g7g">
+                                    <keyModifierFlags key="modifierFlags" command="YES"/>
+                                    <connections>
+                                        <action selector="showOpenSnapshot" destination="p4j-xn-FYS" id="Cx1-Dg-Mtm"/>
+                                    </connections>
+                                </command>
+                                <command title="Rename Snapshot" input="R" id="X7S-Bf-7TO">
+                                    <keyModifierFlags key="modifierFlags" command="YES"/>
+                                    <connections>
+                                        <action selector="showRenameSnapshot" destination="p4j-xn-FYS" id="19j-b1-jYl"/>
+                                    </connections>
+                                </command>
+                                <command title="Duplicate Meeting" input="S" id="wQe-xj-kak">
+                                    <keyModifierFlags key="modifierFlags" command="YES"/>
+                                    <connections>
+                                        <action selector="showDuplicateSnapshot" destination="p4j-xn-FYS" id="jpG-Ck-Ng4"/>
+                                    </connections>
+                                </command>
+                                <command title="Coin Settings" id="1c4-dQ-DH7">
+                                    <connections>
+                                        <action selector="showCoinSettings" destination="p4j-xn-FYS" id="0s0-5l-C4p"/>
+                                    </connections>
+                                </command>
+                            </children>
+                        </menu>
+                        <menu title="Share" anchor="com.apple.menu.application" id="IcH-Pe-uWg">
+                            <children>
+                                <command title="Email Report" input="e" id="8XF-ew-wSE">
+                                    <keyModifierFlags key="modifierFlags" command="YES"/>
+                                    <connections>
+                                        <action selector="shareToEmail" destination="p4j-xn-FYS" id="a1k-yw-6Jc"/>
+                                    </connections>
+                                </command>
+                                <command title="Text Document" input="t" id="9Yx-ht-eOq">
+                                    <keyModifierFlags key="modifierFlags" command="YES"/>
+                                    <connections>
+                                        <action selector="shareToText" destination="p4j-xn-FYS" id="Xxl-V4-BIb"/>
+                                    </connections>
+                                </command>
+                                <command title="CSV Spreadsheet" input="C" id="r1n-mx-3ds">
+                                    <keyModifierFlags key="modifierFlags" command="YES"/>
+                                    <connections>
+                                        <action selector="shareToCSV" destination="p4j-xn-FYS" id="8uJ-m7-QYK"/>
+                                    </connections>
+                                </command>
+                                <command title="JSON Code" input="j" id="0kx-hY-4DO">
+                                    <keyModifierFlags key="modifierFlags" command="YES"/>
+                                    <connections>
+                                        <action selector="shareToJSON" destination="p4j-xn-FYS" id="mV4-ly-8n0"/>
+                                    </connections>
+                                </command>
+                                <command title="Link" input="l" id="dFW-tm-VAp">
+                                    <keyModifierFlags key="modifierFlags" command="YES"/>
+                                    <connections>
+                                        <action selector="shareToLink" destination="p4j-xn-FYS" id="rpq-ZP-mOa"/>
+                                    </connections>
+                                </command>
+                                <command title="Paste Clipboard" input="v" id="wnA-sn-iVv">
+                                    <keyModifierFlags key="modifierFlags" command="YES"/>
+                                    <connections>
+                                        <action selector="pasteFromClipboard" destination="p4j-xn-FYS" id="XpX-En-wAB"/>
+                                    </connections>
+                                </command>
+                                <command title="Print" input="p" id="Ba8-gQ-5N7">
+                                    <keyModifierFlags key="modifierFlags" command="YES"/>
+                                    <connections>
+                                        <action selector="printSnapshot" destination="p4j-xn-FYS" id="Lah-ij-EPd"/>
+                                    </connections>
+                                </command>
+                            </children>
+                        </menu>
+                        <menu isSystemItem="YES" title="View" identifier="com.apple.menu.view" id="ed4-ro-BTI">
+                            <systemMenuChildDeletions>
+                                <menuDeletion anchor="com.apple.menu.toolbar"/>
+                            </systemMenuChildDeletions>
+                        </menu>
+                        <menu isSystemItem="YES" title="Help" identifier="com.apple.menu.help" id="FMd-Wi-ohJ">
+                            <children>
+                                <command title="Instructions" id="zSy-0U-ygK">
+                                    <connections>
+                                        <action selector="showInstructions" destination="p4j-xn-FYS" id="6ui-ih-DMU"/>
+                                    </connections>
+                                </command>
+                                <command title="Data Security" id="onH-Bh-HCX">
+                                    <connections>
+                                        <action selector="showDataSecurity" destination="p4j-xn-FYS" id="RTb-kv-9Lr"/>
+                                    </connections>
+                                </command>
+                                <command title="Feedback" id="yJv-bF-USj">
+                                    <connections>
+                                        <action selector="showFeedback" destination="p4j-xn-FYS" id="IA4-YH-WHv"/>
+                                    </connections>
+                                </command>
+                            </children>
+                            <systemMenuChildDeletions>
+                                <itemDeletion anchorAction="showHelp:"/>
+                            </systemMenuChildDeletions>
+                        </menu>
+                    </children>
+                    <systemMenuChildDeletions>
+                        <menuDeletion anchor="com.apple.menu.file"/>
+                        <menuDeletion anchor="com.apple.menu.edit"/>
+                        <menuDeletion anchor="com.apple.menu.format"/>
+                    </systemMenuChildDeletions>
+                </menu>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="p4j-xn-FYS" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="209" y="-231"/>
+        </scene>
+        <!--Sparkle Updates Hosting Controller-->
+        <scene sceneID="a8Q-HR-D7t">
+            <objects>
+                <hostingController useStoryboardIdentifierAsRestorationIdentifier="YES" id="1fk-83-fSH" customClass="SparkleUpdatesHostingController" customModule="SubCalc" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bPe-N4-9hd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-269" y="254"/>
         </scene>
     </scenes>
 </document>

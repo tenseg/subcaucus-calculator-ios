@@ -158,7 +158,7 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		return query
 	}
 	
-	/// Imports content into SubCalc.
+	/// Imports content into SubCalc. Also used by Catalyst menu items to get the web app to do things in place of its built-in menus.
 	///
 	/// - Parameters:
 	///   - query: The array of query items to import.
