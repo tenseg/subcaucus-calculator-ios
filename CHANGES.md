@@ -2,7 +2,7 @@
 
 ## 3.1.3
 
-Manny small updates to the calculator.
+Many small updates to the calculator. Also laid foundation for macOS app.
 
 ## 3.1.2 – 7 March 2019
 
