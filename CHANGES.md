@@ -2,9 +2,7 @@
 
 ## 3.1.3
 
-Fixed some minor issues for devices running iOS 10 related to accessing the web view the core SubCalc app runs in. For example, this stopped the print option from working at all on these devices. We're sorry about that.
-
-In the last update we said you could long press to get a PDF from the print screen. This was incorrect, as it only works on devices with 3D Touch. We are working on a way to get this functionality to everyone, but at the moment it seems that what appear to be bugs in iOS 12 are stopping the "right" way of doing this from working.
+Manny small updates to the calculator.
 
 ## 3.1.2 – 7 March 2019
 
