@@ -48,12 +48,6 @@
                                         <action selector="showAboutScreen" destination="p4j-xn-FYS" id="IhK-Mc-y9V"/>
                                     </connections>
                                 </command>
-                                <command title="Check for Updates..." input="." id="7wm-no-Cc9">
-                                    <keyModifierFlags key="modifierFlags" command="YES"/>
-                                    <connections>
-                                        <action selector="showManualUpdatesInterface" destination="p4j-xn-FYS" id="mnI-zM-Hkg"/>
-                                    </connections>
-                                </command>
                             </children>
                             <systemMenuChildDeletions>
                                 <menuDeletion anchor="com.apple.menu.about"/>
@@ -177,14 +171,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="p4j-xn-FYS" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="209" y="-231"/>
-        </scene>
-        <!--Sparkle Updates Hosting Controller-->
-        <scene sceneID="a8Q-HR-D7t">
-            <objects>
-                <hostingController useStoryboardIdentifierAsRestorationIdentifier="YES" id="1fk-83-fSH" customClass="SparkleUpdatesHostingController" customModule="SubCalc" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="bPe-N4-9hd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-269" y="254"/>
         </scene>
     </scenes>
 </document>

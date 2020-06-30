@@ -7,37 +7,14 @@
 //
 
 import UIKit
-#if targetEnvironment(macCatalyst)
-import SparkleBridgeClient
-#endif
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	// some optional vars
     var window: UIWindow?
-	#if targetEnvironment(macCatalyst)
-	var sparklePlugin: SparkleBridgePlugin?
-	#endif
-	
-	// required update driver
-	#if targetEnvironment(macCatalyst)
-	var sparkleDriver: CatalystSparkleDriver!
-	#endif
 	
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // set up our sparkle update driver if in catalyst
-		#if targetEnvironment(macCatalyst)
-		sparkleDriver = CatalystSparkleDriver()
-		let result = SparkleBridgeClient.load(with: sparkleDriver)
-		switch result {
-			case .success(let plugin):
-				self.sparklePlugin = plugin
-			case .failure(let error):
-				print(error)
-		}
-		#endif
-		
         return true
     }
 	
@@ -103,11 +80,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		if let viewController = self.window?.rootViewController as? ViewController {
 			viewController.importQuery([URLQueryItem(name: "showAboutScreen", value: "")])
 		}
-	}
-	
-	// update interface
-	@IBAction func showManualUpdatesInterface() {
-		self.sparklePlugin?.checkForUpdates()
 	}
 	
 	// create a new meeting

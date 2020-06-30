@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -15,10 +15,6 @@
 		AC2A2D451C0E668700196FBF /* SubCalcTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2A2D441C0E668700196FBF /* SubCalcTests.swift */; };
 		AC2A2D501C0E668700196FBF /* SubCalcUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2A2D4F1C0E668700196FBF /* SubCalcUITests.swift */; };
 		FA0FD1FD221B562F00E625E6 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = FA0FD1FC221B562F00E625E6 /* .gitignore */; };
-		FA3F0D4424A7E2B5003AC05D /* CatalystSparkleDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3F0D4324A7E2B5003AC05D /* CatalystSparkleDriver.swift */; platformFilter = maccatalyst; };
-		FA3F0D4624A7F059003AC05D /* CatalystSparkleUserInterfaces.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3F0D4524A7F059003AC05D /* CatalystSparkleUserInterfaces.swift */; platformFilter = maccatalyst; };
-		FA47D61724A7DCD500A35223 /* SparkleBridgeClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA47D61624A7DCD500A35223 /* SparkleBridgeClient.framework */; platformFilter = maccatalyst; };
-		FA47D61824A7DCD500A35223 /* SparkleBridgeClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FA47D61624A7DCD500A35223 /* SparkleBridgeClient.framework */; platformFilter = maccatalyst; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FAC65F6F220E1CBC00C303E8 /* SubCalc.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = FA64F4C321F7B86D00D48113 /* SubCalc.entitlements */; };
 		FAE759982228847F0036DC67 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE759972228847E0036DC67 /* Utilities.swift */; };
 /* End PBXBuildFile section */
@@ -51,17 +47,6 @@
 			name = "Embed PlugIns";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FA47D61924A7DCD500A35223 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				FA47D61824A7DCD500A35223 /* SparkleBridgeClient.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -80,8 +65,6 @@
 		AC2A2D511C0E668700196FBF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AC2A2D6C1C0E723200196FBF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		FA0FD1FC221B562F00E625E6 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
-		FA3F0D4324A7E2B5003AC05D /* CatalystSparkleDriver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalystSparkleDriver.swift; sourceTree = "<group>"; };
-		FA3F0D4524A7F059003AC05D /* CatalystSparkleUserInterfaces.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalystSparkleUserInterfaces.swift; sourceTree = "<group>"; };
 		FA47D61624A7DCD500A35223 /* SparkleBridgeClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SparkleBridgeClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA64F4C321F7B86D00D48113 /* SubCalc.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SubCalc.entitlements; sourceTree = "<group>"; };
 		FA9957C7221A0DCD00B97F70 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
@@ -97,7 +80,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA47D61724A7DCD500A35223 /* SparkleBridgeClient.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -187,8 +169,6 @@
 			isa = PBXGroup;
 			children = (
 				AC2A2D2F1C0E668700196FBF /* AppDelegate.swift */,
-				FA3F0D4324A7E2B5003AC05D /* CatalystSparkleDriver.swift */,
-				FA3F0D4524A7F059003AC05D /* CatalystSparkleUserInterfaces.swift */,
 				FAE759972228847E0036DC67 /* Utilities.swift */,
 				AC2A2D311C0E668700196FBF /* ViewController.swift */,
 			);
@@ -234,7 +214,6 @@
 				FA19859F21ED93FC00C8668F /* Save Git Commit Number as Build Number */,
 				FAC65F70221122A600C303E8 /* Build SubCalc React App */,
 				FA27493324A7C96D009D38D1 /* Embed PlugIns */,
-				FA47D61924A7DCD500A35223 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -414,9 +393,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FAE759982228847F0036DC67 /* Utilities.swift in Sources */,
-				FA3F0D4424A7E2B5003AC05D /* CatalystSparkleDriver.swift in Sources */,
 				AC2A2D321C0E668700196FBF /* ViewController.swift in Sources */,
-				FA3F0D4624A7F059003AC05D /* CatalystSparkleUserInterfaces.swift in Sources */,
 				AC2A2D301C0E668700196FBF /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -574,8 +551,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -591,10 +567,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				INFOPLIST_FILE = SubCalc/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = "3.1.3-dev.4";
 				OTHER_SWIFT_FLAGS = "-D DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = net.tenseg.SubCalc;
@@ -613,10 +586,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = SubCalc/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = "3.1.3-dev.4";
 				OTHER_SWIFT_FLAGS = "-D RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = net.tenseg.SubCalc;
@@ -631,11 +601,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = SubCalcTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = net.tenseg.SubCalcTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -648,11 +614,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = SubCalcTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = net.tenseg.SubCalcTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -664,11 +626,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				INFOPLIST_FILE = SubCalcUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = net.tenseg.SubCalcUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -681,11 +639,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				INFOPLIST_FILE = SubCalcUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = net.tenseg.SubCalcUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
