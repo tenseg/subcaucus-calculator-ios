@@ -78,112 +78,112 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	// about screen
 	@IBAction func showAboutScreen() {
 		if let viewController = self.window?.rootViewController as? ViewController {
-			viewController.importQuery([URLQueryItem(name: "showAboutScreen", value: "")])
+			viewController.runMenuCommand(command: "showAboutScreen")
 		}
 	}
 	
 	// create a new meeting
 	@IBAction func showNewMeeting() {
 		if let viewController = self.window?.rootViewController as? ViewController {
-			viewController.importQuery([URLQueryItem(name: "showNewMeeting", value: "")])
+			viewController.runMenuCommand(command: "showNewMeeting")
 		}
 	}
 	
 	// open a snapshot
 	@IBAction func showOpenSnapshot() {
 		if let viewController = self.window?.rootViewController as? ViewController {
-			viewController.importQuery([URLQueryItem(name: "showOpenSnapshot", value: "")])
+			viewController.runMenuCommand(command: "showOpenSnapshot")
 		}
 	}
 	
 	// rename snapshot
 	@IBAction func showRenameSnapshot() {
 		if let viewController = self.window?.rootViewController as? ViewController {
-			viewController.importQuery([URLQueryItem(name: "showRenameSnapshot", value: "")])
+			viewController.runMenuCommand(command: "showRenameSnapshot")
 		}
 	}
 	
 	// duplicate snapshot
 	@IBAction func showDuplicateSnapshot() {
 		if let viewController = self.window?.rootViewController as? ViewController {
-			viewController.importQuery([URLQueryItem(name: "showDuplicateSnapshot", value: "")])
+			viewController.runMenuCommand(command: "showDuplicateSnapshot")
 		}
 	}
 	
 	// coin settings
 	@IBAction func showCoinSettings() {
 		if let viewController = self.window?.rootViewController as? ViewController {
-			viewController.importQuery([URLQueryItem(name: "showCoinSettings", value: "")])
+			viewController.runMenuCommand(command: "showCoinSettings")
 		}
 	}
 	
 	// email report
 	@IBAction func shareToEmail() {
 		if let viewController = self.window?.rootViewController as? ViewController {
-			viewController.importQuery([URLQueryItem(name: "shareToEmail", value: "")])
+			viewController.runMenuCommand(command: "shareToEmail")
 		}
 	}
 	
 	// text document
 	@IBAction func shareToText() {
 		if let viewController = self.window?.rootViewController as? ViewController {
-			viewController.importQuery([URLQueryItem(name: "shareToText", value: "")])
+			viewController.runMenuCommand(command: "shareToText")
 		}
 	}
 	
 	// csv spreadsheet
 	@IBAction func shareToCSV() {
 		if let viewController = self.window?.rootViewController as? ViewController {
-			viewController.importQuery([URLQueryItem(name: "shareToCSV", value: "")])
+			viewController.runMenuCommand(command: "shareToCSV")
 		}
 	}
 	
 	// json code
 	@IBAction func shareToJSON() {
 		if let viewController = self.window?.rootViewController as? ViewController {
-			viewController.importQuery([URLQueryItem(name: "shareToJSON", value: "")])
+			viewController.runMenuCommand(command: "shareToJSON")
 		}
 	}
 	
 	// link
 	@IBAction func shareToLink() {
 		if let viewController = self.window?.rootViewController as? ViewController {
-			viewController.importQuery([URLQueryItem(name: "shareToLink", value: "")])
+			viewController.runMenuCommand(command: "shareToLink")
 		}
 	}
 	
 	// paste from clipboard
 	@IBAction func pasteFromClipboard() {
 		if let viewController = self.window?.rootViewController as? ViewController {
-			viewController.importQuery([URLQueryItem(name: "pasteFromClipboard", value: "")])
+			viewController.runMenuCommand(command: "pasteFromClipboard")
 		}
 	}
 	
 	// print
 	@IBAction func printSnapshot() {
 		if let viewController = self.window?.rootViewController as? ViewController {
-			viewController.importQuery([URLQueryItem(name: "printSnapshot", value: "")])
+			viewController.runMenuCommand(command: "printSnapshot")
 		}
 	}
 	
 	// instructions
 	@IBAction func showInstructions() {
 		if let viewController = self.window?.rootViewController as? ViewController {
-			viewController.importQuery([URLQueryItem(name: "showInstructions", value: "")])
+			viewController.runMenuCommand(command: "showInstructions")
 		}
 	}
 	
 	// data security
 	@IBAction func showDataSecurity() {
 		if let viewController = self.window?.rootViewController as? ViewController {
-			viewController.importQuery([URLQueryItem(name: "showDataSecurity", value: "")])
+			viewController.runMenuCommand(command: "showDataSecurity")
 		}
 	}
 	
 	// feedback
 	@IBAction func showFeedback() {
 		if let viewController = self.window?.rootViewController as? ViewController {
-			viewController.importQuery([URLQueryItem(name: "showFeedback", value: "")])
+			viewController.runMenuCommand(command: "showFeedback")
 		}
 	}	
 	#endif

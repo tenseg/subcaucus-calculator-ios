@@ -175,6 +175,62 @@ class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, MFMa
 		}
 	}
 	
+	#if targetEnvironment(macCatalyst)
+	/// Used to run commands via javascript from the Mac menubar
+	///
+	/// The idea is to run the same functions the internal menu does
+	/// from javascript in the external Swift wrapper app. But as of
+	/// now this is not yet implemented. Until it is, the Mac build will
+	/// be broken and as such cannot be distributed. Use something like:
+	///
+	/// webView.evaluateJavaScript("document.getElementById('someElement').innerText") { (result, error) in
+	///		if error != nil {
+	///			print(result)
+	///		}
+	/// }
+	///
+	/// - Parameters:
+	///		- command: The string name of the command to run
+	func runMenuCommand(command: String) {
+		switch command {
+			case "showAboutScreen":
+				print("executing: " + command)
+			case "showNewMeeting":
+				print("executing: " + command)
+			case "showOpenSnapshot":
+				print("executing: " + command)
+			case "showRenameSnapshot":
+				print("executing: " + command)
+			case "showDuplicateSnapshot":
+				print("executing: " + command)
+			case "showCoinSettings":
+				print("executing: " + command)
+			case "shareToEmail":
+				print("executing: " + command)
+			case "shareToText":
+				print("executing: " + command)
+			case "shareToCSV":
+				print("executing: " + command)
+			case "shareToJSON":
+				print("executing: " + command)
+			case "shareToLink":
+				print("executing: " + command)
+			case "pasteFromClipboard":
+				print("executing: " + command)
+			case "printSnapshot":
+				print("executing: " + command)
+			case "showInstructions":
+				print("executing: " + command)
+			case "showDataSecurity":
+				print("executing: " + command)
+			case "showFeedback":
+				print("executing: " + command)
+			default:
+				print("no default menu command action")
+		}
+	}
+	#endif
+	
 	//MARK: Actions from React App
 	
 	/// Share a text string using the iOS activity view controller.
