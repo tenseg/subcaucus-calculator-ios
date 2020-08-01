@@ -18,7 +18,7 @@
 set -e
 
 # get the build number
-branch=${1:-'master'}
+branch=${1:-'main'}
 buildNumber=$(expr $(git rev-list $branch --count) - $(git rev-list HEAD..$branch --count))
 
 # write to the app bundle
