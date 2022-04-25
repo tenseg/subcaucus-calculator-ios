@@ -1,8 +1,8 @@
 #  Version History
 
-## 3.1.3
+## 3.1.3 - _ April 2022
 
-Many small updates to the calculator. Also laid foundation for macOS app.
+Many small updates to the calculator.
 
 ## 3.1.2 – 7 March 2019
 
