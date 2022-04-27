@@ -1,6 +1,6 @@
 #  Version History
 
-## 3.1.3 - _ April 2022
+## 3.1.3 - 27 April 2022
 
 Many small updates to the calculator.
 
